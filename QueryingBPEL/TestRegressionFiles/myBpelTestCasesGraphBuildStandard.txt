@@ -1,0 +1,131 @@
+################New Process#######################
+ProcessName: tutorial
+VertexSource: Start   Targets: ReceiveCustomerRequestforLoanAmt 
+VertexSource: End     Targets: 
+VertexSource: ReceiveCustomerRequestforLoanAmt      Targets: InvokeLoanAssessor InvokeLoanApprover 
+VertexSource: AcceptMessageToCustomer      Targets: SeqAStart 
+VertexSource: InvokeLoanAssessor      Targets: InvokeLoanApprover AssignYesToAccept 
+VertexSource: InvokeLoanApprover      Targets: AcceptMessageToCustomer 
+VertexSource: AssignYesToAccept      Targets: AcceptMessageToCustomer 
+VertexSource: SeqAStart   Targets: ReceiveA 
+VertexSource: SeqAEnd     Targets: End 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: FlowAStart 
+VertexSource: FlowAStart   Targets: ReceiveB 
+VertexSource: FlowAEnd     Targets: ThrowA 
+VertexSource: ReceiveB      Targets: ReplyB 
+VertexSource: ReplyB      Targets: FlowAEnd 
+VertexSource: ThrowA      Targets: SeqAEnd 
+################New Process#######################
+ProcessName: Wait
+VertexSource: SeqAStart   Targets: ReceiveA 
+VertexSource: SeqAEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: WaitA 
+VertexSource: WaitA      Targets: SeqAEnd 
+################New Process#######################
+ProcessName: WhileActivity
+VertexSource: SeqAStart   Targets: ReceiveA 
+VertexSource: SeqAEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: WhileAStart 
+VertexSource: WhileAStart   Targets: InvokeA 
+VertexSource: WhileAEnd     Targets: SeqAEnd 
+VertexSource: InvokeA      Targets: WhileAEnd 
+################New Process#######################
+ProcessName: Flow2Seq
+VertexSource: FlowAStart   Targets: SeqAStart 
+VertexSource: FlowAEnd     Targets: 
+VertexSource: SeqAStart   Targets: ReceiveA 
+VertexSource: SeqAEnd     Targets: SeqBStart 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: SeqAEnd 
+VertexSource: SeqBStart   Targets: InvokeA 
+VertexSource: SeqBEnd     Targets: FlowAEnd 
+VertexSource: InvokeA      Targets: SeqBEnd 
+################New Process#######################
+ProcessName: NestedFlow
+VertexSource: Start   Targets: ReceiveA 
+VertexSource: End     Targets: 
+VertexSource: FlowBStart   Targets: FlowCStart ReceiveB 
+VertexSource: FlowBEnd     Targets: End 
+VertexSource: FlowCStart   Targets: SeqAStart 
+VertexSource: FlowCEnd     Targets: FlowBEnd 
+VertexSource: SeqAStart   Targets: InvokeA 
+VertexSource: SeqAEnd     Targets: FlowCEnd 
+VertexSource: InvokeA      Targets: EmptyA 
+VertexSource: EmptyA      Targets: ExitA 
+VertexSource: ExitA      Targets: SeqAEnd 
+VertexSource: ReplyA      Targets: InvokeA 
+VertexSource: ReceiveB      Targets: ReplyA 
+VertexSource: ReceiveA      Targets: FlowBStart 
+################New Process#######################
+ProcessName: NestedSequence
+VertexSource: SeqAStart   Targets: ReceiveA 
+VertexSource: SeqAEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: SeqBStart 
+VertexSource: SeqBStart   Targets: InvokeA 
+VertexSource: SeqBEnd     Targets: ExitA 
+VertexSource: InvokeA      Targets: SeqBEnd 
+VertexSource: ExitA      Targets: SeqAEnd 
+################New Process#######################
+ProcessName: PickTest
+VertexSource: PickAStart   Targets: SeqAStart 
+VertexSource: PickAEnd     Targets: 
+VertexSource: SeqAStart   Targets: ReceiveA 
+VertexSource: SeqAEnd     Targets: PickAEnd 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: SeqAEnd 
+################New Process#######################
+ProcessName: ScopeForEachSeq
+VertexSource: ScopeAStart   Targets: SeqAStart 
+VertexSource: ScopeAEnd     Targets: 
+VertexSource: SeqAStart   Targets: ReceiveA 
+VertexSource: SeqAEnd     Targets: ScopeAEnd 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: FlowAStart 
+VertexSource: FlowAStart   Targets: ForEachAStart 
+VertexSource: FlowAEnd     Targets: SeqAEnd 
+VertexSource: ForEachAStart   Targets: ScopeBStart 
+VertexSource: ForEachAEnd     Targets: FlowAEnd 
+VertexSource: ScopeBStart   Targets: InvokeA 
+VertexSource: ScopeBEnd     Targets: ForEachAEnd 
+VertexSource: InvokeA      Targets: ScopeBEnd 
+################New Process#######################
+ProcessName: SequenceEmpty
+VertexSource: SeqAStart   Targets: ReceiveA 
+VertexSource: SeqAEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: EmptyA 
+VertexSource: EmptyA      Targets: SeqAEnd 
+################New Process#######################
+ProcessName: SequenceInvoke
+VertexSource: SeqAStart   Targets: ReceiveA 
+VertexSource: SeqAEnd     Targets: 
+VertexSource: ReceiveA      Targets: Reply 
+VertexSource: Reply      Targets: InvokeA 
+VertexSource: InvokeA      Targets: SeqAEnd 
+################New Process#######################
+ProcessName: SequenceTrivial
+VertexSource: SeqAStart   Targets: ReceiveA 
+VertexSource: SeqAEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: SeqAEnd 
+################New Process#######################
+ProcessName: Switch
+VertexSource: Start   Targets: ReceiveA 
+VertexSource: End     Targets: 
+VertexSource: IfAStart   Targets: SeqAStart SeqBStart InvokeA 
+VertexSource: IfAEnd     Targets: ReplyC 
+VertexSource: SeqAStart   Targets: ReceiveB 
+VertexSource: SeqAEnd     Targets: IfAEnd 
+VertexSource: ReceiveB      Targets: ReplyA 
+VertexSource: ReplyA      Targets: SeqAEnd 
+VertexSource: SeqBStart   Targets: ReceiveC 
+VertexSource: SeqBEnd     Targets: IfAEnd 
+VertexSource: ReceiveC      Targets: ReplyB 
+VertexSource: ReplyB      Targets: SeqBEnd 
+VertexSource: InvokeA      Targets: IfAEnd 
+VertexSource: ReceiveA      Targets: IfAStart 
+VertexSource: ReplyC      Targets: End 

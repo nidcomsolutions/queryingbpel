@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0 (http://www.active-endpoints.com)
+-->
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ns1="http://docs.active-endpoints.com/activebpel/sample/wsdl/telephoneNumberLookupService/2006/08/telephoneNumberLookupService.wsdl" xmlns:ns2="http://docs.active-endpoints.com/activebpel/sample/schema/telephoneNumberLookupService/2007/08/telephoneNumberLookupService.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="validate" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/validate/2006/08/validate.bpel">
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../../Resources/WSDL/telephoneNumberLookupService.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/telephoneNumberLookupService/2006/08/telephoneNumberLookupService.wsdl"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="ServiceProvider" name="PhoneNumberLookupServicePL" partnerLinkType="ns1:PhoneNumberLookupServicePLT"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="ns1:LookupPhoneNumberRequest" name="LookupPhoneNumberRequest"/>
+      <bpel:variable messageType="ns1:LookupPhoneNumberResponse" name="LookupPhoneNumberResponse"/>
+      <bpel:variable messageType="ns1:LookupPhoneNumberInvalidPhoneNumberFault" name="InvalidPhoneNumberFault"/>
+      <bpel:variable name="PhoneNumberVar" type="ns2:PhoneNumberType"/>
+   </bpel:variables>
+   <bpel:faultHandlers>
+      <bpel:catch faultName="bpel:invalidVariables">
+         <bpel:sequence>
+            <bpel:assign name="GenerateFaultMessage">
+               <bpel:copy>
+                  <bpel:from>concat('The input "', $LookupPhoneNumberRequest.Document, '" is not a valid telephone number.')</bpel:from>
+                  <bpel:to part="Document" variable="InvalidPhoneNumberFault"/>
+               </bpel:copy>
+            </bpel:assign>
+            <bpel:reply faultName="ns1:InvalidPhoneNumberFault" name="ReplyWithFault" operation="LookupPhoneNumber" partnerLink="PhoneNumberLookupServicePL" portType="ns1:TelephoneNumberLookupPT" variable="InvalidPhoneNumberFault"/>
+         </bpel:sequence>
+      </bpel:catch>
+   </bpel:faultHandlers>
+   <bpel:sequence>
+      <bpel:receive createInstance="yes" name="ReceivePhoneNumberLookupRequest" operation="LookupPhoneNumber" partnerLink="PhoneNumberLookupServicePL" portType="ns1:TelephoneNumberLookupPT" variable="LookupPhoneNumberRequest"/>
+      <bpel:assign name="TidyUpInput">
+         <bpel:copy>
+            <bpel:from>normalize-space(translate( $LookupPhoneNumberRequest.Document , '(-) ', ''))</bpel:from>
+            <bpel:to variable="PhoneNumberVar"/>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:validate name="ValidateInput" variables="PhoneNumberVar"/>
+      <bpel:assign name="GenerateReply">
+         <bpel:copy>
+            <bpel:from>concat( 'The owner of phone number "',  $PhoneNumberVar, '" is John Doe.')</bpel:from>
+            <bpel:to part="Document" variable="LookupPhoneNumberResponse"/>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:reply name="ReplyWithLookupResult" operation="LookupPhoneNumber" partnerLink="PhoneNumberLookupServicePL" portType="ns1:TelephoneNumberLookupPT" variable="LookupPhoneNumberResponse"/>
+   </bpel:sequence>
+</bpel:process>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0 (http://www.active-endpoints.com)
+-->
+<bpel:process xmlns:bookingType="http://schemas.active-endpoints.com/sample/bookingType/2006/07/bookingType.xsd" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:prt="http://docs.active-endpoints.com/activebpel/sample/wsdl/priceRight/2006/07/priceRight.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="priceRight" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/priceRight/2007/07/priceRight.bpel">
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../../Resources/WSDL/priceRight.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/priceRight/2006/07/priceRight.wsdl"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="PriceRightServiceProvider" name="priceRightService" partnerLinkType="prt:priceRightPLT"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="prt:RequestBookingRequest" name="requestMessage"/>
+      <bpel:variable messageType="prt:RequestBookingResponse" name="responseMessage"/>
+      <bpel:variable messageType="prt:RequestBookingLocationNotFoundFault" name="LocationFault"/>
+   </bpel:variables>
+   <bpel:sequence>
+      <bpel:receive createInstance="yes" operation="RequestBooking" partnerLink="priceRightService" portType="prt:PriceRightServiceType" variable="requestMessage"/>
+      <bpel:assign name="InitializeVariables">
+         <bpel:copy>
+            <bpel:from>
+               <bpel:literal>
+                  <bookingResponse xmlns="http://schemas.active-endpoints.com/sample/bookingType/2006/07/bookingType.xsd" xmlns:tns="http://schemas.active-endpoints.com/sample/bookingType/2006/07/bookingType.xsd">
+	<bookingStatusData>Accepted</bookingStatusData>
+	<bookingConfirmationData>
+		<HotelName>Four Seasons</HotelName>
+		<HotelAddress>123 Queens Blvd., Maui HI </HotelAddress>
+		<HotelPhoneNumber>13334567895</HotelPhoneNumber>
+		<ConfirmationNumber>AXZ012909090</ConfirmationNumber>
+		<TotalPrice>180</TotalPrice>
+	</bookingConfirmationData>
+</bookingResponse>
+               </bpel:literal>
+            </bpel:from>
+            <bpel:to part="Document" variable="responseMessage"/>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:if name="CheckHotelLocation">
+         <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">starts-with( normalize-space($requestMessage.Document/bookingType:bookingRequestData/bookingType:HotelLocation),'Maui')</bpel:condition>
+         <bpel:sequence>
+            <bpel:if name="CheckOfferPrice">
+               <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$requestMessage.Document/bookingType:bookingRequestData/bookingType:OfferPrice &gt;=180</bpel:condition>
+               <bpel:assign name="AssignAcceptedStatus">
+                  <bpel:copy>
+                     <bpel:from>
+                        <bpel:literal>Accepted</bpel:literal>
+                     </bpel:from>
+                     <bpel:to part="Document" variable="responseMessage">
+                        <bpel:query>bookingType:bookingStatusData</bpel:query>
+                     </bpel:to>
+                  </bpel:copy>
+               </bpel:assign>
+               <bpel:else>
+                  <bpel:assign name="AssignRejectedStatus">
+                     <bpel:copy>
+                        <bpel:from>
+                           <bpel:literal>Rejected</bpel:literal>
+                        </bpel:from>
+                        <bpel:to part="Document" variable="responseMessage">
+                           <bpel:query>bookingType:bookingStatusData</bpel:query>
+                        </bpel:to>
+                     </bpel:copy>
+                  </bpel:assign>
+               </bpel:else>
+            </bpel:if>
+            <bpel:reply operation="RequestBooking" partnerLink="priceRightService" portType="prt:PriceRightServiceType" variable="responseMessage"/>
+         </bpel:sequence>
+         <bpel:else>
+            <bpel:sequence>
+               <bpel:assign name="AssignLocationFault">
+                  <bpel:copy>
+                     <bpel:from>
+                        <bpel:literal>The requested location is not found.</bpel:literal>
+                     </bpel:from>
+                     <bpel:to part="Document" variable="LocationFault"/>
+                  </bpel:copy>
+               </bpel:assign>
+               <bpel:reply faultName="prt:LocationNotFoundFault" name="ReplyWithFault" operation="RequestBooking" partnerLink="priceRightService" portType="prt:PriceRightServiceType" variable="LocationFault"/>
+            </bpel:sequence>
+         </bpel:else>
+      </bpel:if>
+   </bpel:sequence>
+</bpel:process>

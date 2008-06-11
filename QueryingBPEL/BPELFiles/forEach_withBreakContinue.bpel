@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0.0 (http://www.active-endpoints.com)
+-->
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ext="http://www.activebpel.org/2.0/bpel/extension" xmlns:ns1="http://docs.active-endpoints.com/activebpel/sample/wsdl/order/2006/09/order.wsdl" xmlns:ns2="http://docs.active-endpoints.com/activebpel/sample/wsdl/orderProcess/2006/09/orderProcess.wsdl" xmlns:ns3="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns4="http://schemas.active-endpoints.com/sample/orderTypes/2006/09/orderTypes.xsd" xmlns:ns5="http://docs.active-endpoints.com/activebpel/sample/wsdl/pick_start/2006/09/pick_start.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="foreach" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/foreach/2006/09/foreach.bpel">
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/order.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/order/2006/09/order.wsdl"/>
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/orderProcess.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/orderProcess/2006/09/orderProcess.wsdl"/>
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/pick_start.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/pick_start/2006/09/pick_start.wsdl"/>
+   <partnerLinks>
+      <partnerLink myRole="orderProcess" name="orderProcessPLT" partnerLinkType="ns2:orderProcessPLT"/>
+   </partnerLinks>
+   <variables>
+      <variable name="numberOfDetails" type="xsd:integer"/>
+      <variable messageType="ns1:orderMessage" name="orderMessage"/>
+      <variable messageType="ns2:orderProcessResponse" name="orderProcessResponse"/>
+      <variable name="numberOfCountedDetails" type="xsd:int"/>
+      <variable name="totalOrderValue" type="xsd:decimal"/>
+   </variables>
+   <flow>
+      <links>
+         <link name="L1"/>
+         <link name="L2"/>
+         <link name="L3"/>
+         <link name="L4"/>
+      </links>
+      <receive createInstance="yes" operation="receiveOrder" partnerLink="orderProcessPLT" portType="ns2:OrderPT" variable="orderMessage">
+         <sources>
+            <source linkName="L1"/>
+         </sources>
+      </receive>
+      <reply operation="receiveOrder" partnerLink="orderProcessPLT" portType="ns2:OrderPT" variable="orderProcessResponse">
+         <targets>
+            <target linkName="L4"/>
+         </targets>
+      </reply>
+      <forEach counterName="counter" name="ForEach_Line_item" parallel="yes">
+         <targets>
+            <target linkName="L3"/>
+         </targets>
+         <sources>
+            <source linkName="L2"/>
+         </sources>
+         <startCounterValue>1</startCounterValue>
+         <finalCounterValue expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$numberOfDetails</finalCounterValue>
+         <scope>
+            <sequence>
+               <wait name="Wait_forIterationSeconds">
+                  <for>concat('PT', string($counter), 'S')</for>
+               </wait>
+               <if>
+                  <condition>($counter = 1)</condition>
+                  <ext:continue name="ContinueIfCounterIs1"/>
+                  <elseif>
+                     <condition>($counter &gt;= 10)</condition>
+                     <ext:break name="BreakIfCounterIsGE10"/>
+                  </elseif>
+               </if>
+               <assign name="IncrermentVariables">
+                  <copy>
+                     <from>($numberOfCountedDetails + 1)</from>
+                     <to variable="numberOfCountedDetails"/>
+                  </copy>
+                  <copy>
+                     <from>($orderMessage.order/OrderDetail[$counter]/TotalCost + $totalOrderValue)</from>
+                     <to variable="totalOrderValue"/>
+                  </copy>
+               </assign>
+            </sequence>
+         </scope>
+      </forEach>
+      <assign name="InitializeVariables">
+         <targets>
+            <target linkName="L1"/>
+         </targets>
+         <sources>
+            <source linkName="L3"/>
+         </sources>
+         <copy>
+            <from>count($orderMessage.order/OrderDetail )</from>
+            <to variable="numberOfDetails"/>
+         </copy>
+         <copy>
+            <from>0</from>
+            <to variable="numberOfCountedDetails"/>
+         </copy>
+         <copy>
+            <from>0</from>
+            <to variable="totalOrderValue"/>
+         </copy>
+      </assign>
+      <assign name="CreateResponseMessage">
+         <targets>
+            <target linkName="L2"/>
+         </targets>
+         <sources>
+            <source linkName="L4"/>
+         </sources>
+         <copy>
+            <from>concat('The order contains ', $numberOfDetails, ' detail elements and the proceess traversed ', $numberOfCountedDetails, ' detail elements.  The total calculated order value =  $', $totalOrderValue)</from>
+            <to part="response" variable="orderProcessResponse"/>
+         </copy>
+         <copy>
+            <from part="order" variable="orderMessage">
+               <query>OrderHeader/PONo</query>
+            </from>
+            <to part="PONum" variable="orderProcessResponse"/>
+         </copy>
+         <copy>
+            <from part="order" variable="orderMessage">
+               <query>OrderHeader/CustId</query>
+            </from>
+            <to part="CustID" variable="orderProcessResponse"/>
+         </copy>
+      </assign>
+   </flow>
+</process>

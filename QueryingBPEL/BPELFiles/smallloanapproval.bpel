@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0.0 (http://www.active-endpoints.com)
+-->
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ns1="http://docs.active-endpoints.com/activebpel/sample/wsdl/invoke_with_catch/2006/09/invoke_with_catch.wsdl" xmlns:ns2="http://docs.active-endpoints.com/activebpel/sample/wsdl/loan_approval/2006/09/loan_approval.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="smallLoanApprovalProcess" suppressJoinFailure="yes" targetNamespace="http://acme.com/loanprocessing">
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/invoke_with_catch.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/invoke_with_catch/2006/09/invoke_with_catch.wsdl"/>
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/loan_approval.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/loan_approval/2006/09/loan_approval.wsdl"/>
+   <partnerLinks>
+      <partnerLink myRole="approver" name="approver" partnerLinkType="ns1:smallLoanApprovalLinkType"/>
+   </partnerLinks>
+   <variables>
+      <variable messageType="ns2:creditInformationMessage" name="request"/>
+      <variable messageType="ns2:approvalMessage" name="approvalInfo"/>
+      <variable messageType="ns2:errorMessage" name="error"/>
+   </variables>
+   <flow>
+      <links>
+         <link name="receive-to-assess"/>
+         <link name="receive-to-approval"/>
+         <link name="setMessage-to-reply"/>
+         <link name="Link97"/>
+      </links>
+      <receive createInstance="yes" operation="approveSmall" partnerLink="approver" portType="ns1:smallLoanApprovalPT" variable="request">
+         <sources>
+            <source linkName="receive-to-assess">
+               <transitionCondition>($request.amount &lt; 10000)</transitionCondition>
+            </source>
+            <source linkName="receive-to-approval">
+               <transitionCondition>($request.amount &gt;= 10000)</transitionCondition>
+            </source>
+         </sources>
+      </receive>
+      <reply operation="approveSmall" partnerLink="approver" portType="ns1:smallLoanApprovalPT" variable="approvalInfo">
+         <targets>
+            <target linkName="setMessage-to-reply"/>
+         </targets>
+      </reply>
+      <assign name="Approved">
+         <targets>
+            <target linkName="receive-to-assess"/>
+         </targets>
+         <sources>
+            <source linkName="setMessage-to-reply"/>
+         </sources>
+         <copy>
+            <from>'approved'</from>
+            <to part="accept" variable="approvalInfo"/>
+         </copy>
+      </assign>
+      <assign name="Error101">
+         <targets>
+            <target linkName="receive-to-approval"/>
+         </targets>
+         <sources>
+            <source linkName="Link97"/>
+         </sources>
+         <copy>
+            <from>'101'</from>
+            <to part="errorCode" variable="error"/>
+         </copy>
+      </assign>
+      <reply faultName="ns1:loanProcessFault" operation="approveSmall" partnerLink="approver" portType="ns1:smallLoanApprovalPT" variable="error">
+         <targets>
+            <target linkName="Link97"/>
+         </targets>
+      </reply>
+   </flow>
+</process>

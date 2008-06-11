@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0.0 (http://www.active-endpoints.com)
+-->
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ns1="http://docs.active-endpoints.com/activebpel/sample/wsdl/serializable_scope/2006/09/serializable_scope.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="serializable_scope" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/while/2006/09/while.bpel">
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/serializable_scope.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/serializable_scope/2006/09/serializable_scope.wsdl"/>
+   <partnerLinks>
+      <partnerLink myRole="scopeProcess" name="scopeProcess" partnerLinkType="ns1:scopeProcess"/>
+   </partnerLinks>
+   <variables>
+      <variable messageType="ns1:orderMessage" name="orderMessage"/>
+      <variable messageType="ns1:outputMessage" name="outputMessage"/>
+      <variable name="status" type="xsd:string"/>
+   </variables>
+   <eventHandlers>
+      <onEvent messageType="ns1:cancelMessage" operation="receiveCancellation" partnerLink="scopeProcess" portType="ns1:scopePT" variable="cancelMessage">
+         <scope isolated="yes">
+            <if name="SkipUnlessBeforeOrder">
+               <condition>($status = 'Start')</condition>
+               <assign name="AssignCancelledToStatus">
+                  <copy>
+                     <from>
+                        <literal>Cancelled</literal>
+                     </from>
+                     <to variable="status"/>
+                  </copy>
+               </assign>
+            </if>
+         </scope>
+      </onEvent>
+   </eventHandlers>
+   <sequence>
+      <receive createInstance="yes" operation="receiveOrder" partnerLink="scopeProcess" portType="ns1:scopePT" variable="orderMessage"/>
+      <assign name="AssignStartToStatus">
+         <copy>
+            <from>
+               <literal>Start</literal>
+            </from>
+            <to variable="status"/>
+         </copy>
+      </assign>
+      <scope isolated="yes" name="Scope">
+         <if name="SkipIfCancelled">
+            <condition>($status != 'Cancelled')</condition>
+            <sequence>
+               <assign name="AssignOrderingToStatus">
+                  <copy>
+                     <from>
+                        <literal>Ordering</literal>
+                     </from>
+                     <to variable="status"/>
+                  </copy>
+               </assign>
+               <assign name="AssignDoneOrderingToStatus">
+                  <copy>
+                     <from>
+                        <literal>Done ordering</literal>
+                     </from>
+                     <to variable="status"/>
+                  </copy>
+               </assign>
+            </sequence>
+         </if>
+      </scope>
+      <assign name="AssignStatusToOutput">
+         <copy>
+            <from variable="status"/>
+            <to part="output" variable="outputMessage"/>
+         </copy>
+      </assign>
+      <reply operation="receiveOrder" partnerLink="scopeProcess" portType="ns1:scopePT" variable="outputMessage"/>
+   </sequence>
+</process>

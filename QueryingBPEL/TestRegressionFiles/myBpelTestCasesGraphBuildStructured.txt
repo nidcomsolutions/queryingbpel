@@ -1,0 +1,187 @@
+################New Process#######################
+ProcessName: auctionService
+VertexSource: StartStart   Targets: StartStart 
+VertexSource: EndEnd     Targets: 
+VertexSource: StartStart   Targets: acceptSellerInformation acceptBuyerInformation EndEnd 
+VertexSource: EndEnd     Targets:  
+VertexSource: acceptSellerInformation      Targets: 
+VertexSource: acceptBuyerInformation      Targets: 
+VertexSource:       Targets: registerAuctionResults 
+VertexSource: registerAuctionResults      Targets: receiveAuctionRegistrationInformation 
+VertexSource: receiveAuctionRegistrationInformation      Targets: StartStart 
+VertexSource: StartStart   Targets: StartStart StartStart EndEnd 
+VertexSource: EndEnd     Targets: EndEnd 
+VertexSource: StartStart   Targets:  
+VertexSource: EndEnd     Targets: 
+VertexSource:       Targets: respondToSeller 
+VertexSource: respondToSeller      Targets: EndEnd 
+VertexSource: StartStart   Targets:  
+VertexSource: EndEnd     Targets: 
+VertexSource:       Targets: respondToBuyer 
+VertexSource: respondToBuyer      Targets: EndEnd 
+################New Process#######################
+ProcessName: Flow2Seq
+VertexSource: FlowAStartStart   Targets: SeqAStartStart FlowAEndEnd 
+VertexSource: FlowAEndEnd     Targets: 
+VertexSource: SeqAStartStart   Targets: ReceiveA 
+VertexSource: SeqAEndEnd     Targets: SeqBStartStart 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: SeqAEndEnd 
+VertexSource: SeqBStartStart   Targets: InvokeA 
+VertexSource: SeqBEndEnd     Targets: 
+VertexSource: InvokeA      Targets: SeqBEndEnd 
+################New Process#######################
+ProcessName: foreach
+VertexSource: StartStart   Targets:  EndEnd 
+VertexSource: EndEnd     Targets: 
+VertexSource: InitializeVariables      Targets: forEachLineItemStartStart 
+VertexSource: CreateResponseMessage      Targets:  
+VertexSource:       Targets: InitializeVariables 
+VertexSource:       Targets: 
+VertexSource: forEachLineItemStartStart   Targets: StartStart 
+VertexSource: forEachLineItemEndEnd     Targets: CreateResponseMessage 
+VertexSource: StartStart   Targets: StartStart 
+VertexSource: EndEnd     Targets: forEachLineItemEndEnd 
+VertexSource: StartStart   Targets: IncrementVariables 
+VertexSource: EndEnd     Targets: EndEnd 
+VertexSource: IncrementVariables      Targets: EndEnd 
+################New Process#######################
+ProcessName: NestedFlow
+VertexSource: StartStart   Targets: ReceiveA EndEnd 
+VertexSource: EndEnd     Targets: 
+VertexSource: FlowBStartStart   Targets: FlowCStartStart ReceiveB FlowBEndEnd 
+VertexSource: FlowBEndEnd     Targets: 
+VertexSource: FlowCStartStart   Targets: SeqAStartStart FlowCEndEnd 
+VertexSource: FlowCEndEnd     Targets: 
+VertexSource: SeqAStartStart   Targets: InvokeA 
+VertexSource: SeqAEndEnd     Targets: 
+VertexSource: InvokeA      Targets: EmptyA 
+VertexSource: EmptyA      Targets: ExitA 
+VertexSource: ExitA      Targets: SeqAEndEnd 
+VertexSource: ReplyA      Targets: InvokeA 
+VertexSource: ReceiveB      Targets: ReplyA 
+VertexSource: ReceiveA      Targets: FlowBStartStart 
+################New Process#######################
+ProcessName: NestedSequence
+VertexSource: SeqAStartStart   Targets: ReceiveA 
+VertexSource: SeqAEndEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: SeqBStartStart 
+VertexSource: SeqBStartStart   Targets: InvokeA 
+VertexSource: SeqBEndEnd     Targets: ExitA 
+VertexSource: InvokeA      Targets: SeqBEndEnd 
+VertexSource: ExitA      Targets: SeqAEndEnd 
+################New Process#######################
+ProcessName: PickTest
+VertexSource: PickAStartStart   Targets: PickAStartONMESSAGEStartStart PickAEndEnd 
+VertexSource: PickAEndEnd     Targets: 
+VertexSource: PickAStartONMESSAGEStartStart   Targets: SeqAStartStart 
+VertexSource: PickAStartONMESSAGEEndEnd     Targets: 
+VertexSource: SeqAStartStart   Targets: ReceiveA 
+VertexSource: SeqAEndEnd     Targets: PickAStartONMESSAGEEndEnd 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: SeqAEndEnd 
+################New Process#######################
+ProcessName: ScopeForEachSeq
+VertexSource: ScopeAStartStart   Targets: SeqAStartStart 
+VertexSource: ScopeAEndEnd     Targets: 
+VertexSource: SeqAStartStart   Targets: ReceiveA 
+VertexSource: SeqAEndEnd     Targets: ScopeAEndEnd 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: FlowAStartStart 
+VertexSource: FlowAStartStart   Targets: ForEachAStartStart FlowAEndEnd 
+VertexSource: FlowAEndEnd     Targets: SeqAEndEnd 
+VertexSource: ForEachAStartStart   Targets: ScopeBStartStart 
+VertexSource: ForEachAEndEnd     Targets: 
+VertexSource: ScopeBStartStart   Targets: InvokeA 
+VertexSource: ScopeBEndEnd     Targets: ForEachAEndEnd 
+VertexSource: InvokeA      Targets: ScopeBEndEnd 
+################New Process#######################
+ProcessName: SequenceEmpty
+VertexSource: SeqAStartStart   Targets: ReceiveA 
+VertexSource: SeqAEndEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: EmptyA 
+VertexSource: EmptyA      Targets: SeqAEndEnd 
+################New Process#######################
+ProcessName: SequenceInvoke
+VertexSource: SeqAStartStart   Targets: ReceiveA 
+VertexSource: SeqAEndEnd     Targets: 
+VertexSource: ReceiveA      Targets: Reply 
+VertexSource: Reply      Targets: InvokeA 
+VertexSource: InvokeA      Targets: SeqAEndEnd 
+################New Process#######################
+ProcessName: SequenceTrivial
+VertexSource: SeqAStartStart   Targets: ReceiveA 
+VertexSource: SeqAEndEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: SeqAEndEnd 
+################New Process#######################
+ProcessName: Switch
+VertexSource: StartStart   Targets: ReceiveA EndEnd 
+VertexSource: EndEnd     Targets: 
+VertexSource: IfAStartStart   Targets: SeqAStartStart IfAStartELSEIFBRANCHStartStart IfAStartELSEBRANCHStartStart IfAEndEnd 
+VertexSource: IfAEndEnd     Targets: ReplyC 
+VertexSource: SeqAStartStart   Targets: ReceiveB 
+VertexSource: SeqAEndEnd     Targets: 
+VertexSource: ReceiveB      Targets: ReplyA 
+VertexSource: ReplyA      Targets: SeqAEndEnd 
+VertexSource: IfAStartELSEIFBRANCHStartStart   Targets: SeqBStartStart 
+VertexSource: IfAStartELSEIFBRANCHEndEnd     Targets: 
+VertexSource: SeqBStartStart   Targets: ReceiveC 
+VertexSource: SeqBEndEnd     Targets: IfAStartELSEIFBRANCHEndEnd 
+VertexSource: ReceiveC      Targets: ReplyB 
+VertexSource: ReplyB      Targets: SeqBEndEnd 
+VertexSource: IfAStartELSEBRANCHStartStart   Targets: InvokeA 
+VertexSource: IfAStartELSEBRANCHEndEnd     Targets: 
+VertexSource: InvokeA      Targets: IfAStartELSEBRANCHEndEnd 
+VertexSource: ReceiveA      Targets: IfAStartStart 
+VertexSource: ReplyC      Targets: 
+################New Process#######################
+ProcessName: tutorial
+VertexSource: StartStart   Targets: ReceiveCustomerRequestforLoanAmt EndEnd 
+VertexSource: EndEnd     Targets: 
+VertexSource: ReceiveCustomerRequestforLoanAmt      Targets: InvokeLoanAssessor InvokeLoanApprover 
+VertexSource: AcceptMessageToCustomer      Targets: SeqAStartStart 
+VertexSource: InvokeLoanAssessor      Targets: InvokeLoanApprover AssignYesToAccept 
+VertexSource: InvokeLoanApprover      Targets: AcceptMessageToCustomer 
+VertexSource: AssignYesToAccept      Targets: AcceptMessageToCustomer 
+VertexSource: SeqAStartStart   Targets: ReceiveA 
+VertexSource: SeqAEndEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: FlowAStartStart 
+VertexSource: FlowAStartStart   Targets: ReceiveB FlowAEndEnd 
+VertexSource: FlowAEndEnd     Targets: ThrowA 
+VertexSource: ReceiveB      Targets: ReplyB 
+VertexSource: ReplyB      Targets: 
+VertexSource: ThrowA      Targets: SeqAEndEnd 
+################New Process#######################
+ProcessName: Wait
+VertexSource: SeqAStartStart   Targets: ReceiveA 
+VertexSource: SeqAEndEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: WaitA 
+VertexSource: WaitA      Targets: SeqAEndEnd 
+################New Process#######################
+ProcessName: While
+VertexSource: StartStart   Targets:  EndEnd 
+VertexSource: EndEnd     Targets: 
+VertexSource: InitializeVariables      Targets: CaclulateTotalStartStart 
+VertexSource: CaclulateTotalStartStart   Targets: StartStart 
+VertexSource: CaclulateTotalEndEnd     Targets: CreateResponseMessage 
+VertexSource: StartStart   Targets: IncrementTotal 
+VertexSource: EndEnd     Targets: CaclulateTotalEndEnd 
+VertexSource: IncrementTotal      Targets: IncrementDetailIndex 
+VertexSource: IncrementDetailIndex      Targets: EndEnd 
+VertexSource: CreateResponseMessage      Targets:  
+VertexSource:       Targets: InitializeVariables 
+VertexSource:       Targets: 
+################New Process#######################
+ProcessName: WhileActivity
+VertexSource: SeqAStartStart   Targets: ReceiveA 
+VertexSource: SeqAEndEnd     Targets: 
+VertexSource: ReceiveA      Targets: ReplyA 
+VertexSource: ReplyA      Targets: WhileAStartStart 
+VertexSource: WhileAStartStart   Targets: InvokeA 
+VertexSource: WhileAEndEnd     Targets: SeqAEndEnd 
+VertexSource: InvokeA      Targets: WhileAEndEnd 

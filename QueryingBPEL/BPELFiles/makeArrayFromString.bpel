@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(r) Designer Version 4.1.0 (http://www.active-endpoints.com)
+-->
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ext="http://www.activebpel.org/2006/09/bpel/extension/query_handling" xmlns:ns1="http://docs.active-endpoints.com/activebpel/sample/wsdl/echo_Array/2006/09/echo_Array.wsdl" xmlns:ns2="http://docs.active-endpoints.com/activebpel/sample/wsdl/makeArray/2006/09/makeArray.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ext:createTargetXPath="yes" name="makeArray" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/makeArrayFromString/2006/09/makeArrayFromString.bpel">
+   <bpel:extensions>
+      <bpel:extension mustUnderstand="yes" namespace="http://www.activebpel.org/2006/09/bpel/extension/query_handling"/>
+   </bpel:extensions>
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../../Resources/WSDL/makeArray.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/makeArray/2006/09/makeArray.wsdl"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="arrayCreation" name="ArrayCreationPLT" partnerLinkType="ns2:ArrayCreationPLT"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="ns2:arrayRequest" name="arrayRequest"/>
+      <bpel:variable name="indexCounter" type="xsd:integer"/>
+      <bpel:variable name="substring" type="xsd:string"/>
+      <bpel:variable name="incoming" type="xsd:string"/>
+      <bpel:variable messageType="ns2:stringArrayResponse" name="stringArrayResponse"/>
+      <!-- 0: Converting 0-leading number to an array of Integers, one per digit. -->
+      <!-- 1: Converting number to an array of ints.                              -->
+      <!-- 2: Converting string to an array of strings, on element per character. -->
+      <bpel:variable name="arrayMode" type="xsd:int"/>
+      <bpel:variable messageType="ns2:intArrayResponse" name="intArrayResponse"/>
+      <bpel:variable messageType="ns2:IntegerArrayResponse" name="IntegerArrayResponse"/>
+   </bpel:variables>
+   <bpel:sequence>
+      <!-- Accept any of the three types of conversion request messages this process supports. -->
+      <bpel:pick createInstance="yes">
+         <bpel:onMessage operation="makeIntegerArray" partnerLink="ArrayCreationPLT" portType="ns2:arrayCreation" variable="arrayRequest">
+            <bpel:empty/>
+         </bpel:onMessage>
+         <bpel:onMessage operation="makeIntArray" partnerLink="ArrayCreationPLT" portType="ns2:arrayCreation" variable="arrayRequest">
+            <bpel:empty/>
+         </bpel:onMessage>
+         <bpel:onMessage operation="makeStringArray" partnerLink="ArrayCreationPLT" portType="ns2:arrayCreation" variable="arrayRequest">
+            <bpel:empty/>
+         </bpel:onMessage>
+      </bpel:pick>
+      <!-- Set the index counter to 1 (arrays are 1, not 0-based).                             -->
+      <!-- Initialize the array data structure (complex parts must be initialized before use). -->
+      <!-- Transfer the incoming string for parsing.                                           -->
+      <bpel:assign name="Initialization">
+         <bpel:copy>
+            <bpel:from>'1'</bpel:from>
+            <bpel:to variable="indexCounter"/>
+         </bpel:copy>
+         <bpel:copy>
+            <bpel:from part="stringToUse" variable="arrayRequest"/>
+            <bpel:to variable="incoming"/>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:if>
+         <bpel:condition>starts-with($arrayRequest.stringToUse, '0')</bpel:condition>
+         <bpel:assign>
+            <bpel:copy>
+               <bpel:from>number('0')</bpel:from>
+               <bpel:to variable="arrayMode"/>
+            </bpel:copy>
+         </bpel:assign>
+         <bpel:elseif>
+            <bpel:condition>(number($arrayRequest.stringToUse) &gt; 0)</bpel:condition>
+            <bpel:assign>
+               <bpel:copy>
+                  <bpel:from>number('1')</bpel:from>
+                  <bpel:to variable="arrayMode"/>
+               </bpel:copy>
+            </bpel:assign>
+         </bpel:elseif>
+         <bpel:else>
+            <bpel:assign>
+               <bpel:copy>
+                  <bpel:from>number('2')</bpel:from>
+                  <bpel:to variable="arrayMode"/>
+               </bpel:copy>
+            </bpel:assign>
+         </bpel:else>
+      </bpel:if>
+      <bpel:while name="Loop_ForAllCharactersInString">
+         <bpel:condition>($indexCounter &lt;= string-length($incoming))</bpel:condition>
+         <bpel:flow>
+            <bpel:links>
+               <bpel:link name="L1"/>
+               <bpel:link name="Link171"/>
+            </bpel:links>
+            <bpel:assign name="GetNextCharacter">
+               <bpel:sources>
+                  <bpel:source linkName="L1"/>
+               </bpel:sources>
+               <bpel:copy>
+                  <bpel:from>substring($incoming, $indexCounter, 1)</bpel:from>
+                  <bpel:to variable="substring"/>
+               </bpel:copy>
+            </bpel:assign>
+            <bpel:assign name="IncrementTheCount">
+               <bpel:targets>
+                  <bpel:target linkName="Link171"/>
+               </bpel:targets>
+               <bpel:copy>
+                  <bpel:from>($indexCounter + 1)</bpel:from>
+                  <bpel:to variable="indexCounter"/>
+               </bpel:copy>
+            </bpel:assign>
+            <bpel:if>
+               <bpel:targets>
+                  <bpel:target linkName="L1"/>
+               </bpel:targets>
+               <bpel:sources>
+                  <bpel:source linkName="Link171"/>
+               </bpel:sources>
+               <bpel:condition>($arrayMode = 0)</bpel:condition>
+               <bpel:assign name="AddIntegerToArray">
+                  <bpel:copy>
+                     <bpel:from variable="substring"/>
+                     <bpel:to part="IntegerArray" variable="IntegerArrayResponse">
+                        <bpel:query>item[ $indexCounter ]</bpel:query>
+                     </bpel:to>
+                  </bpel:copy>
+               </bpel:assign>
+               <bpel:elseif>
+                  <bpel:condition>($arrayMode = 1)</bpel:condition>
+                  <bpel:assign name="AddintToArray">
+                     <bpel:copy>
+                        <bpel:from variable="substring"/>
+                        <bpel:to part="intArray" variable="intArrayResponse">
+                           <bpel:query>item[$indexCounter]</bpel:query>
+                        </bpel:to>
+                     </bpel:copy>
+                  </bpel:assign>
+               </bpel:elseif>
+               <bpel:else>
+                  <bpel:assign name="AddCharacterToArray">
+                     <bpel:copy>
+                        <bpel:from variable="substring"/>
+                        <bpel:to part="stringArray" variable="stringArrayResponse">
+                           <bpel:query>item[$indexCounter]</bpel:query>
+                        </bpel:to>
+                     </bpel:copy>
+                  </bpel:assign>
+               </bpel:else>
+            </bpel:if>
+         </bpel:flow>
+      </bpel:while>
+      <bpel:if>
+         <bpel:condition>($arrayMode = 0)</bpel:condition>
+         <bpel:reply name="ReturnTheIntegerArray" operation="makeIntegerArray" partnerLink="ArrayCreationPLT" portType="ns2:arrayCreation" variable="IntegerArrayResponse"/>
+         <bpel:elseif>
+            <bpel:condition>($arrayMode = 1)</bpel:condition>
+            <bpel:reply name="ReturnTheintArray" operation="makeIntArray" partnerLink="ArrayCreationPLT" portType="ns2:arrayCreation" variable="intArrayResponse"/>
+         </bpel:elseif>
+         <bpel:else>
+            <bpel:reply name="ReturnTheStringArray" operation="makeStringArray" partnerLink="ArrayCreationPLT" portType="ns2:arrayCreation" variable="stringArrayResponse"/>
+         </bpel:else>
+      </bpel:if>
+   </bpel:sequence>
+</bpel:process>

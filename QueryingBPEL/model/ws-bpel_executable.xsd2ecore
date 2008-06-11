@@ -1,0 +1,1267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd2ecore:XSD2EcoreMappingRoot xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsd2ecore="http://www.eclipse.org/emf/2002/XSD2Ecore" inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#/ http://www.w3.org/2001/xml.xsd#/"
+    outputs="executable.ecore#/ ../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#/"
+    topToBottom="true">
+  <nested inputs="bundleentry://507/cache/www.w3.org/2001/XMLSchema.xsd#//language;XSDSimpleTypeDefinition=28"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//Language"/>
+  <nested inputs="http://www.w3.org/2001/xml.xsd#//lang;XSDAttributeDeclaration/XSDSimpleTypeDefinition/XSDSimpleTypeDefinition"
+      outputs="../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#//LangTypeMember1">
+    <nested inputs="http://www.w3.org/2001/xml.xsd#//lang;XSDAttributeDeclaration/XSDSimpleTypeDefinition/XSDSimpleTypeDefinition/XSDEnumerationFacet"
+        outputs="../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#//LangTypeMember1/_"/>
+  </nested>
+  <nested inputs="http://www.w3.org/2001/xml.xsd#//lang;XSDAttributeDeclaration/XSDSimpleTypeDefinition"
+      outputs="../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#//LangType"/>
+  <nested inputs="bundleentry://507/cache/www.w3.org/2001/XMLSchema.xsd#//anyURI;XSDSimpleTypeDefinition=23"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//AnyURI"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tDocumentation;XSDComplexTypeDefinition=2"
+      outputs="executable.ecore#//TDocumentation">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tDocumentation;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TDocumentation/any"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tDocumentation;XSDComplexTypeDefinition=2/XSDAttributeUse=1"
+        outputs="executable.ecore#//TDocumentation/lang"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tDocumentation;XSDComplexTypeDefinition=2/XSDAttributeUse"
+        outputs="executable.ecore#//TDocumentation/source"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtensibleElements;XSDComplexTypeDefinition=1"
+      outputs="executable.ecore#//TExtensibleElements">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtensibleElements;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TExtensibleElements/documentation"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtensibleElements;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TExtensibleElements/any"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtensibleElements;XSDComplexTypeDefinition=1/XSDWildcard"
+        outputs="executable.ecore#//TExtensibleElements/anyAttribute"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExpression;XSDComplexTypeDefinition=68"
+      outputs="executable.ecore#//TExpression">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExpression;XSDComplexTypeDefinition=68/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TExpression/any"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExpression;XSDComplexTypeDefinition=68/XSDAttributeUse"
+        outputs="executable.ecore#//TExpression/expressionLanguage"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExpression;XSDComplexTypeDefinition=68/XSDWildcard"
+        outputs="executable.ecore#//TExpression/anyAttribute"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCondition;XSDComplexTypeDefinition=69"
+      outputs="executable.ecore#//TCondition"/>
+  <nested inputs="bundleentry://507/cache/www.w3.org/2001/XMLSchema.xsd#//NCName;XSDSimpleTypeDefinition=34"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//NCName"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTarget;XSDComplexTypeDefinition=25"
+      outputs="executable.ecore#//TTarget">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTarget;XSDComplexTypeDefinition=25/XSDAttributeUse"
+        outputs="executable.ecore#//TTarget/linkName"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTargets;XSDComplexTypeDefinition=24"
+      outputs="executable.ecore#//TTargets">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTargets;XSDComplexTypeDefinition=24/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TTargets/joinCondition"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTargets;XSDComplexTypeDefinition=24/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TTargets/target"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tSource;XSDComplexTypeDefinition=27"
+      outputs="executable.ecore#//TSource">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tSource;XSDComplexTypeDefinition=27/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TSource/transitionCondition"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tSource;XSDComplexTypeDefinition=27/XSDAttributeUse"
+        outputs="executable.ecore#//TSource/linkName"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tSources;XSDComplexTypeDefinition=26"
+      outputs="executable.ecore#//TSources">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tSources;XSDComplexTypeDefinition=26/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TSources/source"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tBoolean;XSDSimpleTypeDefinition=6"
+      outputs="executable.ecore#//TBoolean">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tBoolean;XSDSimpleTypeDefinition=6/XSDEnumerationFacet"
+        outputs="executable.ecore#//TBoolean/yes"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tBoolean;XSDSimpleTypeDefinition=6/XSDEnumerationFacet=1"
+        outputs="executable.ecore#//TBoolean/no"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tActivity;XSDComplexTypeDefinition=23"
+      outputs="executable.ecore#//TActivity">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tActivity;XSDComplexTypeDefinition=23/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TActivity/targets"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tActivity;XSDComplexTypeDefinition=23/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TActivity/sources"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tActivity;XSDComplexTypeDefinition=23/XSDAttributeUse"
+        outputs="executable.ecore#//TActivity/name"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tActivity;XSDComplexTypeDefinition=23/XSDAttributeUse=1"
+        outputs="executable.ecore#//TActivity/suppressJoinFailure"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tLiteral;XSDComplexTypeDefinition=31"
+      outputs="executable.ecore#//TLiteral">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tLiteral;XSDComplexTypeDefinition=31/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TLiteral/any"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tQuery;XSDComplexTypeDefinition=32"
+      outputs="executable.ecore#//TQuery">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tQuery;XSDComplexTypeDefinition=32/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TQuery/any"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tQuery;XSDComplexTypeDefinition=32/XSDAttributeUse"
+        outputs="executable.ecore#//TQuery/queryLanguage"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tQuery;XSDComplexTypeDefinition=32/XSDWildcard"
+        outputs="executable.ecore#//TQuery/anyAttribute"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tRoles;XSDSimpleTypeDefinition=3"
+      outputs="executable.ecore#//TRoles">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tRoles;XSDSimpleTypeDefinition=3/XSDEnumerationFacet"
+        outputs="executable.ecore#//TRoles/myRole"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tRoles;XSDSimpleTypeDefinition=3/XSDEnumerationFacet=1"
+        outputs="executable.ecore#//TRoles/partnerRole"/>
+  </nested>
+  <nested inputs="bundleentry://507/cache/www.w3.org/2001/XMLSchema.xsd#//QName;XSDSimpleTypeDefinition=24"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//QName"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//BPELVariableName;XSDSimpleTypeDefinition"
+      outputs="executable.ecore#//BPELVariableName"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30"
+      outputs="executable.ecore#//TFrom">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TFrom/documentation"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TFrom/any"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDParticle/XSDModelGroup/XSDParticle=2/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TFrom/literal"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDParticle/XSDModelGroup/XSDParticle=2/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TFrom/query"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDAttributeUse=5"
+        outputs="executable.ecore#//TFrom/endpointReference"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDAttributeUse"
+        outputs="executable.ecore#//TFrom/expressionLanguage"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDAttributeUse=2"
+        outputs="executable.ecore#//TFrom/part"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDAttributeUse=4"
+        outputs="executable.ecore#//TFrom/partnerLink"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDAttributeUse=3"
+        outputs="executable.ecore#//TFrom/property"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDAttributeUse=1"
+        outputs="executable.ecore#//TFrom/variable"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFrom;XSDComplexTypeDefinition=30/XSDWildcard"
+        outputs="executable.ecore#//TFrom/anyAttribute"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTo;XSDComplexTypeDefinition=33"
+      outputs="executable.ecore#//TTo">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTo;XSDComplexTypeDefinition=33/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TTo/documentation"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTo;XSDComplexTypeDefinition=33/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TTo/any"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTo;XSDComplexTypeDefinition=33/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="executable.ecore#//TTo/query"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTo;XSDComplexTypeDefinition=33/XSDAttributeUse"
+        outputs="executable.ecore#//TTo/expressionLanguage"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTo;XSDComplexTypeDefinition=33/XSDAttributeUse=2"
+        outputs="executable.ecore#//TTo/part"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTo;XSDComplexTypeDefinition=33/XSDAttributeUse=4"
+        outputs="executable.ecore#//TTo/partnerLink"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTo;XSDComplexTypeDefinition=33/XSDAttributeUse=3"
+        outputs="executable.ecore#//TTo/property"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTo;XSDComplexTypeDefinition=33/XSDAttributeUse=1"
+        outputs="executable.ecore#//TTo/variable"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tTo;XSDComplexTypeDefinition=33/XSDWildcard"
+        outputs="executable.ecore#//TTo/anyAttribute"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCopy;XSDComplexTypeDefinition=29"
+      outputs="executable.ecore#//TCopy">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCopy;XSDComplexTypeDefinition=29/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TCopy/from"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCopy;XSDComplexTypeDefinition=29/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TCopy/to"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCopy;XSDComplexTypeDefinition=29/XSDAttributeUse=1"
+        outputs="executable.ecore#//TCopy/ignoreMissingFromData"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCopy;XSDComplexTypeDefinition=29/XSDAttributeUse"
+        outputs="executable.ecore#//TCopy/keepSrcElementName"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtensionAssignOperation;XSDComplexTypeDefinition=34"
+      outputs="executable.ecore#//TExtensionAssignOperation"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tAssign;XSDComplexTypeDefinition=28"
+      outputs="executable.ecore#//TAssign">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tAssign;XSDComplexTypeDefinition=28/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TAssign/group"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tAssign;XSDComplexTypeDefinition=28/XSDParticle/XSDModelGroup/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TAssign/copy"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tAssign;XSDComplexTypeDefinition=28/XSDParticle/XSDModelGroup/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TAssign/extensionAssignOperation"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tAssign;XSDComplexTypeDefinition=28/XSDAttributeUse"
+        outputs="executable.ecore#//TAssign/validate"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//assign;XSDElementDeclaration=27"
+      outputs="executable.ecore#//DocumentRoot/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tBranches;XSDComplexTypeDefinition=45"
+      outputs="executable.ecore#//TBranches">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tBranches;XSDComplexTypeDefinition=45/XSDAttributeUse"
+        outputs="executable.ecore#//TBranches/successfulBranchesOnly"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//branches;XSDElementDeclaration=46"
+      outputs="executable.ecore#//DocumentRoot/branches"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TActivityContainer/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCompensate;XSDComplexTypeDefinition=35"
+      outputs="executable.ecore#//TCompensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TActivityContainer/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCompensateScope;XSDComplexTypeDefinition=36"
+      outputs="executable.ecore#//TCompensateScope">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCompensateScope;XSDComplexTypeDefinition=36/XSDAttributeUse"
+        outputs="executable.ecore#//TCompensateScope/target"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TActivityContainer/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tEmpty;XSDComplexTypeDefinition=37"
+      outputs="executable.ecore#//TEmpty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TActivityContainer/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExit;XSDComplexTypeDefinition=38"
+      outputs="executable.ecore#//TExit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TActivityContainer/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtensionActivity;XSDComplexTypeDefinition=39"
+      outputs="executable.ecore#//TExtensionActivity">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtensionActivity;XSDComplexTypeDefinition=39/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TExtensionActivity/any"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TActivityContainer/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tLink;XSDComplexTypeDefinition=42"
+      outputs="executable.ecore#//TLink">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tLink;XSDComplexTypeDefinition=42/XSDAttributeUse"
+        outputs="executable.ecore#//TLink/name"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tLinks;XSDComplexTypeDefinition=41"
+      outputs="executable.ecore#//TLinks">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tLinks;XSDComplexTypeDefinition=41/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TLinks/link"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TFlow/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TFlow/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TFlow/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TFlow/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TFlow/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TFlow/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TFlow/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCompletionCondition;XSDComplexTypeDefinition=44"
+      outputs="executable.ecore#//TCompletionCondition">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCompletionCondition;XSDComplexTypeDefinition=44/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TCompletionCondition/branches"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPartnerLink;XSDComplexTypeDefinition=7"
+      outputs="executable.ecore#//TPartnerLink">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPartnerLink;XSDComplexTypeDefinition=7/XSDAttributeUse=4"
+        outputs="executable.ecore#//TPartnerLink/initializePartnerRole"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPartnerLink;XSDComplexTypeDefinition=7/XSDAttributeUse=2"
+        outputs="executable.ecore#//TPartnerLink/myRole"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPartnerLink;XSDComplexTypeDefinition=7/XSDAttributeUse"
+        outputs="executable.ecore#//TPartnerLink/name"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPartnerLink;XSDComplexTypeDefinition=7/XSDAttributeUse=1"
+        outputs="executable.ecore#//TPartnerLink/partnerLinkType"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPartnerLink;XSDComplexTypeDefinition=7/XSDAttributeUse=3"
+        outputs="executable.ecore#//TPartnerLink/partnerRole"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPartnerLinks;XSDComplexTypeDefinition=6"
+      outputs="executable.ecore#//TPartnerLinks">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPartnerLinks;XSDComplexTypeDefinition=6/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TPartnerLinks/partnerLink"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tMessageExchange;XSDComplexTypeDefinition=9"
+      outputs="executable.ecore#//TMessageExchange">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tMessageExchange;XSDComplexTypeDefinition=9/XSDAttributeUse"
+        outputs="executable.ecore#//TMessageExchange/name"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tMessageExchanges;XSDComplexTypeDefinition=8"
+      outputs="executable.ecore#//TMessageExchanges">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tMessageExchanges;XSDComplexTypeDefinition=8/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TMessageExchanges/messageExchange"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tVariable;XSDComplexTypeDefinition=11"
+      outputs="executable.ecore#//TVariable">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tVariable;XSDComplexTypeDefinition=11/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TVariable/from"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tVariable;XSDComplexTypeDefinition=11/XSDAttributeUse=3"
+        outputs="executable.ecore#//TVariable/element"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tVariable;XSDComplexTypeDefinition=11/XSDAttributeUse=1"
+        outputs="executable.ecore#//TVariable/messageType"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tVariable;XSDComplexTypeDefinition=11/XSDAttributeUse"
+        outputs="executable.ecore#//TVariable/name"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tVariable;XSDComplexTypeDefinition=11/XSDAttributeUse=2"
+        outputs="executable.ecore#//TVariable/type"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tVariables;XSDComplexTypeDefinition=10"
+      outputs="executable.ecore#//TVariables">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tVariables;XSDComplexTypeDefinition=10/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TVariables/variable"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//QNames;XSDSimpleTypeDefinition=1/XSDSimpleTypeDefinition"
+      outputs="executable.ecore#//QNamesBase"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//QNames;XSDSimpleTypeDefinition=1"
+      outputs="executable.ecore#//QNames"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelationSet;XSDComplexTypeDefinition=13"
+      outputs="executable.ecore#//TCorrelationSet">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelationSet;XSDComplexTypeDefinition=13/XSDAttributeUse=1"
+        outputs="executable.ecore#//TCorrelationSet/name"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelationSet;XSDComplexTypeDefinition=13/XSDAttributeUse"
+        outputs="executable.ecore#//TCorrelationSet/properties"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelationSets;XSDComplexTypeDefinition=12"
+      outputs="executable.ecore#//TCorrelationSets">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelationSets;XSDComplexTypeDefinition=12/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TCorrelationSets/correlationSet"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFaultHandlers;XSDComplexTypeDefinition=14"
+      outputs="executable.ecore#//TFaultHandlers">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFaultHandlers;XSDComplexTypeDefinition=14/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TFaultHandlers/catch"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFaultHandlers;XSDComplexTypeDefinition=14/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TFaultHandlers/catchAll"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInitiate;XSDSimpleTypeDefinition=2"
+      outputs="executable.ecore#//TInitiate">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInitiate;XSDSimpleTypeDefinition=2/XSDEnumerationFacet"
+        outputs="executable.ecore#//TInitiate/yes"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInitiate;XSDSimpleTypeDefinition=2/XSDEnumerationFacet=1"
+        outputs="executable.ecore#//TInitiate/join"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInitiate;XSDSimpleTypeDefinition=2/XSDEnumerationFacet=2"
+        outputs="executable.ecore#//TInitiate/no"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelation;XSDComplexTypeDefinition=21"
+      outputs="executable.ecore#//TCorrelation">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelation;XSDComplexTypeDefinition=21/XSDAttributeUse=1"
+        outputs="executable.ecore#//TCorrelation/initiate"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelation;XSDComplexTypeDefinition=21/XSDAttributeUse"
+        outputs="executable.ecore#//TCorrelation/set"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelations;XSDComplexTypeDefinition=20"
+      outputs="executable.ecore#//TCorrelations">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelations;XSDComplexTypeDefinition=20/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TCorrelations/correlation"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFromPart;XSDComplexTypeDefinition=52"
+      outputs="executable.ecore#//TFromPart">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFromPart;XSDComplexTypeDefinition=52/XSDAttributeUse"
+        outputs="executable.ecore#//TFromPart/part"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFromPart;XSDComplexTypeDefinition=52/XSDAttributeUse=1"
+        outputs="executable.ecore#//TFromPart/toVariable"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFromParts;XSDComplexTypeDefinition=51"
+      outputs="executable.ecore#//TFromParts">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFromParts;XSDComplexTypeDefinition=51/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TFromParts/fromPart"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnMsgCommon;XSDComplexTypeDefinition=19"
+      outputs="executable.ecore#//TOnMsgCommon">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnMsgCommon;XSDComplexTypeDefinition=19/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TOnMsgCommon/correlations"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnMsgCommon;XSDComplexTypeDefinition=19/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TOnMsgCommon/fromParts"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnMsgCommon;XSDComplexTypeDefinition=19/XSDAttributeUse=3"
+        outputs="executable.ecore#//TOnMsgCommon/messageExchange"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnMsgCommon;XSDComplexTypeDefinition=19/XSDAttributeUse=2"
+        outputs="executable.ecore#//TOnMsgCommon/operation"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnMsgCommon;XSDComplexTypeDefinition=19/XSDAttributeUse"
+        outputs="executable.ecore#//TOnMsgCommon/partnerLink"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnMsgCommon;XSDComplexTypeDefinition=19/XSDAttributeUse=1"
+        outputs="executable.ecore#//TOnMsgCommon/portType"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnMsgCommon;XSDComplexTypeDefinition=19/XSDAttributeUse=4"
+        outputs="executable.ecore#//TOnMsgCommon/variable"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnEvent;XSDComplexTypeDefinition=18"
+      outputs="executable.ecore#//TOnEvent">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnEvent;XSDComplexTypeDefinition=18/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TOnEvent/scope"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnEvent;XSDComplexTypeDefinition=18/XSDAttributeUse=1"
+        outputs="executable.ecore#//TOnEvent/element"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnEvent;XSDComplexTypeDefinition=18/XSDAttributeUse"
+        outputs="executable.ecore#//TOnEvent/messageType"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tDuration-expr;XSDComplexTypeDefinition=71"
+      outputs="executable.ecore#//TDurationExpr"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//forOrUntilGroup;XSDModelGroupDefinition=1/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TOnAlarmEvent/for"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tDeadline-expr;XSDComplexTypeDefinition=72"
+      outputs="executable.ecore#//TDeadlineExpr"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//forOrUntilGroup;XSDModelGroupDefinition=1/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TOnAlarmEvent/until"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnAlarmEvent;XSDComplexTypeDefinition=22"
+      outputs="executable.ecore#//TOnAlarmEvent">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnAlarmEvent;XSDComplexTypeDefinition=22/XSDParticle/XSDModelGroup/XSDParticle/XSDModelGroup/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TOnAlarmEvent/repeatEvery"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnAlarmEvent;XSDComplexTypeDefinition=22/XSDParticle/XSDModelGroup/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TOnAlarmEvent/repeatEvery1"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnAlarmEvent;XSDComplexTypeDefinition=22/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TOnAlarmEvent/scope"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tEventHandlers;XSDComplexTypeDefinition=17"
+      outputs="executable.ecore#//TEventHandlers">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tEventHandlers;XSDComplexTypeDefinition=17/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TEventHandlers/onEvent"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tEventHandlers;XSDComplexTypeDefinition=17/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TEventHandlers/onAlarm"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TScope/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TScope/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TScope/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TScope/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TScope/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TScope/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TScope/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TScope/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tBoolean-expr;XSDComplexTypeDefinition=70"
+      outputs="executable.ecore#//TBooleanExpr"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TIf/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TIf/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TIf/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TIf/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TIf/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TIf/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TIf/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TIf/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TIf/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPattern;XSDSimpleTypeDefinition=4"
+      outputs="executable.ecore#//TPattern">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPattern;XSDSimpleTypeDefinition=4/XSDEnumerationFacet"
+        outputs="executable.ecore#//TPattern/request"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPattern;XSDSimpleTypeDefinition=4/XSDEnumerationFacet=1"
+        outputs="executable.ecore#//TPattern/response"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPattern;XSDSimpleTypeDefinition=4/XSDEnumerationFacet=2"
+        outputs="executable.ecore#//TPattern/requestResponse"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelationWithPattern;XSDComplexTypeDefinition=50"
+      outputs="executable.ecore#//TCorrelationWithPattern">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelationWithPattern;XSDComplexTypeDefinition=50/XSDAttributeUse"
+        outputs="executable.ecore#//TCorrelationWithPattern/pattern"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelationsWithPattern;XSDComplexTypeDefinition=49"
+      outputs="executable.ecore#//TCorrelationsWithPattern">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCorrelationsWithPattern;XSDComplexTypeDefinition=49/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TCorrelationsWithPattern/correlation"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tToPart;XSDComplexTypeDefinition=54"
+      outputs="executable.ecore#//TToPart">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tToPart;XSDComplexTypeDefinition=54/XSDAttributeUse=1"
+        outputs="executable.ecore#//TToPart/fromVariable"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tToPart;XSDComplexTypeDefinition=54/XSDAttributeUse"
+        outputs="executable.ecore#//TToPart/part"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tToParts;XSDComplexTypeDefinition=53"
+      outputs="executable.ecore#//TToParts">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tToParts;XSDComplexTypeDefinition=53/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TToParts/toPart"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48"
+      outputs="executable.ecore#//TInvoke">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TInvoke/correlations"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TInvoke/catch"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="executable.ecore#//TInvoke/catchAll"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="executable.ecore#//TInvoke/compensationHandler"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDParticle/XSDModelGroup/XSDParticle=4"
+        outputs="executable.ecore#//TInvoke/toParts"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDParticle/XSDModelGroup/XSDParticle=5"
+        outputs="executable.ecore#//TInvoke/fromParts"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDAttributeUse=3"
+        outputs="executable.ecore#//TInvoke/inputVariable"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDAttributeUse=2"
+        outputs="executable.ecore#//TInvoke/operation"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDAttributeUse=4"
+        outputs="executable.ecore#//TInvoke/outputVariable"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDAttributeUse"
+        outputs="executable.ecore#//TInvoke/partnerLink"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tInvoke;XSDComplexTypeDefinition=48/XSDAttributeUse=1"
+        outputs="executable.ecore#//TInvoke/portType"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TIf/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TOnMessage/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TOnMessage/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TOnMessage/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TOnMessage/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TOnMessage/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TOnMessage/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TOnMessage/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TOnMessage/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TOnMessage/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TOnMessage/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TOnMessage/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReceive;XSDComplexTypeDefinition=58"
+      outputs="executable.ecore#//TReceive">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReceive;XSDComplexTypeDefinition=58/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TReceive/correlations"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReceive;XSDComplexTypeDefinition=58/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TReceive/fromParts"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReceive;XSDComplexTypeDefinition=58/XSDAttributeUse=4"
+        outputs="executable.ecore#//TReceive/createInstance"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReceive;XSDComplexTypeDefinition=58/XSDAttributeUse=5"
+        outputs="executable.ecore#//TReceive/messageExchange"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReceive;XSDComplexTypeDefinition=58/XSDAttributeUse=2"
+        outputs="executable.ecore#//TReceive/operation"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReceive;XSDComplexTypeDefinition=58/XSDAttributeUse"
+        outputs="executable.ecore#//TReceive/partnerLink"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReceive;XSDComplexTypeDefinition=58/XSDAttributeUse=1"
+        outputs="executable.ecore#//TReceive/portType"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReceive;XSDComplexTypeDefinition=58/XSDAttributeUse=3"
+        outputs="executable.ecore#//TReceive/variable"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TOnMessage/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TRepeatUntil/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TRepeatUntil/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TRepeatUntil/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TRepeatUntil/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TRepeatUntil/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TRepeatUntil/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TRepeatUntil/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TRepeatUntil/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TRepeatUntil/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TRepeatUntil/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TRepeatUntil/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TRepeatUntil/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TRepeatUntil/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReply;XSDComplexTypeDefinition=60"
+      outputs="executable.ecore#//TReply">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReply;XSDComplexTypeDefinition=60/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TReply/correlations"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReply;XSDComplexTypeDefinition=60/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TReply/toParts"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReply;XSDComplexTypeDefinition=60/XSDAttributeUse=4"
+        outputs="executable.ecore#//TReply/faultName"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReply;XSDComplexTypeDefinition=60/XSDAttributeUse=5"
+        outputs="executable.ecore#//TReply/messageExchange"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReply;XSDComplexTypeDefinition=60/XSDAttributeUse=2"
+        outputs="executable.ecore#//TReply/operation"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReply;XSDComplexTypeDefinition=60/XSDAttributeUse"
+        outputs="executable.ecore#//TReply/partnerLink"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReply;XSDComplexTypeDefinition=60/XSDAttributeUse=1"
+        outputs="executable.ecore#//TReply/portType"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tReply;XSDComplexTypeDefinition=60/XSDAttributeUse=3"
+        outputs="executable.ecore#//TReply/variable"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TRepeatUntil/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tRethrow;XSDComplexTypeDefinition=61"
+      outputs="executable.ecore#//TRethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TRepeatUntil/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TRepeatUntil/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TSequence/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TSequence/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TSequence/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TSequence/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TSequence/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TSequence/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TSequence/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TSequence/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TSequence/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TSequence/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TSequence/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TSequence/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TSequence/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TSequence/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TSequence/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TSequence/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TSequence/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tThrow;XSDComplexTypeDefinition=64"
+      outputs="executable.ecore#//TThrow">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tThrow;XSDComplexTypeDefinition=64/XSDAttributeUse"
+        outputs="executable.ecore#//TThrow/faultName"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tThrow;XSDComplexTypeDefinition=64/XSDAttributeUse=1"
+        outputs="executable.ecore#//TThrow/faultVariable"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TSequence/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//BPELVariableNames;XSDSimpleTypeDefinition=5/XSDSimpleTypeDefinition"
+      outputs="executable.ecore#//BPELVariableNamesBase"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//BPELVariableNames;XSDSimpleTypeDefinition=5"
+      outputs="executable.ecore#//BPELVariableNames"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tValidate;XSDComplexTypeDefinition=65"
+      outputs="executable.ecore#//TValidate">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tValidate;XSDComplexTypeDefinition=65/XSDAttributeUse"
+        outputs="executable.ecore#//TValidate/variables"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TSequence/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tWait;XSDComplexTypeDefinition=66"
+      outputs="executable.ecore#//TWait">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tWait;XSDComplexTypeDefinition=66/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TWait/for"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tWait;XSDComplexTypeDefinition=66/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TWait/until"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TSequence/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TWhile/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TWhile/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TWhile/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TWhile/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TWhile/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TWhile/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TWhile/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TWhile/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TWhile/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TWhile/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TWhile/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TWhile/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TWhile/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TWhile/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TWhile/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TWhile/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TWhile/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TWhile/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TWhile/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TWhile/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TWhile/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tWhile;XSDComplexTypeDefinition=67"
+      outputs="executable.ecore#//TWhile">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tWhile;XSDComplexTypeDefinition=67/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TWhile/condition"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TSequence/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tSequence;XSDComplexTypeDefinition=63"
+      outputs="executable.ecore#//TSequence">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tSequence;XSDComplexTypeDefinition=63/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TSequence/activity"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TRepeatUntil/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TRepeatUntil/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TRepeatUntil/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TRepeatUntil/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TRepeatUntil/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tRepeatUntil;XSDComplexTypeDefinition=59"
+      outputs="executable.ecore#//TRepeatUntil">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tRepeatUntil;XSDComplexTypeDefinition=59/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TRepeatUntil/condition"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TOnMessage/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TOnMessage/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TOnMessage/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TOnMessage/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TOnMessage/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TOnMessage/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TOnMessage/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TOnMessage/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TOnMessage/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnMessage;XSDComplexTypeDefinition=56"
+      outputs="executable.ecore#//TOnMessage"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//forOrUntilGroup;XSDModelGroupDefinition=1/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TOnAlarmPick/for"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//forOrUntilGroup;XSDModelGroupDefinition=1/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TOnAlarmPick/until"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TOnAlarmPick/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TOnAlarmPick/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TOnAlarmPick/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TOnAlarmPick/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TOnAlarmPick/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TOnAlarmPick/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TOnAlarmPick/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TOnAlarmPick/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TOnAlarmPick/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TOnAlarmPick/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TOnAlarmPick/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TOnAlarmPick/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TOnAlarmPick/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TOnAlarmPick/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TOnAlarmPick/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TOnAlarmPick/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TOnAlarmPick/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TOnAlarmPick/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TOnAlarmPick/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TOnAlarmPick/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TOnAlarmPick/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tOnAlarmPick;XSDComplexTypeDefinition=57"
+      outputs="executable.ecore#//TOnAlarmPick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPick;XSDComplexTypeDefinition=55"
+      outputs="executable.ecore#//TPick">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPick;XSDComplexTypeDefinition=55/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TPick/onMessage"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPick;XSDComplexTypeDefinition=55/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TPick/onAlarm"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tPick;XSDComplexTypeDefinition=55/XSDAttributeUse"
+        outputs="executable.ecore#//TPick/createInstance"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TIf/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TIf/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TIf/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TIf/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TIf/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TIf/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TIf/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TIf/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TIf/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TIf/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TIf/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TElseif/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TElseif/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TElseif/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TElseif/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TElseif/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TElseif/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TElseif/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TElseif/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TElseif/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TElseif/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TElseif/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TElseif/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TElseif/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TElseif/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TElseif/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TElseif/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TElseif/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TElseif/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TElseif/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TElseif/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TElseif/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tElseif;XSDComplexTypeDefinition=47"
+      outputs="executable.ecore#//TElseif">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tElseif;XSDComplexTypeDefinition=47/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TElseif/condition"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tIf;XSDComplexTypeDefinition=46"
+      outputs="executable.ecore#//TIf">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tIf;XSDComplexTypeDefinition=46/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TIf/condition"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tIf;XSDComplexTypeDefinition=46/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="executable.ecore#//TIf/elseif"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tIf;XSDComplexTypeDefinition=46/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="executable.ecore#//TIf/else"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TScope/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TScope/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TScope/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TScope/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TScope/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TScope/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TScope/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TScope/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TScope/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TScope/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TScope/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TScope/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TScope/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62"
+      outputs="executable.ecore#//TScope">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TScope/partnerLinks"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TScope/messageExchanges"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="executable.ecore#//TScope/variables"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="executable.ecore#//TScope/correlationSets"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62/XSDParticle/XSDModelGroup/XSDParticle=4"
+        outputs="executable.ecore#//TScope/faultHandlers"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62/XSDParticle/XSDModelGroup/XSDParticle=5"
+        outputs="executable.ecore#//TScope/compensationHandler"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62/XSDParticle/XSDModelGroup/XSDParticle=6"
+        outputs="executable.ecore#//TScope/terminationHandler"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62/XSDParticle/XSDModelGroup/XSDParticle=7"
+        outputs="executable.ecore#//TScope/eventHandlers"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62/XSDAttributeUse=1"
+        outputs="executable.ecore#//TScope/exitOnStandardFault"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tScope;XSDComplexTypeDefinition=62/XSDAttributeUse"
+        outputs="executable.ecore#//TScope/isolated"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tForEach;XSDComplexTypeDefinition=43"
+      outputs="executable.ecore#//TForEach">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tForEach;XSDComplexTypeDefinition=43/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TForEach/startCounterValue"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tForEach;XSDComplexTypeDefinition=43/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TForEach/finalCounterValue"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tForEach;XSDComplexTypeDefinition=43/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="executable.ecore#//TForEach/completionCondition"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tForEach;XSDComplexTypeDefinition=43/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="executable.ecore#//TForEach/scope"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tForEach;XSDComplexTypeDefinition=43/XSDAttributeUse"
+        outputs="executable.ecore#//TForEach/counterName"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tForEach;XSDComplexTypeDefinition=43/XSDAttributeUse=1"
+        outputs="executable.ecore#//TForEach/parallel"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TFlow/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TFlow/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TFlow/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TFlow/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TFlow/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TFlow/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TFlow/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TFlow/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TFlow/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TFlow/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TFlow/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TFlow/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TFlow/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TFlow/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFlow;XSDComplexTypeDefinition=40"
+      outputs="executable.ecore#//TFlow">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFlow;XSDComplexTypeDefinition=40/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TFlow/links"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tFlow;XSDComplexTypeDefinition=40/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TFlow/activity"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TActivityContainer/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TActivityContainer/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TActivityContainer/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TActivityContainer/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TActivityContainer/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TActivityContainer/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TActivityContainer/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TActivityContainer/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TActivityContainer/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TActivityContainer/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TActivityContainer/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TActivityContainer/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TActivityContainer/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TActivityContainer/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TActivityContainer/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tActivityContainer;XSDComplexTypeDefinition=16"
+      outputs="executable.ecore#//TActivityContainer"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCatch;XSDComplexTypeDefinition=15"
+      outputs="executable.ecore#//TCatch">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCatch;XSDComplexTypeDefinition=15/XSDAttributeUse=3"
+        outputs="executable.ecore#//TCatch/faultElement"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCatch;XSDComplexTypeDefinition=15/XSDAttributeUse=2"
+        outputs="executable.ecore#//TCatch/faultMessageType"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCatch;XSDComplexTypeDefinition=15/XSDAttributeUse"
+        outputs="executable.ecore#//TCatch/faultName"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tCatch;XSDComplexTypeDefinition=15/XSDAttributeUse=1"
+        outputs="executable.ecore#//TCatch/faultVariable"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//catch;XSDElementDeclaration=14"
+      outputs="executable.ecore#//DocumentRoot/catch"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//catchAll;XSDElementDeclaration=15"
+      outputs="executable.ecore#//DocumentRoot/catchAll"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//compensate;XSDElementDeclaration=34"
+      outputs="executable.ecore#//DocumentRoot/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//compensateScope;XSDElementDeclaration=35"
+      outputs="executable.ecore#//DocumentRoot/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//compensationHandler;XSDElementDeclaration=62"
+      outputs="executable.ecore#//DocumentRoot/compensationHandler"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//completionCondition;XSDElementDeclaration=45"
+      outputs="executable.ecore#//DocumentRoot/completionCondition"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//condition;XSDElementDeclaration=69"
+      outputs="executable.ecore#//DocumentRoot/condition"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//copy;XSDElementDeclaration=28"
+      outputs="executable.ecore#//DocumentRoot/copy"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//correlationSet;XSDElementDeclaration=12"
+      outputs="executable.ecore#//DocumentRoot/correlationSet"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//correlationSets;XSDElementDeclaration=11"
+      outputs="executable.ecore#//DocumentRoot/correlationSets"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//documentation;XSDElementDeclaration=1"
+      outputs="executable.ecore#//DocumentRoot/documentation"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//else;XSDElementDeclaration=49"
+      outputs="executable.ecore#//DocumentRoot/else"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//elseif;XSDElementDeclaration=48"
+      outputs="executable.ecore#//DocumentRoot/elseif"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//empty;XSDElementDeclaration=36"
+      outputs="executable.ecore#//DocumentRoot/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//eventHandlers;XSDElementDeclaration=16"
+      outputs="executable.ecore#//DocumentRoot/eventHandlers"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//exit;XSDElementDeclaration=37"
+      outputs="executable.ecore#//DocumentRoot/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtension;XSDComplexTypeDefinition=4"
+      outputs="executable.ecore#//TExtension">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtension;XSDComplexTypeDefinition=4/XSDAttributeUse=1"
+        outputs="executable.ecore#//TExtension/mustUnderstand"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtension;XSDComplexTypeDefinition=4/XSDAttributeUse"
+        outputs="executable.ecore#//TExtension/namespace"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//extension;XSDElementDeclaration=3"
+      outputs="executable.ecore#//DocumentRoot/extension"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//extensionActivity;XSDElementDeclaration=38"
+      outputs="executable.ecore#//DocumentRoot/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//extensionAssignOperation;XSDElementDeclaration=33"
+      outputs="executable.ecore#//DocumentRoot/extensionAssignOperation"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtensions;XSDComplexTypeDefinition=3"
+      outputs="executable.ecore#//TExtensions">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tExtensions;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TExtensions/extension"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//extensions;XSDElementDeclaration=2"
+      outputs="executable.ecore#//DocumentRoot/extensions"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//faultHandlers;XSDElementDeclaration=13"
+      outputs="executable.ecore#//DocumentRoot/faultHandlers"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//finalCounterValue;XSDElementDeclaration=44"
+      outputs="executable.ecore#//DocumentRoot/finalCounterValue"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//flow;XSDElementDeclaration=39"
+      outputs="executable.ecore#//DocumentRoot/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//for;XSDElementDeclaration=18"
+      outputs="executable.ecore#//DocumentRoot/for"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//forEach;XSDElementDeclaration=42"
+      outputs="executable.ecore#//DocumentRoot/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//from;XSDElementDeclaration=29"
+      outputs="executable.ecore#//DocumentRoot/from"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//fromPart;XSDElementDeclaration=52"
+      outputs="executable.ecore#//DocumentRoot/fromPart"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//fromParts;XSDElementDeclaration=51"
+      outputs="executable.ecore#//DocumentRoot/fromParts"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//if;XSDElementDeclaration=47"
+      outputs="executable.ecore#//DocumentRoot/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tImport;XSDComplexTypeDefinition=5"
+      outputs="executable.ecore#//TImport">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tImport;XSDComplexTypeDefinition=5/XSDAttributeUse=2"
+        outputs="executable.ecore#//TImport/importType"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tImport;XSDComplexTypeDefinition=5/XSDAttributeUse=1"
+        outputs="executable.ecore#//TImport/location"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tImport;XSDComplexTypeDefinition=5/XSDAttributeUse"
+        outputs="executable.ecore#//TImport/namespace"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//import;XSDElementDeclaration=4"
+      outputs="executable.ecore#//DocumentRoot/import"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//invoke;XSDElementDeclaration=50"
+      outputs="executable.ecore#//DocumentRoot/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//joinCondition;XSDElementDeclaration=22"
+      outputs="executable.ecore#//DocumentRoot/joinCondition"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//link;XSDElementDeclaration=41"
+      outputs="executable.ecore#//DocumentRoot/link"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//links;XSDElementDeclaration=40"
+      outputs="executable.ecore#//DocumentRoot/links"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//literal;XSDElementDeclaration=30"
+      outputs="executable.ecore#//DocumentRoot/literal"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//messageExchange;XSDElementDeclaration=8"
+      outputs="executable.ecore#//DocumentRoot/messageExchange"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//messageExchanges;XSDElementDeclaration=7"
+      outputs="executable.ecore#//DocumentRoot/messageExchanges"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//onEvent;XSDElementDeclaration=17"
+      outputs="executable.ecore#//DocumentRoot/onEvent"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//onMessage;XSDElementDeclaration=56"
+      outputs="executable.ecore#//DocumentRoot/onMessage"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//partnerLink;XSDElementDeclaration=6"
+      outputs="executable.ecore#//DocumentRoot/partnerLink"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//partnerLinks;XSDElementDeclaration=5"
+      outputs="executable.ecore#//DocumentRoot/partnerLinks"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//pick;XSDElementDeclaration=55"
+      outputs="executable.ecore#//DocumentRoot/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle"
+      outputs="executable.ecore#//TProcess/assign"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=1"
+      outputs="executable.ecore#//TProcess/compensate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=2"
+      outputs="executable.ecore#//TProcess/compensateScope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=3"
+      outputs="executable.ecore#//TProcess/empty"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=4"
+      outputs="executable.ecore#//TProcess/exit"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=5"
+      outputs="executable.ecore#//TProcess/extensionActivity"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=6"
+      outputs="executable.ecore#//TProcess/flow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=7"
+      outputs="executable.ecore#//TProcess/forEach"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=8"
+      outputs="executable.ecore#//TProcess/if"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=9"
+      outputs="executable.ecore#//TProcess/invoke"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=10"
+      outputs="executable.ecore#//TProcess/pick"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=11"
+      outputs="executable.ecore#//TProcess/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=12"
+      outputs="executable.ecore#//TProcess/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=13"
+      outputs="executable.ecore#//TProcess/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=14"
+      outputs="executable.ecore#//TProcess/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=15"
+      outputs="executable.ecore#//TProcess/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=16"
+      outputs="executable.ecore#//TProcess/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=17"
+      outputs="executable.ecore#//TProcess/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=18"
+      outputs="executable.ecore#//TProcess/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=19"
+      outputs="executable.ecore#//TProcess/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//activity;XSDModelGroupDefinition/XSDModelGroup/XSDParticle=20"
+      outputs="executable.ecore#//TProcess/while"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition"
+      outputs="executable.ecore#//TProcess">
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="executable.ecore#//TProcess/extensions"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="executable.ecore#//TProcess/import"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="executable.ecore#//TProcess/partnerLinks"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="executable.ecore#//TProcess/messageExchanges"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=4"
+        outputs="executable.ecore#//TProcess/variables"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=5"
+        outputs="executable.ecore#//TProcess/correlationSets"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=6"
+        outputs="executable.ecore#//TProcess/faultHandlers"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=7"
+        outputs="executable.ecore#//TProcess/eventHandlers"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDAttributeUse=5"
+        outputs="executable.ecore#//TProcess/exitOnStandardFault"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDAttributeUse=3"
+        outputs="executable.ecore#//TProcess/expressionLanguage"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="executable.ecore#//TProcess/name"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDAttributeUse=2"
+        outputs="executable.ecore#//TProcess/queryLanguage"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDAttributeUse=4"
+        outputs="executable.ecore#//TProcess/suppressJoinFailure"/>
+    <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//tProcess;XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="executable.ecore#//TProcess/targetNamespace"/>
+  </nested>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//process;XSDElementDeclaration"
+      outputs="executable.ecore#//DocumentRoot/process"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//query;XSDElementDeclaration=31"
+      outputs="executable.ecore#//DocumentRoot/query"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//receive;XSDElementDeclaration=57"
+      outputs="executable.ecore#//DocumentRoot/receive"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//repeatEvery;XSDElementDeclaration=20"
+      outputs="executable.ecore#//DocumentRoot/repeatEvery"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//repeatUntil;XSDElementDeclaration=58"
+      outputs="executable.ecore#//DocumentRoot/repeatUntil"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//reply;XSDElementDeclaration=59"
+      outputs="executable.ecore#//DocumentRoot/reply"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//rethrow;XSDElementDeclaration=60"
+      outputs="executable.ecore#//DocumentRoot/rethrow"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//scope;XSDElementDeclaration=61"
+      outputs="executable.ecore#//DocumentRoot/scope"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//sequence;XSDElementDeclaration=64"
+      outputs="executable.ecore#//DocumentRoot/sequence"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//source;XSDElementDeclaration=25"
+      outputs="executable.ecore#//DocumentRoot/source"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//sources;XSDElementDeclaration=24"
+      outputs="executable.ecore#//DocumentRoot/sources"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//startCounterValue;XSDElementDeclaration=43"
+      outputs="executable.ecore#//DocumentRoot/startCounterValue"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//target;XSDElementDeclaration=23"
+      outputs="executable.ecore#//DocumentRoot/target"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//targets;XSDElementDeclaration=21"
+      outputs="executable.ecore#//DocumentRoot/targets"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//terminationHandler;XSDElementDeclaration=63"
+      outputs="executable.ecore#//DocumentRoot/terminationHandler"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//throw;XSDElementDeclaration=65"
+      outputs="executable.ecore#//DocumentRoot/throw"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//to;XSDElementDeclaration=32"
+      outputs="executable.ecore#//DocumentRoot/to"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//toPart;XSDElementDeclaration=54"
+      outputs="executable.ecore#//DocumentRoot/toPart"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//toParts;XSDElementDeclaration=53"
+      outputs="executable.ecore#//DocumentRoot/toParts"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//transitionCondition;XSDElementDeclaration=26"
+      outputs="executable.ecore#//DocumentRoot/transitionCondition"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//until;XSDElementDeclaration=19"
+      outputs="executable.ecore#//DocumentRoot/until"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//validate;XSDElementDeclaration=66"
+      outputs="executable.ecore#//DocumentRoot/validate"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//variable;XSDElementDeclaration=10"
+      outputs="executable.ecore#//DocumentRoot/variable"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//variables;XSDElementDeclaration=9"
+      outputs="executable.ecore#//DocumentRoot/variables"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//wait;XSDElementDeclaration=67"
+      outputs="executable.ecore#//DocumentRoot/wait"/>
+  <nested inputs="file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd#//while;XSDElementDeclaration=68"
+      outputs="executable.ecore#//DocumentRoot/while"/>
+  <nested inputs="http://www.w3.org/2001/xml.xsd#//base;XSDAttributeDeclaration=2"
+      outputs="../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#//DocumentRoot/base"/>
+  <nested inputs="bundleentry://507/cache/www.w3.org/2001/XMLSchema.xsd#//ID;XSDSimpleTypeDefinition=35"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//ID"/>
+  <nested inputs="http://www.w3.org/2001/xml.xsd#//id;XSDAttributeDeclaration=3" outputs="../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#//DocumentRoot/id"/>
+  <nested inputs="http://www.w3.org/2001/xml.xsd#//lang;XSDAttributeDeclaration" outputs="../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#//DocumentRoot/lang"/>
+  <nested inputs="http://www.w3.org/2001/xml.xsd#//space;XSDAttributeDeclaration=1/XSDSimpleTypeDefinition"
+      outputs="../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#//SpaceType">
+    <nested inputs="http://www.w3.org/2001/xml.xsd#//space;XSDAttributeDeclaration=1/XSDSimpleTypeDefinition/XSDEnumerationFacet"
+        outputs="../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#//SpaceType/default"/>
+    <nested inputs="http://www.w3.org/2001/xml.xsd#//space;XSDAttributeDeclaration=1/XSDSimpleTypeDefinition/XSDEnumerationFacet=1"
+        outputs="../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#//SpaceType/preserve"/>
+  </nested>
+  <nested inputs="http://www.w3.org/2001/xml.xsd#//space;XSDAttributeDeclaration=1"
+      outputs="../../../plugin/org.eclipse.emf.ecore/model/XMLNamespace.ecore#//DocumentRoot/space"/>
+</xsd2ecore:XSD2EcoreMappingRoot>

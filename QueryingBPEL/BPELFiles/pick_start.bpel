@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0.0 (http://www.active-endpoints.com)
+-->
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ns1="http://docs.active-endpoints.com/activebpel/sample/wsdl/pick_start/2006/09/pick_start.wsdl" xmlns:ns10="urn:oasis:names:specification:ubl:schema:xsd:OrderResponseSimple-1.0" xmlns:ns2="http://docs.active-endpoints.com/activebpel/sample/wsdl/order/2006/09/order.wsdl" xmlns:ns3="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns4="http://docs.active-endpoints.com/activebpel/sample/wsdl/orderProcess/2006/09/orderProcess.wsdl" xmlns:ns5="http://schemas.active-endpoints.com/sample/orderTypes/2006/09/orderTypes.xsd" xmlns:ns6="urn:oasis:names:specification:ubl:schema:xsd:Order-1.0" xmlns:ns7="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-1.0" xmlns:ns8="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-1.0" xmlns:ns9="Invalid Document" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="pick_start" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/pick_start/2006/09/pick_start.bpel">
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/pick_start.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/pick_start/2006/09/pick_start.wsdl"/>
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/order.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/order/2006/09/order.wsdl"/>
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/orderProcess.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/orderProcess/2006/09/orderProcess.wsdl"/>
+   <partnerLinks>
+      <partnerLink myRole="orderProcess" name="orderProcessPLT" partnerLinkType="ns4:orderProcessPLT"/>
+      <partnerLink myRole="pick-startProcess" name="ublOrderPLT" partnerLinkType="ns1:ublOrderPLT"/>
+   </partnerLinks>
+   <variables>
+      <variable messageType="ns2:orderMessage" name="orderMessage"/>
+      <variable messageType="ns4:orderProcessResponse" name="orderProcessResponse"/>
+      <variable messageType="ns1:ublOrderMessage" name="ublOrderMessage"/>
+      <variable messageType="ns1:ublOutputMessage" name="ublOutputMessage"/>
+   </variables>
+   <pick createInstance="yes">
+      <onMessage operation="receiveOrder" partnerLink="orderProcessPLT" portType="ns4:OrderPT" variable="orderMessage">
+         <sequence name="Sequence">
+            <assign name="SetResponse">
+               <copy>
+                  <from>concat('Received custom order with PO# ', $orderMessage.order/OrderHeader/PONo, ' from customer ', $orderMessage.order/OrderHeader/CustId)</from>
+                  <to part="response" variable="orderProcessResponse"/>
+               </copy>
+               <copy>
+                  <from part="order" variable="orderMessage">
+                     <query>OrderHeader/PONo</query>
+                  </from>
+                  <to part="PONum" variable="orderProcessResponse"/>
+               </copy>
+               <copy>
+                  <from part="order" variable="orderMessage">
+                     <query>OrderHeader/CustId</query>
+                  </from>
+                  <to part="CustID" variable="orderProcessResponse"/>
+               </copy>
+            </assign>
+            <reply name="ReplyStatus" operation="receiveOrder" partnerLink="orderProcessPLT" portType="ns4:OrderPT" variable="orderProcessResponse"/>
+         </sequence>
+      </onMessage>
+      <onMessage operation="receiveUBLOrder" partnerLink="ublOrderPLT" portType="ns1:ublPT" variable="ublOrderMessage">
+         <sequence>
+            <assign name="InitializeVariable">
+               <copy>
+                  <from>
+                     <literal>
+                        <OrderResponseSimple xmlns="urn:oasis:names:specification:ubl:schema:xsd:OrderResponseSimple-1.0" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-1.0" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-1.0" xmlns:ccp="urn:oasis:names:specification:ubl:schema:xsd:CoreComponentParameters-1.0" xmlns:dsc="urn:oasis:names:specification:ubl:schema:xsd:DocumentStatusCode-1.0" xmlns:sdt="urn:oasis:names:specification:ubl:schema:xsd:SpecializedDatatypes-1.0" xmlns:udt="urn:oasis:names:specification:ubl:schema:xsd:UnspecializedDatatypes-1.0">
+	<ID>id</ID>
+	<cbc:IssueDate/>
+	<AcceptedIndicator>true</AcceptedIndicator>
+	<cac:OrderReference/>
+	<cac:BuyerParty/>
+	<cac:SellerParty/>
+</OrderResponseSimple>
+                     </literal>
+                  </from>
+                  <to part="output" variable="ublOutputMessage"/>
+               </copy>
+            </assign>
+            <assign name="SetResponse">
+               <copy>
+                  <from>$ublOrderMessage.order/ns6:BuyersID</from>
+                  <to part="output" variable="ublOutputMessage">
+                     <query>ns10:ID</query>
+                  </to>
+               </copy>
+               <copy>
+                  <from>$ublOrderMessage.order/ns7:IssueDate</from>
+                  <to part="output" variable="ublOutputMessage">
+                     <query>ns7:IssueDate</query>
+                  </to>
+               </copy>
+               <copy>
+                  <from>$ublOrderMessage.order/ns8:BuyerParty</from>
+                  <to part="output" variable="ublOutputMessage">
+                     <query>ns8:BuyerParty</query>
+                  </to>
+               </copy>
+               <copy>
+                  <from>$ublOrderMessage.order/ns8:SellerParty</from>
+                  <to part="output" variable="ublOutputMessage">
+                     <query>ns8:SellerParty</query>
+                  </to>
+               </copy>
+            </assign>
+            <reply operation="receiveUBLOrder" partnerLink="ublOrderPLT" portType="ns1:ublPT" variable="ublOutputMessage"/>
+         </sequence>
+      </onMessage>
+   </pick>
+</process>

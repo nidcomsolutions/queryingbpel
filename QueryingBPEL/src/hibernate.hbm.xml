@@ -1,0 +1,2586 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false">
+	<typedef name="executable.BPELVariableNames" class="org.eclipse.emf.teneo.hibernate.mapping.DefaultToStringUserType">
+		<param name="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</param>
+		<param name="edatatype">BPELVariableNames</param>
+	</typedef>
+	<typedef name="executable.BPELVariableNamesBase" class="org.eclipse.emf.teneo.hibernate.mapping.DefaultToStringUserType">
+		<param name="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</param>
+		<param name="edatatype">BPELVariableNamesBase</param>
+	</typedef>
+	<typedef name="executable.QNames" class="org.eclipse.emf.teneo.hibernate.mapping.DefaultToStringUserType">
+		<param name="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</param>
+		<param name="edatatype">QNames</param>
+	</typedef>
+	<typedef name="executable.QNamesBase" class="org.eclipse.emf.teneo.hibernate.mapping.DefaultToStringUserType">
+		<param name="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</param>
+		<param name="edatatype">QNamesBase</param>
+	</typedef>
+	<typedef name="executable.BooleanObject" class="org.eclipse.emf.teneo.hibernate.mapping.DefaultToStringUserType">
+		<param name="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</param>
+		<param name="edatatype">BooleanObject</param>
+	</typedef>
+	<typedef name="executable.InitiateObject" class="org.eclipse.emf.teneo.hibernate.mapping.DefaultToStringUserType">
+		<param name="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</param>
+		<param name="edatatype">InitiateObject</param>
+	</typedef>
+	<typedef name="executable.PatternObject" class="org.eclipse.emf.teneo.hibernate.mapping.DefaultToStringUserType">
+		<param name="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</param>
+		<param name="edatatype">PatternObject</param>
+	</typedef>
+	<typedef name="executable.RolesObject" class="org.eclipse.emf.teneo.hibernate.mapping.DefaultToStringUserType">
+		<param name="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</param>
+		<param name="edatatype">RolesObject</param>
+	</typedef>
+		
+	<class name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ExtensibleElementsImpl" entity-name="ExtensibleElements" abstract="false" lazy="false" table="`extensibleelements`">
+		<meta attribute="eclassName">ExtensibleElements</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<id type="long" name="e_id" column="e_id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId">true</meta>
+			<generator class="native"/>
+		</id>
+		<version name="e_version" column="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<list name="documentation" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="extensibleelements_documentation">
+				<column name="`extensibleelements_documentation_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`extensibleelements_documentation_idx`"/>
+			<one-to-many entity-name="Documentation"/>
+		</list>
+		<list name="any" table="`extensibleelements_any`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`extensibleelements_any_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`extensibleelements_any_idx`"/>
+			<one-to-many entity-name="ExtensibleElements_any"/>
+		</list>
+		<list name="anyAttribute" table="`extensibleelements_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`extensibleelements_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`extensibleelements_anyattribute_idx`"/>
+			<one-to-many entity-name="ExtensibleElements_anyAttribute"/>
+		</list>
+	</class>
+	<class entity-name="ExtensibleElements_any" lazy="false" table="`extensibleelements_any`">
+		<meta attribute="featureMap">ExtensibleElements</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="documentation" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="extensibleelements_documentation">
+				<column name="`any_extensibleelements_documentation_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_extensibleelements_documentation_idx`"/>
+			<one-to-many entity-name="Documentation"/>
+		</list>
+		<list name="anyAttribute" table="`any_extensibleelements_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_extensibleelements_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_extensibleelements_anyattribute_idx`"/>
+			<one-to-many entity-name="ExtensibleElements_anyAttribute"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<class entity-name="ExtensibleElements_anyAttribute" lazy="false" table="`extensibleelements_anyattribute`">
+		<meta attribute="featureMap">ExtensibleElements</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+	</class>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ActivityImpl" entity-name="Activity" abstract="false" lazy="false" extends="ExtensibleElements" table="`activity`">
+		<meta attribute="eclassName">Activity</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="targets" entity-name="Targets" cascade="all" foreign-key="activity_targets" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`targets_targets_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sources" entity-name="Sources" cascade="all" foreign-key="activity_sources" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`sources_sources_e_id`"/>
+		</many-to-one>
+		<property name="name" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`name`"/>
+		</property>
+		<property name="suppressJoinFailure" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`suppressjoinfailure`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ActivityContainerImpl" entity-name="ActivityContainer" abstract="false" lazy="false" extends="ExtensibleElements" table="`activitycontainer`">
+		<meta attribute="eclassName">ActivityContainer</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="activitycontainer_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="activitycontainer_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="activitycontainer_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="activitycontainer_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="activitycontainer_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="activitycontainer_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="activitycontainer_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="activitycontainer_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="activitycontainer_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="activitycontainer_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="activitycontainer_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="activitycontainer_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="activitycontainer_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="activitycontainer_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="activitycontainer_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="activitycontainer_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="activitycontainer_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="activitycontainer_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="activitycontainer_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="activitycontainer_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="activitycontainer_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`while_while_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.AssignImpl" entity-name="Assign" abstract="false" lazy="false" extends="Activity" table="`assign`">
+		<meta attribute="eclassName">Assign</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<list name="group" table="`assign_group`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`assign_group_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`assign_group_idx`"/>
+			<one-to-many entity-name="Assign_group"/>
+		</list>
+		<property name="validate" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`validate`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+	</joined-subclass>
+	<class entity-name="Assign_group" lazy="false" table="`assign_group`">
+		<meta attribute="featureMap">Assign</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<many-to-one name="copy" entity-name="Copy" cascade="all" foreign-key="assign_copy" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`group_copy_copy_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionAssignOperation" entity-name="ExtensionAssignOperation" cascade="all" foreign-key="assign_extensionassignoperation" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`group_extensionassignoperation_extensionassignoperation_e_id`"/>
+		</many-to-one>
+	</class>
+	<class name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ExpressionImpl" entity-name="Expression" abstract="false" lazy="false" table="`expression`">
+		<meta attribute="eclassName">Expression</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<id type="long" name="e_id" column="e_id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId">true</meta>
+			<generator class="native"/>
+		</id>
+		<version name="e_version" column="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<list name="mixed" table="`expression_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`expression_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`expression_mixed_idx`"/>
+			<one-to-many entity-name="Expression_mixed"/>
+		</list>
+		<property name="expressionLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`expressionlanguage`"/>
+		</property>
+		<list name="anyAttribute" table="`expression_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`expression_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`expression_anyattribute_idx`"/>
+			<one-to-many entity-name="Expression_anyAttribute"/>
+		</list>
+	</class>
+	<class entity-name="Expression_mixed" lazy="false" table="`expression_mixed`">
+		<meta attribute="featureMap">Expression</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="any" table="`mixed_expression_any`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`mixed_expression_any_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_expression_any_idx`"/>
+			<one-to-many entity-name="Expression_any"/>
+		</list>
+		<property name="expressionLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_expressionlanguage`"/>
+		</property>
+		<list name="anyAttribute" table="`mixed_expression_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`mixed_expression_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_expression_anyattribute_idx`"/>
+			<one-to-many entity-name="Expression_anyAttribute"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<class entity-name="Expression_anyAttribute" lazy="false" table="`expression_anyattribute`">
+		<meta attribute="featureMap">Expression</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+	</class>
+	<class entity-name="Expression_any" lazy="false" table="`expression_any`">
+		<meta attribute="featureMap">Expression</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="mixed" table="`any_expression_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_expression_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_expression_mixed_idx`"/>
+			<one-to-many entity-name="Expression_mixed"/>
+		</list>
+		<property name="expressionLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_expressionlanguage`"/>
+		</property>
+		<list name="anyAttribute" table="`any_expression_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_expression_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_expression_anyattribute_idx`"/>
+			<one-to-many entity-name="Expression_anyAttribute"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.BooleanExprImpl" entity-name="BooleanExpr" abstract="false" lazy="false" extends="Expression" table="`booleanexpr`">
+		<meta attribute="eclassName">BooleanExpr</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`expression_e_id`"/>
+		</key>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.BranchesImpl" entity-name="Branches" abstract="false" lazy="false" extends="Expression" table="`branches`">
+		<meta attribute="eclassName">Branches</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`expression_e_id`"/>
+		</key>
+		<property name="successfulBranchesOnly" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`successfulbranchesonly`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CatchImpl" entity-name="Catch" abstract="false" lazy="false" extends="ActivityContainer" table="`catch`">
+		<meta attribute="eclassName">Catch</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activitycontainer_e_id`"/>
+		</key>
+		<property name="faultElement" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`faultelement`"/>
+		</property>
+		<property name="faultMessageType" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`faultmessagetype`"/>
+		</property>
+		<property name="faultName" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`faultname`"/>
+		</property>
+		<property name="faultVariable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`faultvariable`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CompensateImpl" entity-name="Compensate" abstract="false" lazy="false" extends="Activity" table="`compensate`">
+		<meta attribute="eclassName">Compensate</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CompensateScopeImpl" entity-name="CompensateScope" abstract="false" lazy="false" extends="Activity" table="`compensatescope`">
+		<meta attribute="eclassName">CompensateScope</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<property name="target" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`target`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CompletionConditionImpl" entity-name="CompletionCondition" abstract="false" lazy="false" extends="ExtensibleElements" table="`completioncondition`">
+		<meta attribute="eclassName">CompletionCondition</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="branches" entity-name="Branches" cascade="all" foreign-key="completioncondition_branches" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`branches_branches_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ConditionImpl" entity-name="Condition" abstract="false" lazy="false" extends="Expression" table="`condition`">
+		<meta attribute="eclassName">Condition</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`expression_e_id`"/>
+		</key>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CopyImpl" entity-name="Copy" abstract="false" lazy="false" extends="ExtensibleElements" table="`copy`">
+		<meta attribute="eclassName">Copy</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="from" entity-name="From" cascade="all" foreign-key="copy_from" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`from_from_e_id`"/>
+		</many-to-one>
+		<many-to-one name="to" entity-name="To" cascade="all" foreign-key="copy_to" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`to_to_e_id`"/>
+		</many-to-one>
+		<property name="ignoreMissingFromData" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`ignoremissingfromdata`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+		<property name="keepSrcElementName" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`keepsrcelementname`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CorrelationImpl" entity-name="Correlation" abstract="false" lazy="false" extends="ExtensibleElements" table="`correlation`">
+		<meta attribute="eclassName">Correlation</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<property name="initiate" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`initiate`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Initiate</param>
+			</type>
+		</property>
+		<property name="set" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`set`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CorrelationsImpl" entity-name="Correlations" abstract="false" lazy="false" extends="ExtensibleElements" table="`correlations`">
+		<meta attribute="eclassName">Correlations</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="correlation" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="correlations_correlation">
+				<column name="`correlations_correlation_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`correlations_correlation_idx`"/>
+			<one-to-many entity-name="Correlation"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CorrelationSetImpl" entity-name="CorrelationSet" abstract="false" lazy="false" extends="ExtensibleElements" table="`correlationset`">
+		<meta attribute="eclassName">CorrelationSet</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<property name="name" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`name`"/>
+		</property>
+		<property name="properties" lazy="false" insert="true" update="true" not-null="true" unique="false" type="executable.QNames">
+			<column not-null="true" unique="false" name="`properties`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CorrelationSetsImpl" entity-name="CorrelationSets" abstract="false" lazy="false" extends="ExtensibleElements" table="`correlationsets`">
+		<meta attribute="eclassName">CorrelationSets</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="correlationSet" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="correlationsets_correlationset">
+				<column name="`correlationsets_correlationset_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`correlationsets_correlationset_idx`"/>
+			<one-to-many entity-name="CorrelationSet"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CorrelationsWithPatternImpl" entity-name="CorrelationsWithPattern" abstract="false" lazy="false" extends="ExtensibleElements" table="`correlationswithpattern`">
+		<meta attribute="eclassName">CorrelationsWithPattern</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="correlation" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="correlationswithpattern_correlation">
+				<column name="`correlationswithpattern_correlation_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`correlationswithpattern_correlation_idx`"/>
+			<one-to-many entity-name="CorrelationWithPattern"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.CorrelationWithPatternImpl" entity-name="CorrelationWithPattern" abstract="false" lazy="false" extends="Correlation" table="`correlationwithpattern`">
+		<meta attribute="eclassName">CorrelationWithPattern</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`correlation_e_id`"/>
+		</key>
+		<property name="pattern" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`pattern`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Pattern</param>
+			</type>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.DeadlineExprImpl" entity-name="DeadlineExpr" abstract="false" lazy="false" extends="Expression" table="`deadlineexpr`">
+		<meta attribute="eclassName">DeadlineExpr</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`expression_e_id`"/>
+		</key>
+	</joined-subclass>
+	<class name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.DocumentationImpl" entity-name="Documentation" abstract="false" lazy="false" table="`documentation`">
+		<meta attribute="eclassName">Documentation</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<id type="long" name="e_id" column="e_id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId">true</meta>
+			<generator class="native"/>
+		</id>
+		<version name="e_version" column="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<list name="mixed" table="`documentation_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`documentation_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`documentation_mixed_idx`"/>
+			<one-to-many entity-name="Documentation_mixed"/>
+		</list>
+		<property name="lang" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`lang`"/>
+		</property>
+		<property name="source" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`source`"/>
+		</property>
+	</class>
+	<class entity-name="Documentation_mixed" lazy="false" table="`documentation_mixed`">
+		<meta attribute="featureMap">Documentation</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="any" table="`mixed_documentation_any`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`mixed_documentation_any_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_documentation_any_idx`"/>
+			<one-to-many entity-name="Documentation_any"/>
+		</list>
+		<property name="lang" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_lang`"/>
+		</property>
+		<property name="source" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_source`"/>
+		</property>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<class entity-name="Documentation_any" lazy="false" table="`documentation_any`">
+		<meta attribute="featureMap">Documentation</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="mixed" table="`any_documentation_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_documentation_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_documentation_mixed_idx`"/>
+			<one-to-many entity-name="Documentation_mixed"/>
+		</list>
+		<property name="lang" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_lang`"/>
+		</property>
+		<property name="source" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_source`"/>
+		</property>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.DurationExprImpl" entity-name="DurationExpr" abstract="false" lazy="false" extends="Expression" table="`durationexpr`">
+		<meta attribute="eclassName">DurationExpr</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`expression_e_id`"/>
+		</key>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ElseifImpl" entity-name="Elseif" abstract="false" lazy="false" extends="ExtensibleElements" table="`elseif`">
+		<meta attribute="eclassName">Elseif</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="condition" entity-name="BooleanExpr" cascade="all" foreign-key="elseif_condition" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`booleanexpr_condition_e_id`"/>
+		</many-to-one>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="elseif_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="elseif_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="elseif_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="elseif_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="elseif_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="elseif_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="elseif_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="elseif_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="elseif_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="elseif_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="elseif_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="elseif_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="elseif_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="elseif_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="elseif_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="elseif_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="elseif_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="elseif_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="elseif_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="elseif_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="elseif_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`while_while_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.EmptyImpl" entity-name="Empty" abstract="false" lazy="false" extends="Activity" table="`empty`">
+		<meta attribute="eclassName">Empty</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.EventHandlersImpl" entity-name="EventHandlers" abstract="false" lazy="false" extends="ExtensibleElements" table="`eventhandlers`">
+		<meta attribute="eclassName">EventHandlers</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="onEvent" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="eventhandlers_onevent">
+				<column name="`eventhandlers_onevent_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`eventhandlers_onevent_idx`"/>
+			<one-to-many entity-name="OnEvent"/>
+		</list>
+		<list name="onAlarm" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="eventhandlers_onalarm">
+				<column name="`eventhandlers_onalarm_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`eventhandlers_onalarm_idx`"/>
+			<one-to-many entity-name="OnAlarmEvent"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ExitImpl" entity-name="Exit" abstract="false" lazy="false" extends="Activity" table="`exit`">
+		<meta attribute="eclassName">Exit</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ExtensionImpl" entity-name="Extension" abstract="false" lazy="false" extends="ExtensibleElements" table="`extension`">
+		<meta attribute="eclassName">Extension</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<property name="mustUnderstand" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`mustunderstand`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+		<property name="namespace" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`namespace`"/>
+		</property>
+	</joined-subclass>
+	<class name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ExtensionActivityImpl" entity-name="ExtensionActivity" abstract="false" lazy="false" table="`extensionactivity`">
+		<meta attribute="eclassName">ExtensionActivity</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<id type="long" name="e_id" column="e_id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId">true</meta>
+			<generator class="native"/>
+		</id>
+		<version name="e_version" column="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<list name="any" table="`extensionactivity_any`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`extensionactivity_any_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`extensionactivity_any_idx`"/>
+			<one-to-many entity-name="ExtensionActivity_any"/>
+		</list>
+	</class>
+	<class entity-name="ExtensionActivity_any" lazy="false" table="`extensionactivity_any`">
+		<meta attribute="featureMap">ExtensionActivity</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ExtensionAssignOperationImpl" entity-name="ExtensionAssignOperation" abstract="false" lazy="false" extends="ExtensibleElements" table="`extensionassignoperation`">
+		<meta attribute="eclassName">ExtensionAssignOperation</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ExtensionsImpl" entity-name="Extensions" abstract="false" lazy="false" extends="ExtensibleElements" table="`extensions`">
+		<meta attribute="eclassName">Extensions</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="extension" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="extensions_extension">
+				<column name="`extensions_extension_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`extensions_extension_idx`"/>
+			<one-to-many entity-name="Extension"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.FaultHandlersImpl" entity-name="FaultHandlers" abstract="false" lazy="false" extends="ExtensibleElements" table="`faulthandlers`">
+		<meta attribute="eclassName">FaultHandlers</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="catch" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="faulthandlers_catch">
+				<column name="`faulthandlers_catch_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`faulthandlers_catch_idx`"/>
+			<one-to-many entity-name="Catch"/>
+		</list>
+		<many-to-one name="catchAll" entity-name="ActivityContainer" cascade="all" foreign-key="faulthandlers_catchall" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activitycontainer_catchall_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.FlowImpl" entity-name="Flow" abstract="false" lazy="false" extends="Activity" table="`flow`">
+		<meta attribute="eclassName">Flow</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<many-to-one name="links" entity-name="Links" cascade="all" foreign-key="flow_links" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`links_links_e_id`"/>
+		</many-to-one>
+		<list name="activity" table="`flow_activity`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`flow_activity_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`flow_activity_idx`"/>
+			<one-to-many entity-name="Flow_activity"/>
+		</list>
+	</joined-subclass>
+	<class entity-name="Flow_activity" lazy="false" table="`flow_activity`">
+		<meta attribute="featureMap">Flow</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="flow_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="flow_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="flow_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="flow_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="flow_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="flow_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="flow_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="flow_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="flow_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="flow_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="flow_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="flow_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="flow_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="flow_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="flow_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="flow_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="flow_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="flow_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="flow_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="flow_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="flow_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_while_while_e_id`"/>
+		</many-to-one>
+	</class>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ForEachImpl" entity-name="ForEach" abstract="false" lazy="false" extends="Activity" table="`foreach`">
+		<meta attribute="eclassName">ForEach</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<many-to-one name="startCounterValue" entity-name="Expression" cascade="all" foreign-key="foreach_startcountervalue" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`expression_startcountervalue_e_id`"/>
+		</many-to-one>
+		<many-to-one name="finalCounterValue" entity-name="Expression" cascade="all" foreign-key="foreach_finalcountervalue" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`expression_finalcountervalue_e_id`"/>
+		</many-to-one>
+		<many-to-one name="completionCondition" entity-name="CompletionCondition" cascade="all" foreign-key="foreach_completioncondition" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`completioncondition_completioncondition_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="foreach_scope" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<property name="counterName" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`countername`"/>
+		</property>
+		<property name="parallel" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`parallel`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+	</joined-subclass>
+	<class name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.FromImpl" entity-name="From" abstract="false" lazy="false" table="`from`">
+		<meta attribute="eclassName">From</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<id type="long" name="e_id" column="e_id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId">true</meta>
+			<generator class="native"/>
+		</id>
+		<version name="e_version" column="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<list name="mixed" table="`from_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`from_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`from_mixed_idx`"/>
+			<one-to-many entity-name="From_mixed"/>
+		</list>
+		<property name="endpointReference" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`endpointreference`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Roles</param>
+			</type>
+		</property>
+		<property name="expressionLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`expressionlanguage`"/>
+		</property>
+		<property name="part" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`part`"/>
+		</property>
+		<property name="partnerLink" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`partnerlink`"/>
+		</property>
+		<property name="property" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`property`"/>
+		</property>
+		<property name="variable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`variable`"/>
+		</property>
+		<list name="anyAttribute" table="`from_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`from_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`from_anyattribute_idx`"/>
+			<one-to-many entity-name="From_anyAttribute"/>
+		</list>
+	</class>
+	<class entity-name="From_mixed" lazy="false" table="`from_mixed`">
+		<meta attribute="featureMap">From</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="documentation" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="from_documentation">
+				<column name="`mixed_from_documentation_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_from_documentation_idx`"/>
+			<one-to-many entity-name="Documentation"/>
+		</list>
+		<list name="any" table="`mixed_from_any`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`mixed_from_any_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_from_any_idx`"/>
+			<one-to-many entity-name="From_any"/>
+		</list>
+		<many-to-one name="literal" entity-name="Literal" cascade="all" foreign-key="from_literal" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`mixed_literal_literal_e_id`"/>
+		</many-to-one>
+		<many-to-one name="query" entity-name="Query" cascade="all" foreign-key="from_query" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`mixed_query_query_e_id`"/>
+		</many-to-one>
+		<property name="endpointReference" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`mixed_endpointreference`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Roles</param>
+			</type>
+		</property>
+		<property name="expressionLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_expressionlanguage`"/>
+		</property>
+		<property name="part" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_part`"/>
+		</property>
+		<property name="partnerLink" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_partnerlink`"/>
+		</property>
+		<property name="property" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`mixed_property`"/>
+		</property>
+		<property name="variable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_variable`"/>
+		</property>
+		<list name="anyAttribute" table="`mixed_from_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`mixed_from_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_from_anyattribute_idx`"/>
+			<one-to-many entity-name="From_anyAttribute"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<class entity-name="From_anyAttribute" lazy="false" table="`from_anyattribute`">
+		<meta attribute="featureMap">From</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+	</class>
+	<class entity-name="From_any" lazy="false" table="`from_any`">
+		<meta attribute="featureMap">From</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="mixed" table="`any_from_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_from_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_from_mixed_idx`"/>
+			<one-to-many entity-name="From_mixed"/>
+		</list>
+		<list name="documentation" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="from_documentation">
+				<column name="`any_from_documentation_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_from_documentation_idx`"/>
+			<one-to-many entity-name="Documentation"/>
+		</list>
+		<many-to-one name="literal" entity-name="Literal" cascade="all" foreign-key="from_literal" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`any_literal_literal_e_id`"/>
+		</many-to-one>
+		<many-to-one name="query" entity-name="Query" cascade="all" foreign-key="from_query" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`any_query_query_e_id`"/>
+		</many-to-one>
+		<property name="endpointReference" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`any_endpointreference`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Roles</param>
+			</type>
+		</property>
+		<property name="expressionLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_expressionlanguage`"/>
+		</property>
+		<property name="part" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_part`"/>
+		</property>
+		<property name="partnerLink" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_partnerlink`"/>
+		</property>
+		<property name="property" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`any_property`"/>
+		</property>
+		<property name="variable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_variable`"/>
+		</property>
+		<list name="anyAttribute" table="`any_from_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_from_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_from_anyattribute_idx`"/>
+			<one-to-many entity-name="From_anyAttribute"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.FromPartImpl" entity-name="FromPart" abstract="false" lazy="false" extends="ExtensibleElements" table="`frompart`">
+		<meta attribute="eclassName">FromPart</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<property name="part" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`part`"/>
+		</property>
+		<property name="toVariable" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`tovariable`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.FromPartsImpl" entity-name="FromParts" abstract="false" lazy="false" extends="ExtensibleElements" table="`fromparts`">
+		<meta attribute="eclassName">FromParts</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="fromPart" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="fromparts_frompart">
+				<column name="`fromparts_frompart_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`fromparts_frompart_idx`"/>
+			<one-to-many entity-name="FromPart"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.IfImpl" entity-name="If" abstract="false" lazy="false" extends="Activity" table="`if`">
+		<meta attribute="eclassName">If</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<many-to-one name="condition" entity-name="BooleanExpr" cascade="all" foreign-key="if_condition" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`booleanexpr_condition_e_id`"/>
+		</many-to-one>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="if_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="if_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="if_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="if_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="if_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="if_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="if_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="if_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="if_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="if_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="if_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="if_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="if_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="if_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="if_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="if_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="if_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="if_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="if_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="if_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="if_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`while_while_e_id`"/>
+		</many-to-one>
+		<list name="elseif" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="if_elseif">
+				<column name="`if_elseif_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`if_elseif_idx`"/>
+			<one-to-many entity-name="Elseif"/>
+		</list>
+		<many-to-one name="else" entity-name="ActivityContainer" cascade="all" foreign-key="if_else" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activitycontainer_else_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ImportImpl" entity-name="Import" abstract="false" lazy="false" extends="ExtensibleElements" table="`import`">
+		<meta attribute="eclassName">Import</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<property name="importType" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`importtype`"/>
+		</property>
+		<property name="location" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`location`"/>
+		</property>
+		<property name="namespace" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`namespace`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.InvokeImpl" entity-name="Invoke" abstract="false" lazy="false" extends="Activity" table="`invoke`">
+		<meta attribute="eclassName">Invoke</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<many-to-one name="correlations" entity-name="CorrelationsWithPattern" cascade="all" foreign-key="invoke_correlations" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`correlationswithpattern_correlations_e_id`"/>
+		</many-to-one>
+		<list name="catch" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="invoke_catch">
+				<column name="`invoke_catch_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`invoke_catch_idx`"/>
+			<one-to-many entity-name="Catch"/>
+		</list>
+		<many-to-one name="catchAll" entity-name="ActivityContainer" cascade="all" foreign-key="invoke_catchall" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activitycontainer_catchall_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensationHandler" entity-name="ActivityContainer" cascade="all" foreign-key="invoke_compensationhandler" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activitycontainer_compensationhandler_e_id`"/>
+		</many-to-one>
+		<many-to-one name="toParts" entity-name="ToParts" cascade="all" foreign-key="invoke_toparts" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`toparts_toparts_e_id`"/>
+		</many-to-one>
+		<many-to-one name="fromParts" entity-name="FromParts" cascade="all" foreign-key="invoke_fromparts" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`fromparts_fromparts_e_id`"/>
+		</many-to-one>
+		<property name="inputVariable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`inputvariable`"/>
+		</property>
+		<property name="operation" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`operation`"/>
+		</property>
+		<property name="outputVariable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`outputvariable`"/>
+		</property>
+		<property name="partnerLink" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`partnerlink`"/>
+		</property>
+		<property name="portType" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`porttype`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.LinkImpl" entity-name="Link" abstract="false" lazy="false" extends="ExtensibleElements" table="`link`">
+		<meta attribute="eclassName">Link</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<property name="name" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`name`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.LinksImpl" entity-name="Links" abstract="false" lazy="false" extends="ExtensibleElements" table="`links`">
+		<meta attribute="eclassName">Links</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="link" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="links_link">
+				<column name="`links_link_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`links_link_idx`"/>
+			<one-to-many entity-name="Link"/>
+		</list>
+	</joined-subclass>
+	<class name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.LiteralImpl" entity-name="Literal" abstract="false" lazy="false" table="`literal`">
+		<meta attribute="eclassName">Literal</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<id type="long" name="e_id" column="e_id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId">true</meta>
+			<generator class="native"/>
+		</id>
+		<version name="e_version" column="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<list name="mixed" table="`literal_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`literal_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`literal_mixed_idx`"/>
+			<one-to-many entity-name="Literal_mixed"/>
+		</list>
+	</class>
+	<class entity-name="Literal_mixed" lazy="false" table="`literal_mixed`">
+		<meta attribute="featureMap">Literal</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="any" table="`mixed_literal_any`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`mixed_literal_any_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_literal_any_idx`"/>
+			<one-to-many entity-name="Literal_any"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<class entity-name="Literal_any" lazy="false" table="`literal_any`">
+		<meta attribute="featureMap">Literal</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="mixed" table="`any_literal_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_literal_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_literal_mixed_idx`"/>
+			<one-to-many entity-name="Literal_mixed"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.MessageExchangeImpl" entity-name="MessageExchange" abstract="false" lazy="false" extends="ExtensibleElements" table="`messageexchange`">
+		<meta attribute="eclassName">MessageExchange</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<property name="name" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`name`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.MessageExchangesImpl" entity-name="MessageExchanges" abstract="false" lazy="false" extends="ExtensibleElements" table="`messageexchanges`">
+		<meta attribute="eclassName">MessageExchanges</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="messageExchange" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="messageexchanges_messageexchange">
+				<column name="`messageexchanges_messageexchange_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`messageexchanges_messageexchange_idx`"/>
+			<one-to-many entity-name="MessageExchange"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.OnAlarmEventImpl" entity-name="OnAlarmEvent" abstract="false" lazy="false" extends="ExtensibleElements" table="`onalarmevent`">
+		<meta attribute="eclassName">OnAlarmEvent</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="for" entity-name="DurationExpr" cascade="all" foreign-key="onalarmevent_for" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`durationexpr_for_e_id`"/>
+		</many-to-one>
+		<many-to-one name="until" entity-name="DeadlineExpr" cascade="all" foreign-key="onalarmevent_until" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`deadlineexpr_until_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatEvery" entity-name="DurationExpr" cascade="all" foreign-key="onalarmevent_repeatevery" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`durationexpr_repeatevery_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatEvery1" entity-name="DurationExpr" cascade="all" foreign-key="onalarmevent_repeatevery1" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`durationexpr_repeatevery1_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="onalarmevent_scope" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.OnAlarmPickImpl" entity-name="OnAlarmPick" abstract="false" lazy="false" extends="ExtensibleElements" table="`onalarmpick`">
+		<meta attribute="eclassName">OnAlarmPick</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="for" entity-name="DurationExpr" cascade="all" foreign-key="onalarmpick_for" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`durationexpr_for_e_id`"/>
+		</many-to-one>
+		<many-to-one name="until" entity-name="DeadlineExpr" cascade="all" foreign-key="onalarmpick_until" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`deadlineexpr_until_e_id`"/>
+		</many-to-one>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="onalarmpick_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="onalarmpick_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="onalarmpick_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="onalarmpick_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="onalarmpick_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="onalarmpick_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="onalarmpick_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="onalarmpick_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="onalarmpick_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="onalarmpick_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="onalarmpick_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="onalarmpick_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="onalarmpick_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="onalarmpick_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="onalarmpick_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="onalarmpick_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="onalarmpick_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="onalarmpick_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="onalarmpick_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="onalarmpick_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="onalarmpick_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`while_while_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.OnMsgCommonImpl" entity-name="OnMsgCommon" abstract="false" lazy="false" extends="ExtensibleElements" table="`onmsgcommon`">
+		<meta attribute="eclassName">OnMsgCommon</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="correlations" entity-name="Correlations" cascade="all" foreign-key="onmsgcommon_correlations" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`correlations_correlations_e_id`"/>
+		</many-to-one>
+		<many-to-one name="fromParts" entity-name="FromParts" cascade="all" foreign-key="onmsgcommon_fromparts" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`fromparts_fromparts_e_id`"/>
+		</many-to-one>
+		<property name="messageExchange" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`messageexchange`"/>
+		</property>
+		<property name="operation" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`operation`"/>
+		</property>
+		<property name="partnerLink" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`partnerlink`"/>
+		</property>
+		<property name="portType" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`porttype`"/>
+		</property>
+		<property name="variable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`variable`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.OnEventImpl" entity-name="OnEvent" abstract="false" lazy="false" extends="OnMsgCommon" table="`onevent`">
+		<meta attribute="eclassName">OnEvent</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`onmsgcommon_e_id`"/>
+		</key>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="onevent_scope" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<property name="element" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`element`"/>
+		</property>
+		<property name="messageType" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`messagetype`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.OnMessageImpl" entity-name="OnMessage" abstract="false" lazy="false" extends="OnMsgCommon" table="`onmessage`">
+		<meta attribute="eclassName">OnMessage</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`onmsgcommon_e_id`"/>
+		</key>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="onmessage_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="onmessage_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="onmessage_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="onmessage_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="onmessage_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="onmessage_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="onmessage_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="onmessage_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="onmessage_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="onmessage_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="onmessage_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="onmessage_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="onmessage_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="onmessage_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="onmessage_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="onmessage_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="onmessage_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="onmessage_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="onmessage_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="onmessage_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="onmessage_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`while_while_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.PartnerLinkImpl" entity-name="PartnerLink" abstract="false" lazy="false" extends="ExtensibleElements" table="`partnerlink`">
+		<meta attribute="eclassName">PartnerLink</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<property name="initializePartnerRole" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`initializepartnerrole`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+		<property name="myRole" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`myrole`"/>
+		</property>
+		<property name="name" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`name`"/>
+		</property>
+		<property name="partnerLinkType" lazy="false" insert="true" update="true" not-null="true" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="true" unique="false" name="`partnerlinktype`"/>
+		</property>
+		<property name="partnerRole" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`partnerrole`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.PartnerLinksImpl" entity-name="PartnerLinks" abstract="false" lazy="false" extends="ExtensibleElements" table="`partnerlinks`">
+		<meta attribute="eclassName">PartnerLinks</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="partnerLink" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="partnerlinks_partnerlink">
+				<column name="`partnerlinks_partnerlink_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`partnerlinks_partnerlink_idx`"/>
+			<one-to-many entity-name="PartnerLink"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.PickImpl" entity-name="Pick" abstract="false" lazy="false" extends="Activity" table="`pick`">
+		<meta attribute="eclassName">Pick</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<list name="onMessage" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="pick_onmessage">
+				<column name="`pick_onmessage_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`pick_onmessage_idx`"/>
+			<one-to-many entity-name="OnMessage"/>
+		</list>
+		<list name="onAlarm" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="pick_onalarm">
+				<column name="`pick_onalarm_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`pick_onalarm_idx`"/>
+			<one-to-many entity-name="OnAlarmPick"/>
+		</list>
+		<property name="createInstance" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`createinstance`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ProcessImpl" entity-name="Process" abstract="false" lazy="false" extends="ExtensibleElements" table="`process`">
+		<meta attribute="eclassName">Process</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="extensions" entity-name="Extensions" cascade="all" foreign-key="process_extensions" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`extensions_extensions_e_id`"/>
+		</many-to-one>
+		<list name="import" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="process_import">
+				<column name="`process_import_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`process_import_idx`"/>
+			<one-to-many entity-name="Import"/>
+		</list>
+		<many-to-one name="partnerLinks" entity-name="PartnerLinks" cascade="all" foreign-key="process_partnerlinks" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`partnerlinks_partnerlinks_e_id`"/>
+		</many-to-one>
+		<many-to-one name="messageExchanges" entity-name="MessageExchanges" cascade="all" foreign-key="process_messageexchanges" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`messageexchanges_messageexchanges_e_id`"/>
+		</many-to-one>
+		<many-to-one name="variables" entity-name="Variables" cascade="all" foreign-key="process_variables" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`variables_variables_e_id`"/>
+		</many-to-one>
+		<many-to-one name="correlationSets" entity-name="CorrelationSets" cascade="all" foreign-key="process_correlationsets" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`correlationsets_correlationsets_e_id`"/>
+		</many-to-one>
+		<many-to-one name="faultHandlers" entity-name="FaultHandlers" cascade="all" foreign-key="process_faulthandlers" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`faulthandlers_faulthandlers_e_id`"/>
+		</many-to-one>
+		<many-to-one name="eventHandlers" entity-name="EventHandlers" cascade="all" foreign-key="process_eventhandlers" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`eventhandlers_eventhandlers_e_id`"/>
+		</many-to-one>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="process_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="process_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="process_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="process_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="process_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="process_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="process_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="process_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="process_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="process_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="process_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="process_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="process_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="process_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="process_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="process_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="process_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="process_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="process_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="process_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="process_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`while_while_e_id`"/>
+		</many-to-one>
+		<property name="exitOnStandardFault" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`exitonstandardfault`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+		<property name="expressionLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`expressionlanguage`"/>
+		</property>
+		<property name="name" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`name`"/>
+		</property>
+		<property name="queryLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`querylanguage`"/>
+		</property>
+		<property name="suppressJoinFailure" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`suppressjoinfailure`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+		<property name="targetNamespace" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`targetnamespace`"/>
+		</property>
+	</joined-subclass>
+	<class name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.QueryImpl" entity-name="Query" abstract="false" lazy="false" table="`query`">
+		<meta attribute="eclassName">Query</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<id type="long" name="e_id" column="e_id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId">true</meta>
+			<generator class="native"/>
+		</id>
+		<version name="e_version" column="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<list name="mixed" table="`query_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`query_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`query_mixed_idx`"/>
+			<one-to-many entity-name="Query_mixed"/>
+		</list>
+		<property name="queryLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`querylanguage`"/>
+		</property>
+		<list name="anyAttribute" table="`query_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`query_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`query_anyattribute_idx`"/>
+			<one-to-many entity-name="Query_anyAttribute"/>
+		</list>
+	</class>
+	<class entity-name="Query_mixed" lazy="false" table="`query_mixed`">
+		<meta attribute="featureMap">Query</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="any" table="`mixed_query_any`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`mixed_query_any_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_query_any_idx`"/>
+			<one-to-many entity-name="Query_any"/>
+		</list>
+		<property name="queryLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_querylanguage`"/>
+		</property>
+		<list name="anyAttribute" table="`mixed_query_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`mixed_query_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_query_anyattribute_idx`"/>
+			<one-to-many entity-name="Query_anyAttribute"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<class entity-name="Query_anyAttribute" lazy="false" table="`query_anyattribute`">
+		<meta attribute="featureMap">Query</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+	</class>
+	<class entity-name="Query_any" lazy="false" table="`query_any`">
+		<meta attribute="featureMap">Query</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="mixed" table="`any_query_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_query_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_query_mixed_idx`"/>
+			<one-to-many entity-name="Query_mixed"/>
+		</list>
+		<property name="queryLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_querylanguage`"/>
+		</property>
+		<list name="anyAttribute" table="`any_query_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_query_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_query_anyattribute_idx`"/>
+			<one-to-many entity-name="Query_anyAttribute"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ReceiveImpl" entity-name="Receive" abstract="false" lazy="false" extends="Activity" table="`receive`">
+		<meta attribute="eclassName">Receive</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<many-to-one name="correlations" entity-name="Correlations" cascade="all" foreign-key="receive_correlations" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`correlations_correlations_e_id`"/>
+		</many-to-one>
+		<many-to-one name="fromParts" entity-name="FromParts" cascade="all" foreign-key="receive_fromparts" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`fromparts_fromparts_e_id`"/>
+		</many-to-one>
+		<property name="createInstance" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`createinstance`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+		<property name="messageExchange" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`messageexchange`"/>
+		</property>
+		<property name="operation" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`operation`"/>
+		</property>
+		<property name="partnerLink" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`partnerlink`"/>
+		</property>
+		<property name="portType" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`porttype`"/>
+		</property>
+		<property name="variable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`variable`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.RepeatUntilImpl" entity-name="RepeatUntil" abstract="false" lazy="false" extends="Activity" table="`repeatuntil`">
+		<meta attribute="eclassName">RepeatUntil</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="repeatuntil_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="repeatuntil_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="repeatuntil_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="repeatuntil_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="repeatuntil_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="repeatuntil_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="repeatuntil_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="repeatuntil_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="repeatuntil_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="repeatuntil_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="repeatuntil_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="repeatuntil_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="repeatuntil_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="repeatuntil_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="repeatuntil_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="repeatuntil_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="repeatuntil_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="repeatuntil_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="repeatuntil_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="repeatuntil_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="repeatuntil_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`while_while_e_id`"/>
+		</many-to-one>
+		<many-to-one name="condition" entity-name="BooleanExpr" cascade="all" foreign-key="repeatuntil_condition" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`booleanexpr_condition_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ReplyImpl" entity-name="Reply" abstract="false" lazy="false" extends="Activity" table="`reply`">
+		<meta attribute="eclassName">Reply</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<many-to-one name="correlations" entity-name="Correlations" cascade="all" foreign-key="reply_correlations" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`correlations_correlations_e_id`"/>
+		</many-to-one>
+		<many-to-one name="toParts" entity-name="ToParts" cascade="all" foreign-key="reply_toparts" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`toparts_toparts_e_id`"/>
+		</many-to-one>
+		<property name="faultName" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`faultname`"/>
+		</property>
+		<property name="messageExchange" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`messageexchange`"/>
+		</property>
+		<property name="operation" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`operation`"/>
+		</property>
+		<property name="partnerLink" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`partnerlink`"/>
+		</property>
+		<property name="portType" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`porttype`"/>
+		</property>
+		<property name="variable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`variable`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.RethrowImpl" entity-name="Rethrow" abstract="false" lazy="false" extends="Activity" table="`rethrow`">
+		<meta attribute="eclassName">Rethrow</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ScopeImpl" entity-name="Scope" abstract="false" lazy="false" extends="Activity" table="`scope`">
+		<meta attribute="eclassName">Scope</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<many-to-one name="partnerLinks" entity-name="PartnerLinks" cascade="all" foreign-key="scope_partnerlinks" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`partnerlinks_partnerlinks_e_id`"/>
+		</many-to-one>
+		<many-to-one name="messageExchanges" entity-name="MessageExchanges" cascade="all" foreign-key="scope_messageexchanges" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`messageexchanges_messageexchanges_e_id`"/>
+		</many-to-one>
+		<many-to-one name="variables" entity-name="Variables" cascade="all" foreign-key="scope_variables" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`variables_variables_e_id`"/>
+		</many-to-one>
+		<many-to-one name="correlationSets" entity-name="CorrelationSets" cascade="all" foreign-key="scope_correlationsets" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`correlationsets_correlationsets_e_id`"/>
+		</many-to-one>
+		<many-to-one name="faultHandlers" entity-name="FaultHandlers" cascade="all" foreign-key="scope_faulthandlers" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`faulthandlers_faulthandlers_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensationHandler" entity-name="ActivityContainer" cascade="all" foreign-key="scope_compensationhandler" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activitycontainer_compensationhandler_e_id`"/>
+		</many-to-one>
+		<many-to-one name="terminationHandler" entity-name="ActivityContainer" cascade="all" foreign-key="scope_terminationhandler" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activitycontainer_terminationhandler_e_id`"/>
+		</many-to-one>
+		<many-to-one name="eventHandlers" entity-name="EventHandlers" cascade="all" foreign-key="scope_eventhandlers" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`eventhandlers_eventhandlers_e_id`"/>
+		</many-to-one>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="scope_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="scope_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="scope_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="scope_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="scope_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="scope_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="scope_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="scope_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="scope_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="scope_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="scope_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="scope_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="scope_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="scope_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="scope_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="scope_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="scope_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="scope_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="scope_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="scope_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="scope_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`while_while_e_id`"/>
+		</many-to-one>
+		<property name="exitOnStandardFault" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`exitonstandardfault`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+		<property name="isolated" lazy="false" not-null="false" insert="true" update="true" unique="false">
+			<column not-null="false" unique="false" name="`isolated`"/>
+			<type name="org.eclipse.emf.teneo.hibernate.mapping.ENumUserType">
+				<param name="enumClass">org.open.oasis.docs.wsbpel._2._0.process.executable.Boolean</param>
+			</type>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.SequenceImpl" entity-name="Sequence" abstract="false" lazy="false" extends="Activity" table="`sequence`">
+		<meta attribute="eclassName">Sequence</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<list name="activity" table="`sequence_activity`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`sequence_activity_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`sequence_activity_idx`"/>
+			<one-to-many entity-name="Sequence_activity"/>
+		</list>
+	</joined-subclass>
+	<class entity-name="Sequence_activity" lazy="false" table="`sequence_activity`">
+		<meta attribute="featureMap">Sequence</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="sequence_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="sequence_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="sequence_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="sequence_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="sequence_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="sequence_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="sequence_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="sequence_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="sequence_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="sequence_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="sequence_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="sequence_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="sequence_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="sequence_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="sequence_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="sequence_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="sequence_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="sequence_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="sequence_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="sequence_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="sequence_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`activity_while_while_e_id`"/>
+		</many-to-one>
+	</class>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.SourceImpl" entity-name="Source" abstract="false" lazy="false" extends="ExtensibleElements" table="`source`">
+		<meta attribute="eclassName">Source</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="transitionCondition" entity-name="Condition" cascade="all" foreign-key="source_transitioncondition" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`condition_transitioncondition_e_id`"/>
+		</many-to-one>
+		<property name="linkName" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`linkname`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.SourcesImpl" entity-name="Sources" abstract="false" lazy="false" extends="ExtensibleElements" table="`sources`">
+		<meta attribute="eclassName">Sources</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="source" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="sources_source">
+				<column name="`sources_source_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`sources_source_idx`"/>
+			<one-to-many entity-name="Source"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.TargetImpl" entity-name="Target" abstract="false" lazy="false" extends="ExtensibleElements" table="`target`">
+		<meta attribute="eclassName">Target</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<property name="linkName" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`linkname`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.TargetsImpl" entity-name="Targets" abstract="false" lazy="false" extends="ExtensibleElements" table="`targets`">
+		<meta attribute="eclassName">Targets</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="joinCondition" entity-name="Condition" cascade="all" foreign-key="targets_joincondition" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`condition_joincondition_e_id`"/>
+		</many-to-one>
+		<list name="target" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="targets_target">
+				<column name="`targets_target_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`targets_target_idx`"/>
+			<one-to-many entity-name="Target"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ThrowImpl" entity-name="Throw" abstract="false" lazy="false" extends="Activity" table="`throw`">
+		<meta attribute="eclassName">Throw</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<property name="faultName" lazy="false" insert="true" update="true" not-null="true" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="true" unique="false" name="`faultname`"/>
+		</property>
+		<property name="faultVariable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`faultvariable`"/>
+		</property>
+	</joined-subclass>
+	<class name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ToImpl" entity-name="To" abstract="false" lazy="false" table="`to`">
+		<meta attribute="eclassName">To</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<id type="long" name="e_id" column="e_id" access="org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierPropertyHandler">
+			<meta attribute="syntheticId">true</meta>
+			<generator class="native"/>
+		</id>
+		<version name="e_version" column="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<list name="mixed" table="`to_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`to_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`to_mixed_idx`"/>
+			<one-to-many entity-name="To_mixed"/>
+		</list>
+		<property name="expressionLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`expressionlanguage`"/>
+		</property>
+		<property name="part" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`part`"/>
+		</property>
+		<property name="partnerLink" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`partnerlink`"/>
+		</property>
+		<property name="property" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`property`"/>
+		</property>
+		<property name="variable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`variable`"/>
+		</property>
+		<list name="anyAttribute" table="`to_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`to_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`to_anyattribute_idx`"/>
+			<one-to-many entity-name="To_anyAttribute"/>
+		</list>
+	</class>
+	<class entity-name="To_mixed" lazy="false" table="`to_mixed`">
+		<meta attribute="featureMap">To</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="documentation" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="to_documentation">
+				<column name="`mixed_to_documentation_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_to_documentation_idx`"/>
+			<one-to-many entity-name="Documentation"/>
+		</list>
+		<list name="any" table="`mixed_to_any`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`mixed_to_any_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_to_any_idx`"/>
+			<one-to-many entity-name="To_any"/>
+		</list>
+		<many-to-one name="query" entity-name="Query" cascade="all" foreign-key="to_query" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`mixed_query_query_e_id`"/>
+		</many-to-one>
+		<property name="expressionLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_expressionlanguage`"/>
+		</property>
+		<property name="part" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_part`"/>
+		</property>
+		<property name="partnerLink" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_partnerlink`"/>
+		</property>
+		<property name="property" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`mixed_property`"/>
+		</property>
+		<property name="variable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`mixed_variable`"/>
+		</property>
+		<list name="anyAttribute" table="`mixed_to_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`mixed_to_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`mixed_to_anyattribute_idx`"/>
+			<one-to-many entity-name="To_anyAttribute"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<class entity-name="To_anyAttribute" lazy="false" table="`to_anyattribute`">
+		<meta attribute="featureMap">To</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+	</class>
+	<class entity-name="To_any" lazy="false" table="`to_any`">
+		<meta attribute="featureMap">To</meta>
+		<id type="long">
+			<generator class="native"/>
+		</id>
+		<version name="e_version" access="org.eclipse.emf.teneo.hibernate.mapping.property.VersionPropertyHandler">
+			<meta attribute="syntheticVersion">true</meta>
+		</version>
+		<property name="fme_feature" type="java.lang.String"/>
+		<list name="mixed" table="`any_to_mixed`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_to_mixed_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_to_mixed_idx`"/>
+			<one-to-many entity-name="To_mixed"/>
+		</list>
+		<list name="documentation" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="to_documentation">
+				<column name="`any_to_documentation_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_to_documentation_idx`"/>
+			<one-to-many entity-name="Documentation"/>
+		</list>
+		<many-to-one name="query" entity-name="Query" cascade="all" foreign-key="to_query" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`any_query_query_e_id`"/>
+		</many-to-one>
+		<property name="expressionLanguage" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_expressionlanguage`"/>
+		</property>
+		<property name="part" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_part`"/>
+		</property>
+		<property name="partnerLink" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_partnerlink`"/>
+		</property>
+		<property name="property" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`any_property`"/>
+		</property>
+		<property name="variable" lazy="false" insert="true" update="true" not-null="false" unique="false" type="java.lang.String">
+			<column not-null="false" unique="false" name="`any_variable`"/>
+		</property>
+		<list name="anyAttribute" table="`any_to_anyattribute`" lazy="false" cascade="all,delete-orphan">
+			<key update="true">
+				<column name="`any_to_anyattribute_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`any_to_anyattribute_idx`"/>
+			<one-to-many entity-name="To_anyAttribute"/>
+		</list>
+		<property name="fme_mixed_text" type="java.lang.String"/>
+		<property name="fme_mixed_cdata" type="java.lang.String"/>
+		<property name="fme_mixed_comment" type="java.lang.String"/>
+	</class>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ToPartImpl" entity-name="ToPart" abstract="false" lazy="false" extends="ExtensibleElements" table="`topart`">
+		<meta attribute="eclassName">ToPart</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<property name="fromVariable" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`fromvariable`"/>
+		</property>
+		<property name="part" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`part`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ToPartsImpl" entity-name="ToParts" abstract="false" lazy="false" extends="ExtensibleElements" table="`toparts`">
+		<meta attribute="eclassName">ToParts</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="toPart" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="toparts_topart">
+				<column name="`toparts_topart_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`toparts_topart_idx`"/>
+			<one-to-many entity-name="ToPart"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.ValidateImpl" entity-name="Validate" abstract="false" lazy="false" extends="Activity" table="`validate`">
+		<meta attribute="eclassName">Validate</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<property name="variables" lazy="false" insert="true" update="true" not-null="true" unique="false" type="executable.BPELVariableNames">
+			<column not-null="true" unique="false" name="`variables`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.VariableImpl" entity-name="Variable" abstract="false" lazy="false" extends="ExtensibleElements" table="`variable`">
+		<meta attribute="eclassName">Variable</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<many-to-one name="from" entity-name="From" cascade="all" foreign-key="variable_from" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`from_from_e_id`"/>
+		</many-to-one>
+		<property name="element" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`element`"/>
+		</property>
+		<property name="messageType" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`messagetype`"/>
+		</property>
+		<property name="name" lazy="false" insert="true" update="true" not-null="true" unique="false" type="java.lang.String">
+			<column not-null="true" unique="false" name="`name`"/>
+		</property>
+		<property name="type" lazy="false" insert="true" update="true" not-null="false" unique="false" type="org.eclipse.emf.teneo.hibernate.mapping.QNameUserType">
+			<column not-null="false" unique="false" name="`type`"/>
+		</property>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.VariablesImpl" entity-name="Variables" abstract="false" lazy="false" extends="ExtensibleElements" table="`variables`">
+		<meta attribute="eclassName">Variables</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`extensibleelements_e_id`"/>
+		</key>
+		<list name="variable" lazy="false" cascade="all,delete-orphan">
+			<key update="true" foreign-key="variables_variable">
+				<column name="`variables_variable_e_id`" not-null="false" unique="false"/>
+			</key>
+			<list-index column="`variables_variable_idx`"/>
+			<one-to-many entity-name="Variable"/>
+		</list>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.WaitImpl" entity-name="Wait" abstract="false" lazy="false" extends="Activity" table="`wait`">
+		<meta attribute="eclassName">Wait</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<many-to-one name="for" entity-name="DurationExpr" cascade="all" foreign-key="wait_for" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`durationexpr_for_e_id`"/>
+		</many-to-one>
+		<many-to-one name="until" entity-name="DeadlineExpr" cascade="all" foreign-key="wait_until" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`deadlineexpr_until_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+	<joined-subclass name="org.open.oasis.docs.wsbpel._2._0.process.executable.impl.WhileImpl" entity-name="While" abstract="false" lazy="false" extends="Activity" table="`while`">
+		<meta attribute="eclassName">While</meta>
+		<meta attribute="epackage">http://docs.oasis-open.org/wsbpel/2.0/process/executable</meta>
+		<key>
+			<column name="`activity_e_id`"/>
+		</key>
+		<many-to-one name="condition" entity-name="BooleanExpr" cascade="all" foreign-key="while_condition" lazy="false" insert="true" update="true" not-null="true">
+			<column not-null="true" unique="false" name="`booleanexpr_condition_e_id`"/>
+		</many-to-one>
+		<many-to-one name="assign" entity-name="Assign" cascade="all" foreign-key="while_assign" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`assign_assign_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensate" entity-name="Compensate" cascade="all" foreign-key="while_compensate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensate_compensate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="compensateScope" entity-name="CompensateScope" cascade="all" foreign-key="while_compensatescope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`compensatescope_compensatescope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="empty" entity-name="Empty" cascade="all" foreign-key="while_empty" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`empty_empty_e_id`"/>
+		</many-to-one>
+		<many-to-one name="exit" entity-name="Exit" cascade="all" foreign-key="while_exit" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`exit_exit_e_id`"/>
+		</many-to-one>
+		<many-to-one name="extensionActivity" entity-name="ExtensionActivity" cascade="all" foreign-key="while_extensionactivity" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`extensionactivity_extensionactivity_e_id`"/>
+		</many-to-one>
+		<many-to-one name="flow" entity-name="Flow" cascade="all" foreign-key="while_flow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`flow_flow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="forEach" entity-name="ForEach" cascade="all" foreign-key="while_foreach" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`foreach_foreach_e_id`"/>
+		</many-to-one>
+		<many-to-one name="if" entity-name="If" cascade="all" foreign-key="while_if" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`if_if_e_id`"/>
+		</many-to-one>
+		<many-to-one name="invoke" entity-name="Invoke" cascade="all" foreign-key="while_invoke" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`invoke_invoke_e_id`"/>
+		</many-to-one>
+		<many-to-one name="pick" entity-name="Pick" cascade="all" foreign-key="while_pick" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`pick_pick_e_id`"/>
+		</many-to-one>
+		<many-to-one name="receive" entity-name="Receive" cascade="all" foreign-key="while_receive" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`receive_receive_e_id`"/>
+		</many-to-one>
+		<many-to-one name="repeatUntil" entity-name="RepeatUntil" cascade="all" foreign-key="while_repeatuntil" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`repeatuntil_repeatuntil_e_id`"/>
+		</many-to-one>
+		<many-to-one name="reply" entity-name="Reply" cascade="all" foreign-key="while_reply" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`reply_reply_e_id`"/>
+		</many-to-one>
+		<many-to-one name="rethrow" entity-name="Rethrow" cascade="all" foreign-key="while_rethrow" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`rethrow_rethrow_e_id`"/>
+		</many-to-one>
+		<many-to-one name="scope" entity-name="Scope" cascade="all" foreign-key="while_scope" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`scope_scope_e_id`"/>
+		</many-to-one>
+		<many-to-one name="sequence" entity-name="Sequence" cascade="all" foreign-key="while_sequence" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`sequence_sequence_e_id`"/>
+		</many-to-one>
+		<many-to-one name="throw" entity-name="Throw" cascade="all" foreign-key="while_throw" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`throw_throw_e_id`"/>
+		</many-to-one>
+		<many-to-one name="validate" entity-name="Validate" cascade="all" foreign-key="while_validate" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`validate_validate_e_id`"/>
+		</many-to-one>
+		<many-to-one name="wait" entity-name="Wait" cascade="all" foreign-key="while_wait" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`wait_wait_e_id`"/>
+		</many-to-one>
+		<many-to-one name="while" entity-name="While" cascade="all" foreign-key="while_while" lazy="false" insert="true" update="true" not-null="false">
+			<column not-null="false" unique="false" name="`while_while_e_id`"/>
+		</many-to-one>
+	</joined-subclass>
+</hibernate-mapping>
