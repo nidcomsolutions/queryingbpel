@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0 (http://www.active-endpoints.com)
+-->
+<!-- This process simulates a hotel booking service utilizing a fictitious "Name Your Price" web service, called PriceRight.                                                                                                                                                                                     -->
+<!--                                                                                                                                                                                                                                                                                                             -->
+<!-- PriceRight does business by accepting customer initiated hotel booking inqury with date, location and an offer price and search in its database for hotel rooms that match the requirement. If it finds a match it will book the room and charge the customer the offer price.                              -->
+<!--                                                                                                                                                                                                                                                                                                             -->
+<!-- The hotel booking service (implemented in this BPEL process) will help the customer to save money by reducing the offer price when using the PriceRight service. It will take a customer request, reduce the offer price (initially at 1/2 the price), and submit the request to PriceRight for processing. -->
+<!--                                                                                                                                                                                                                                                                                                             -->
+<!-- If a match is found, then the reservation data is sent back to the customer and the process is completed.                                                                                                                                                                                                   -->
+<!-- If no matching room found by PriceRight, it will increase the offer price by 10% of the original offer price and submit the request again to PriceRight. It will repeat this process until either a match is found, or the original offer price has been reached.                                           -->
+<!--                                                                                                                                                                                                                                                                                                             -->
+<!-- It automates this process using a BPEL(2.0) repeatUtil loop.                                                                                                                                                                                                                                                -->
+<bpel:process xmlns:bksvc="http://docs.active-endpoints.com/activebpel/sample/wsdl/bookingService/2006/07/bookingService.wsdl" xmlns:bookingType="http://schemas.active-endpoints.com/sample/bookingType/2006/07/bookingType.xsd" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:prt="http://docs.active-endpoints.com/activebpel/sample/wsdl/priceRight/2006/07/priceRight.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0" name="repeatUntil" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/repeatUntil/2007/07/repeatUntil.bpel">
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../../Resources/WSDL/priceRight.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/priceRight/2006/07/priceRight.wsdl"/>
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../../Resources/WSDL/bookingService.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/bookingService/2006/07/bookingService.wsdl"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="BookingServiceProvider" name="BookingProcess" partnerLinkType="bksvc:bookingProcessPLT"/>
+      <bpel:partnerLink initializePartnerRole="yes" name="PriceRight" partnerLinkType="prt:priceRightPLT" partnerRole="PriceRightServiceProvider"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="prt:RequestBookingRequest" name="CustomerRequest"/>
+      <bpel:variable messageType="prt:RequestBookingRequest" name="PriceRightRequest"/>
+      <bpel:variable name="PriceFactor" type="xsd:positiveInteger"/>
+      <bpel:variable messageType="prt:RequestBookingResponse" name="PriceRightResponse"/>
+      <bpel:variable messageType="bksvc:ProcessingFaultMessage" name="ProcessingFault"/>
+   </bpel:variables>
+   <bpel:faultHandlers>
+      <bpel:catch faultName="prt:LocationNotFoundFault">
+         <bpel:sequence>
+            <bpel:assign name="AssignLocationFaultMsg">
+               <bpel:copy>
+                  <bpel:from>
+                     <bpel:literal>No hotel is found for the speified location. </bpel:literal>
+                  </bpel:from>
+                  <bpel:to part="Document" variable="ProcessingFault"/>
+               </bpel:copy>
+            </bpel:assign>
+            <bpel:reply faultName="bksvc:ProcessingFault" name="ReplyWithFault" operation="RequestBooking" partnerLink="BookingProcess" portType="bksvc:BookingServiceType" variable="ProcessingFault"/>
+         </bpel:sequence>
+      </bpel:catch>
+      <bpel:catch faultName="prt:RequestFormatFault">
+         <bpel:sequence>
+            <bpel:assign name="AssignFormatFaultMsg">
+               <bpel:copy>
+                  <bpel:from>
+                     <bpel:literal>An unexpected error has occurred.</bpel:literal>
+                  </bpel:from>
+                  <bpel:to part="Document" variable="ProcessingFault"/>
+               </bpel:copy>
+            </bpel:assign>
+            <bpel:reply faultName="bksvc:ProcessingFault" name="ReplyWithFault" operation="RequestBooking" partnerLink="BookingProcess" portType="bksvc:BookingServiceType" variable="ProcessingFault"/>
+         </bpel:sequence>
+      </bpel:catch>
+   </bpel:faultHandlers>
+   <bpel:sequence>
+      <!-- Receiving a customer request for booking a hotel -->
+      <bpel:receive createInstance="yes" name="ReceiveCustomerBookingRequest" operation="RequestBooking" partnerLink="BookingProcess" portType="bksvc:BookingServiceType" variable="CustomerRequest"/>
+      <bpel:assign name="CopyCustomerRequest">
+         <bpel:copy>
+            <bpel:from variable="CustomerRequest"/>
+            <bpel:to variable="PriceRightRequest"/>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:assign name="InitializeVariable">
+         <bpel:copy>
+            <bpel:from>
+               <bpel:literal>40</bpel:literal>
+            </bpel:from>
+            <bpel:to variable="PriceFactor"/>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:repeatUntil name="FindBestPrice">
+         <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$PriceRightResponse.Document/bookingType:bookingStatusData = 'Accepted' or $PriceFactor &gt;=100</bpel:condition>
+         <bpel:sequence>
+            <bpel:assign name="SetOfferPrice">
+               <bpel:copy>
+                  <bpel:from>$PriceFactor +10</bpel:from>
+                  <bpel:to variable="PriceFactor"/>
+               </bpel:copy>
+               <bpel:copy>
+                  <bpel:from>round($CustomerRequest.Document/bookingType:bookingRequestData/bookingType:OfferPrice * $PriceFactor div 100)</bpel:from>
+                  <bpel:to>$PriceRightRequest.Document/bookingType:bookingRequestData/bookingType:OfferPrice</bpel:to>
+               </bpel:copy>
+            </bpel:assign>
+            <bpel:invoke inputVariable="PriceRightRequest" name="FindAndBookHotel" operation="RequestBooking" outputVariable="PriceRightResponse" partnerLink="PriceRight" portType="prt:PriceRightServiceType"/>
+         </bpel:sequence>
+      </bpel:repeatUntil>
+      <bpel:reply name="ReplyToCustomer" operation="RequestBooking" partnerLink="BookingProcess" portType="bksvc:BookingServiceType" variable="PriceRightResponse"/>
+   </bpel:sequence>
+</bpel:process>

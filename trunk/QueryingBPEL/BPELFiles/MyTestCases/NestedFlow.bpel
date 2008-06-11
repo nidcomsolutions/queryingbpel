@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(r) Designer Version 4.1.0 (http://www.active-endpoints.com)
+-->
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ns1="http://example.com/loan-approval/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="NestedFlow" suppressJoinFailure="yes" targetNamespace="http://NestedFlow">
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../ActiveBPEL_Samples/Completed Tutorial/WSDL/loanServicePT.wsdl" namespace="http://example.com/loan-approval/wsdl/"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="loanService" name="loanPartnerLT" partnerLinkType="ns1:loanPartnerLT"/>
+      <bpel:partnerLink name="riskAssessmentLT" partnerLinkType="ns1:riskAssessmentLT" partnerRole="assessor"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="ns1:creditInformationMessage" name="creditInformationMessage"/>
+      <bpel:variable messageType="ns1:approvalMessage" name="approvalMessage"/>
+      <bpel:variable messageType="ns1:riskAssessmentMessage" name="riskAssessmentMessage"/>
+   </bpel:variables>
+   <bpel:flow>
+      <bpel:links>
+         <bpel:link name="L2"/>
+      </bpel:links>
+      <bpel:flow name="FlowB">
+         <bpel:targets>
+            <bpel:target linkName="L2"/>
+         </bpel:targets>
+         <bpel:links>
+            <bpel:link name="L3"/>
+            <bpel:link name="L1"/>
+         </bpel:links>
+         <bpel:flow name="FlowC">
+            <bpel:sequence name="SeqA">
+               <bpel:invoke inputVariable="creditInformationMessage" name="InvokeA" operation="check" outputVariable="riskAssessmentMessage" partnerLink="riskAssessmentLT" portType="ns1:riskAssessmentPT">
+                  <bpel:targets>
+                     <bpel:target linkName="L3"/>
+                  </bpel:targets>
+               </bpel:invoke>
+               <bpel:empty name="EmptyA"/>
+               <bpel:exit name="ExitA"/>
+            </bpel:sequence>
+         </bpel:flow>
+         <bpel:reply name="ReplyA" operation="request" partnerLink="loanPartnerLT" portType="ns1:loanServicePT" variable="approvalMessage">
+            <bpel:targets>
+               <bpel:target linkName="L1"/>
+            </bpel:targets>
+            <bpel:sources>
+               <bpel:source linkName="L3"/>
+            </bpel:sources>
+         </bpel:reply>
+         <bpel:receive name="ReceiveB" operation="request" partnerLink="loanPartnerLT" portType="ns1:loanServicePT" variable="creditInformationMessage">
+            <bpel:sources>
+               <bpel:source linkName="L1"/>
+            </bpel:sources>
+         </bpel:receive>
+      </bpel:flow>
+      <bpel:receive createInstance="yes" name="ReceiveA" operation="request" partnerLink="loanPartnerLT" variable="creditInformationMessage">
+         <bpel:sources>
+            <bpel:source linkName="L2"/>
+         </bpel:sources>
+      </bpel:receive>
+   </bpel:flow>
+</bpel:process>

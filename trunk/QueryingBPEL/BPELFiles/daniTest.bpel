@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 4.0.0 (http://www.active-endpoints.com )
+-->
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ns1=" http://saas.uni-stuttgart.de/serverManagement" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="provisioningWorkflow" suppressJoinFailure="yes" targetNamespace=" http://provisioningWorkflow">
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="file:/C:/ws.BPEL/SaaS-BPEL-Process/WSDL/serverManagement.wsdl" namespace=" http://saas.uni-stuttgart.de/serverManagement"/>
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/ " location="../WSDL/serverManagement.wsdl" namespace="http://saas.uni-stuttgart.de/serverManagement"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="service" name="serverManagementLinkType" partnerLinkType="ns1:serverManagementLinkType" partnerRole="service"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="ns1:aquireServerRequest" name="aquireServerRequest"/>
+      <bpel:variable messageType="ns1:aquireServerResponse" name="aquireServerResponse"/>
+      <bpel:variable messageType="ns1:releaseServerRequest" name="releaseServerRequest"/>
+      <bpel:variable messageType="ns1:releaseServerResponse" name="releaseServerResponse"/>
+      <bpel:variable messageType="ns1:getComponentsByServerIDRequest" name="getComponentsByServerIDRequest"/>
+      <bpel:variable messageType="ns1:getComponentsByServerIDResponse" name="getComponentsByServerIDResponse"/>
+      <bpel:variable messageType="ns1:getServerConfigurationRequest" name="getServerConfigurationRequest"/>
+      <bpel:variable messageType="ns1:getServerConfigurationResponse" name="getServerConfigurationResponse"/>
+      <bpel:variable messageType="ns1:getServerStatusRequest" name="getServerStatusRequest"/>
+      <bpel:variable messageType="ns1:getServerStatusResponse" name="getServerStatusResponse"/>
+      <bpel:variable messageType="ns1:startServerRequest" name="startServerRequest"/>
+      <bpel:variable messageType="ns1:startServerResponse" name="startServerResponse"/>
+      <bpel:variable messageType="ns1:stopServerRequest" name="stopServerRequest"/>
+      <bpel:variable messageType="ns1:stopServerResponse" name="stopServerResponse"/>
+      <bpel:variable messageType="ns1:getServerByComponentIDRequest" name="getServerByComponentIDRequest"/>
+      <bpel:variable messageType="ns1:getServerByComponentIDResponse" name="getServerByComponentIDResponse"/>
+   </bpel:variables>
+   <bpel:pick createInstance="yes">
+      <bpel:onMessage operation="aquireServer" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="aquireServerRequest">
+         <bpel:sequence>
+            <bpel:invoke inputVariable="aquireServerRequest" operation="aquireServer" outputVariable="aquireServerResponse" partnerLink="serverManagementLinkType" portType="ns1:serverManagement"/>
+            <bpel:reply operation="aquireServer" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="aquireServerResponse"/>
+         </bpel:sequence>
+      </bpel:onMessage>
+      <bpel:onMessage operation="getComponentsByServerID" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="getComponentsByServerIDRequest">
+         <bpel:sequence>
+            <bpel:invoke inputVariable="getComponentsByServerIDRequest" operation="getComponentsByServerID" outputVariable="getComponentsByServerIDResponse" partnerLink="serverManagementLinkType" portType="ns1:serverManagement"/>
+            <bpel:reply operation="getComponentsByServerID" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="getComponentsByServerIDResponse"/>
+         </bpel:sequence>
+      </bpel:onMessage>
+      <bpel:onMessage operation="getServerConfiguration" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="getServerConfigurationRequest">
+         <bpel:sequence>
+            <bpel:invoke inputVariable="getServerConfigurationRequest" operation="getServerConfiguration" outputVariable="getServerConfigurationResponse" partnerLink="serverManagementLinkType" portType="ns1:serverManagement"/>
+            <bpel:reply operation="getServerConfiguration" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="getServerConfigurationResponse"/>
+         </bpel:sequence>
+      </bpel:onMessage>
+      <bpel:onMessage operation="getServerByComponentID" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="getServerByComponentIDRequest">
+         <bpel:sequence>
+            <bpel:invoke inputVariable="getServerByComponentIDRequest" operation="getServerByComponentID" outputVariable="getServerByComponentIDResponse" partnerLink="serverManagementLinkType" portType="ns1:serverManagement"/>
+            <bpel:reply operation="getServerByComponentID" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="getServerByComponentIDResponse"/>
+         </bpel:sequence>
+      </bpel:onMessage>
+      <bpel:onMessage operation="getServerStatus" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="getServerStatusRequest">
+         <bpel:sequence>
+            <bpel:invoke inputVariable="getServerStatusRequest" operation="getServerStatus" outputVariable="getServerStatusResponse" partnerLink="serverManagementLinkType" portType="ns1:serverManagement"/>
+            <bpel:reply operation="getServerStatus" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="getServerStatusResponse"/>
+         </bpel:sequence>
+      </bpel:onMessage>
+      <bpel:onMessage operation="releaseServer" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="releaseServerRequest">
+         <bpel:sequence>
+            <bpel:invoke inputVariable="releaseServerRequest" operation="releaseServer" outputVariable="releaseServerResponse" partnerLink="serverManagementLinkType" portType="ns1:serverManagement"/>
+            <bpel:reply operation="releaseServer" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="releaseServerResponse"/>
+         </bpel:sequence>
+      </bpel:onMessage>
+      <bpel:onMessage operation="startServer" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="startServerRequest">
+         <bpel:sequence>
+            <bpel:invoke inputVariable="startServerRequest" operation="startServer" outputVariable="startServerResponse" partnerLink="serverManagementLinkType" portType="ns1:serverManagement"/>
+            <bpel:reply operation="startServer" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="startServerResponse"/>
+         </bpel:sequence>
+      </bpel:onMessage>
+      <bpel:onMessage operation="stopServer" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="stopServerRequest">
+         <bpel:sequence>
+            <bpel:invoke inputVariable="stopServerRequest" operation="stopServer" outputVariable="stopServerResponse" partnerLink="serverManagementLinkType" portType="ns1:serverManagement"/>
+            <bpel:reply operation="stopServer" partnerLink="serverManagementLinkType" portType="ns1:serverManagement" variable="stopServerResponse"/>
+         </bpel:sequence>
+      </bpel:onMessage>
+   </bpel:pick>
+</bpel:process>
+

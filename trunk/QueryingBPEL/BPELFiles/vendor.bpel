@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0 (http://www.active-endpoints.com)
+-->
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ns="http://schemas.active-endpoints.com/activebpel/sample/schema/procurement/2006/08/procurement.wsdl" xmlns:ns1="http://docs.active-endpoints.com/activebpel/sample/wsdl/procurement/2006/08/procurement.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="vendor" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/vendor/2006/08/vendor.bpel">
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../../Resources/WSDL/procurement.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/procurement/2006/08/procurement.wsdl"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="Vendor" name="VendorLink" partnerLinkType="ns1:VendorPLT"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="ns1:GetVendorQuoteOpRequest" name="GetVendorQuoteOpRequestVar"/>
+      <bpel:variable messageType="ns1:GetVendorQuoteOpResponse" name="GetVendorQuoteOpResponseVar"/>
+      <bpel:variable messageType="ns1:GetVendorQuoteOpItemNotAvailableFault" name="ItemNotAvailableFaultVar"/>
+   </bpel:variables>
+   <bpel:sequence>
+      <bpel:receive createInstance="yes" name="ReceiveQuoteInquiry" operation="GetVendorQuoteOp" partnerLink="VendorLink" portType="ns1:VendorPortType" variable="GetVendorQuoteOpRequestVar"/>
+      <bpel:assign name="InitializeResponse">
+         <bpel:copy>
+            <bpel:from>
+               <bpel:literal>
+                  <ns:ItemQuoteInfo>
+<ns:ItemName/>
+<ns:Quantity/>
+<ns:UnitPrice/>
+</ns:ItemQuoteInfo>
+               </bpel:literal>
+            </bpel:from>
+            <bpel:to part="Document" variable="GetVendorQuoteOpResponseVar"/>
+         </bpel:copy>
+         <bpel:copy>
+            <bpel:from>$GetVendorQuoteOpRequestVar.Document/ns:ItemName</bpel:from>
+            <bpel:to part="Document" variable="GetVendorQuoteOpResponseVar">
+               <bpel:query>ns:ItemName</bpel:query>
+            </bpel:to>
+         </bpel:copy>
+         <bpel:copy>
+            <bpel:from>$GetVendorQuoteOpRequestVar.Document/ns:Quantity</bpel:from>
+            <bpel:to part="Document" variable="GetVendorQuoteOpResponseVar">
+               <bpel:query>ns:Quantity</bpel:query>
+            </bpel:to>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:if name="GenerateResponse">
+         <bpel:condition>$GetVendorQuoteOpRequestVar.Document/ns:Quantity &gt; '1000'</bpel:condition>
+         <bpel:sequence>
+            <bpel:assign name="GenerateFaultMessage">
+               <bpel:copy>
+                  <bpel:from>concat('The requested item "', $GetVendorQuoteOpRequestVar.Document/ns:ItemName , '" and quantity (', $GetVendorQuoteOpRequestVar.Document/ns:Quantity , ') is not available for purchase.')</bpel:from>
+                  <bpel:to part="Document" variable="ItemNotAvailableFaultVar"/>
+               </bpel:copy>
+            </bpel:assign>
+            <bpel:reply faultName="ns1:ItemNotAvailableFault" name="ReplyWithFault" operation="GetVendorQuoteOp" partnerLink="VendorLink" portType="ns1:VendorPortType" variable="ItemNotAvailableFaultVar"/>
+         </bpel:sequence>
+         <bpel:else>
+            <bpel:sequence>
+               <bpel:assign name="GenerateQuote">
+                  <bpel:copy>
+                     <bpel:from>
+                        <bpel:literal>100.00</bpel:literal>
+                     </bpel:from>
+                     <bpel:to part="Document" variable="GetVendorQuoteOpResponseVar">
+                        <bpel:query>ns:UnitPrice</bpel:query>
+                     </bpel:to>
+                  </bpel:copy>
+               </bpel:assign>
+               <bpel:reply name="ReplyWithQuote" operation="GetVendorQuoteOp" partnerLink="VendorLink" portType="ns1:VendorPortType" variable="GetVendorQuoteOpResponseVar"/>
+            </bpel:sequence>
+         </bpel:else>
+      </bpel:if>
+   </bpel:sequence>
+</bpel:process>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0 (http://www.active-endpoints.com)
+-->
+<bpel:process xmlns:abx="http://www.activebpel.org/bpel/extension" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ts="http://docs.active-endpoints.com/activebpel/sample/wsdl/travelService/2006/07/travelService.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="rethrow" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/rethrow/2006/08/rethrow.bpel">
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../../Resources/WSDL/travelService.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/travelService/2006/07/travelService.wsdl"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="ServiceProvider" name="BookPackageLink" partnerLinkType="ts:BookPackagePLT"/>
+      <bpel:partnerLink initializePartnerRole="yes" name="BookFligtLink" partnerLinkType="ts:BookFligtLink" partnerRole="ServiceProvider"/>
+      <bpel:partnerLink initializePartnerRole="yes" name="BookHotelLink" partnerLinkType="ts:BookHotelLink" partnerRole="ServiceProvider"/>
+      <bpel:partnerLink initializePartnerRole="yes" name="BookRentalCarLink" partnerLinkType="ts:BookRentalCarLink" partnerRole="ServiceProvider"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="ts:BookPackageRequest" name="BookPackageRequest"/>
+      <bpel:variable messageType="ts:BookPackageResponse" name="BookPackageResponse"/>
+      <bpel:variable messageType="ts:BookFlightRequest" name="BookFlightRequest"/>
+      <bpel:variable messageType="ts:BookFlightResponse" name="BookFlightResponse"/>
+      <bpel:variable messageType="ts:BookHotelRequest" name="BookHotelRequest"/>
+      <bpel:variable messageType="ts:BookHotelResponse" name="BookHotelResponse"/>
+      <bpel:variable messageType="ts:BookRentalCarRequest" name="BookRentalCarRequest"/>
+      <bpel:variable messageType="ts:BookRentalCarResponse" name="BookRentalCarResponse"/>
+      <bpel:variable messageType="ts:BookPackageFault" name="BookPackageFaultVar"/>
+   </bpel:variables>
+   <bpel:faultHandlers>
+      <bpel:catchAll>
+         <bpel:sequence>
+            <bpel:compensate name="ReverseCompletedTransactions"/>
+            <bpel:assign name="GenerateFaultMessage">
+               <bpel:copy>
+                  <bpel:from>
+                     <bpel:literal>An error occurred while submitting the order. All transactions have been canceled.
+</bpel:literal>
+                  </bpel:from>
+                  <bpel:to part="Document" variable="BookPackageFaultVar"/>
+               </bpel:copy>
+            </bpel:assign>
+            <bpel:reply faultName="ts:BookPackageFault" name="SendBookPackageError" operation="BookPackage" partnerLink="BookPackageLink" portType="ts:TravelServicePT" variable="BookPackageFaultVar"/>
+         </bpel:sequence>
+      </bpel:catchAll>
+   </bpel:faultHandlers>
+   <bpel:sequence>
+      <bpel:receive createInstance="yes" name="ReceiveBookPackageRequest" operation="BookPackage" partnerLink="BookPackageLink" portType="ts:TravelServicePT" variable="BookPackageRequest"/>
+      <bpel:assign name="GenerateRequests">
+         <bpel:copy>
+            <bpel:from part="Document" variable="BookPackageRequest"/>
+            <bpel:to part="Document" variable="BookFlightRequest"/>
+         </bpel:copy>
+         <bpel:copy>
+            <bpel:from part="Document" variable="BookPackageRequest"/>
+            <bpel:to part="Document" variable="BookHotelRequest"/>
+         </bpel:copy>
+         <bpel:copy>
+            <bpel:from part="Document" variable="BookPackageRequest"/>
+            <bpel:to part="Document" variable="BookRentalCarRequest"/>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:flow>
+         <bpel:scope>
+            <bpel:faultHandlers>
+               <bpel:catchAll>
+                  <bpel:sequence>
+                     <bpel:empty name="HandleInvocatonError"/>
+                     <bpel:rethrow/>
+                  </bpel:sequence>
+               </bpel:catchAll>
+            </bpel:faultHandlers>
+            <bpel:invoke inputVariable="BookFlightRequest" name="BookFlight" operation="BookFlight" outputVariable="BookFlightResponse" partnerLink="BookFligtLink" portType="ts:FlightServicePT"/>
+         </bpel:scope>
+         <bpel:scope>
+            <bpel:faultHandlers>
+               <bpel:catchAll>
+                  <bpel:sequence>
+                     <bpel:empty name="HandleInvocatonError"/>
+                     <bpel:rethrow/>
+                  </bpel:sequence>
+               </bpel:catchAll>
+            </bpel:faultHandlers>
+            <bpel:invoke inputVariable="BookHotelRequest" name="BookHotel" operation="BookHotel" outputVariable="BookHotelResponse" partnerLink="BookHotelLink" portType="ts:HotelServicePT"/>
+         </bpel:scope>
+         <bpel:scope>
+            <bpel:faultHandlers>
+               <bpel:catchAll>
+                  <bpel:sequence>
+                     <bpel:empty name="HandleInvocatonError"/>
+                     <bpel:rethrow/>
+                  </bpel:sequence>
+               </bpel:catchAll>
+            </bpel:faultHandlers>
+            <bpel:invoke inputVariable="BookRentalCarRequest" name="BookCar" operation="BookRentalCar" outputVariable="BookRentalCarResponse" partnerLink="BookRentalCarLink" portType="ts:RentalCarServicePT"/>
+         </bpel:scope>
+      </bpel:flow>
+      <bpel:assign name="GenerateResponse">
+         <bpel:copy>
+            <bpel:from>concat( 'Flight: ', $BookFlightResponse.Document , '- Hotel: ', $BookHotelResponse.Document , '- Rental Car: ', $BookRentalCarResponse.Document )</bpel:from>
+            <bpel:to part="Document" variable="BookPackageResponse"/>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:reply name="SendBookPackageResponse" operation="BookPackage" partnerLink="BookPackageLink" portType="ts:TravelServicePT" variable="BookPackageResponse"/>
+   </bpel:sequence>
+</bpel:process>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0 (http://www.active-endpoints.com)
+-->
+<bpel:process xmlns:aecf-rules="http://docs.active-endpoints.com/activebpel/sample/customFunction/ruleService/2006/09" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:fts="http://docs.active-endpoints.com/activebpel/sample/wsdl/flightTrackerService/2006/07/flightTrackerService.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0" name="alarm_repeatEvery" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/alarm_repeatEvery/2007/07/alarm_repeatEvery.bpel">
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../../Resources/WSDL/flightTrackerService.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/flightTrackerService/2006/07/flightTrackerService.wsdl"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="TrackerServiceProvider" name="FlightTrackServicePLT" partnerLinkType="fts:FlightTrackServicePLT"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="fts:CreateTrackerRequest" name="CreateTrackerRequest"/>
+      <bpel:variable messageType="fts:CreateTrackerResponse" name="CreateTrackerResponse"/>
+      <bpel:variable element="fts:FlightHistory" name="FlightHistory">
+         <bpel:from>
+            <bpel:literal>
+               <fts:FlightHistory xmlns:fts="http://docs.active-endpoints.com/activebpel/sample/wsdl/flightTrackerService/2006/07/flightTrackerService.wsdl">
+<fts:FlightStatus>
+<fts:StatusTime>0 second</fts:StatusTime>
+<fts:LocationDescription>In air</fts:LocationDescription>
+</fts:FlightStatus>
+</fts:FlightHistory>
+            </bpel:literal>
+         </bpel:from>
+      </bpel:variable>
+      <bpel:variable messageType="fts:GetFlightHistoryRequest" name="GetFlightHistoryRequest"/>
+      <bpel:variable messageType="fts:GetFlightHistoryResponse" name="GetFlightHistoryResponse"/>
+      <bpel:variable messageType="fts:RemoveTrackerRequest" name="RemoveTrackerRequest"/>
+      <bpel:variable name="IsTrackerValid" type="xsd:boolean">
+         <bpel:from>true()</bpel:from>
+      </bpel:variable>
+      <bpel:variable name="UpdateCount" type="xsd:int">
+         <bpel:from>
+            <bpel:literal>1</bpel:literal>
+         </bpel:from>
+      </bpel:variable>
+   </bpel:variables>
+   <bpel:correlationSets>
+      <bpel:correlationSet name="TrackerIdCS" properties="fts:TrackerId"/>
+   </bpel:correlationSets>
+   <bpel:sequence>
+      <bpel:receive createInstance="yes" name="ReceiveCreateTrackerRequest" operation="CreateTracker" partnerLink="FlightTrackServicePLT" portType="fts:flight_tracker_service_type" variable="CreateTrackerRequest"/>
+      <bpel:assign name="InitializeVariables" validate="yes">
+         <bpel:copy>
+            <bpel:from>
+               <bpel:literal>
+                  <fts:createTrackerResponse xmlns:fts="http://docs.active-endpoints.com/activebpel/sample/wsdl/flightTrackerService/2006/07/flightTrackerService.wsdl">
+<fts:TrackerID/>
+</fts:createTrackerResponse>
+               </bpel:literal>
+            </bpel:from>
+            <bpel:to part="Document" variable="CreateTrackerResponse"/>
+         </bpel:copy>
+         <bpel:copy>
+            <bpel:from>
+               <bpel:literal>
+                  <FlightHistory xmlns="http://docs.active-endpoints.com/activebpel/sample/wsdl/flightTrackerService/2006/07/flightTrackerService.wsdl">
+</FlightHistory>
+               </bpel:literal>
+            </bpel:from>
+            <bpel:to part="Document" variable="GetFlightHistoryResponse"/>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:assign name="GenerateTrackerId">
+         <bpel:copy>
+            <bpel:from>$CreateTrackerRequest.Document/fts:FightNumber</bpel:from>
+            <bpel:to>$CreateTrackerResponse.Document/fts:TrackerID</bpel:to>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:reply name="ReplyWithTrackerId" operation="CreateTracker" partnerLink="FlightTrackServicePLT" portType="fts:flight_tracker_service_type" variable="CreateTrackerResponse">
+         <bpel:correlations>
+            <bpel:correlation initiate="yes" set="TrackerIdCS"/>
+         </bpel:correlations>
+      </bpel:reply>
+      <bpel:scope>
+         <bpel:eventHandlers>
+            <bpel:onAlarm>
+               <bpel:for>'PT15S'</bpel:for>
+               <bpel:repeatEvery>'PT15S'</bpel:repeatEvery>
+               <bpel:scope isolated="yes">
+                  <bpel:if name="UpdateFlightHistoryForValidTracker">
+                     <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$IsTrackerValid = true() and $UpdateCount &lt; 5</bpel:condition>
+                     <bpel:sequence>
+                        <bpel:assign name="IncrementUpdateCounter">
+                           <bpel:copy>
+                              <bpel:from>$UpdateCount + 1</bpel:from>
+                              <bpel:to variable="UpdateCount"/>
+                           </bpel:copy>
+                        </bpel:assign>
+                        <bpel:assign name="ExpandFlightHistory" validate="yes">
+                           <bpel:copy>
+                              <bpel:from>bpel:doXslTransform("project:/BPEL_Samples/Resources/XSL/AddFlightStatusData.xsl", $FlightHistory )</bpel:from>
+                              <bpel:to variable="FlightHistory"/>
+                           </bpel:copy>
+                        </bpel:assign>
+                        <bpel:assign name="SetStatusUpdateTime">
+                           <bpel:copy>
+                              <bpel:from>concat( ($UpdateCount -1)* 15 , " seconds")</bpel:from>
+                              <bpel:to>$FlightHistory/fts:FlightStatus[$UpdateCount]/fts:StatusTime</bpel:to>
+                           </bpel:copy>
+                        </bpel:assign>
+                        <bpel:if>
+                           <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$UpdateCount &lt;5</bpel:condition>
+                           <bpel:assign name="SetFlightStatusInAir">
+                              <bpel:copy>
+                                 <bpel:from>
+                                    <bpel:literal>In air</bpel:literal>
+                                 </bpel:from>
+                                 <bpel:to>$FlightHistory/fts:FlightStatus[$UpdateCount]/fts:LocationDescription</bpel:to>
+                              </bpel:copy>
+                           </bpel:assign>
+                           <bpel:else>
+                              <bpel:assign name="SetFlightStatusLanded">
+                                 <bpel:copy>
+                                    <bpel:from>
+                                       <bpel:literal>Landed</bpel:literal>
+                                    </bpel:from>
+                                    <bpel:to>$FlightHistory/fts:FlightStatus[$UpdateCount]/fts:LocationDescription</bpel:to>
+                                 </bpel:copy>
+                              </bpel:assign>
+                           </bpel:else>
+                        </bpel:if>
+                     </bpel:sequence>
+                  </bpel:if>
+               </bpel:scope>
+            </bpel:onAlarm>
+         </bpel:eventHandlers>
+         <bpel:repeatUntil name="TrackerLifeCycle">
+            <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$IsTrackerValid = false()</bpel:condition>
+            <bpel:pick>
+               <bpel:onMessage operation="GetFlightHistory" partnerLink="FlightTrackServicePLT" portType="fts:flight_tracker_service_type" variable="GetFlightHistoryRequest">
+                  <bpel:correlations>
+                     <bpel:correlation initiate="no" set="TrackerIdCS"/>
+                  </bpel:correlations>
+                  <bpel:scope isolated="yes">
+                     <bpel:sequence>
+                        <bpel:assign name="GenerateResponse">
+                           <bpel:copy>
+                              <bpel:from variable="FlightHistory"/>
+                              <bpel:to part="Document" variable="GetFlightHistoryResponse"/>
+                           </bpel:copy>
+                        </bpel:assign>
+                        <bpel:reply name="ReplyWithFlightHistory" operation="GetFlightHistory" partnerLink="FlightTrackServicePLT" portType="fts:flight_tracker_service_type" variable="GetFlightHistoryResponse"/>
+                     </bpel:sequence>
+                  </bpel:scope>
+               </bpel:onMessage>
+               <bpel:onMessage operation="RemoveTracker" partnerLink="FlightTrackServicePLT" portType="fts:flight_tracker_service_type" variable="RemoveTrackerRequest">
+                  <bpel:correlations>
+                     <bpel:correlation initiate="no" set="TrackerIdCS"/>
+                  </bpel:correlations>
+                  <bpel:scope isolated="yes">
+                     <bpel:assign name="InvalidateTracker">
+                        <bpel:copy>
+                           <bpel:from>false()</bpel:from>
+                           <bpel:to variable="IsTrackerValid"/>
+                        </bpel:copy>
+                     </bpel:assign>
+                  </bpel:scope>
+               </bpel:onMessage>
+            </bpel:pick>
+         </bpel:repeatUntil>
+      </bpel:scope>
+   </bpel:sequence>
+</bpel:process>

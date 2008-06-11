@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0.0 (http://www.active-endpoints.com)
+-->
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ns1="http://docs.active-endpoints.com/activebpel/sample/wsdl/order/2006/09/order.wsdl" xmlns:ns1-1="http://docs.active-endpoints.com/activebpel/sample/wsdl/pick_start/2006/09/pick_start.wsdl" xmlns:ns1-2="http://docs.active-endpoints.com/activebpel/sample/wsdl/pick_start/2006/09/pick_start.wsdl" xmlns:ns2="http://docs.active-endpoints.com/activebpel/sample/wsdl/orderProcess/2006/09/orderProcess.wsdl" xmlns:ns3="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns4="http://docs.active-endpoints.com/activebpel/sample/wsdl/pick_start/2006/09/pick_start.wsdl" xmlns:ns5="urn:oasis:names:specification:ubl:schema:xsd:Order-1.0" xmlns:ns6="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-1.0" xmlns:ns7="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-1.0" xmlns:ns8="http://schemas.active-endpoints.com/sample/orderTypes/2006/09/orderTypes.xsd" xmlns:ns9="urn:oasis:names:specification:ubl:schema:xsd:OrderResponseSimple-1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="multi-start_receives" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/multi-start_receives/2006/09/multi-start_receives.bpel">
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/order.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/order/2006/09/order.wsdl"/>
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/orderProcess.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/orderProcess/2006/09/orderProcess.wsdl"/>
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/pick_start.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/pick_start/2006/09/pick_start.wsdl"/>
+   <partnerLinks>
+      <partnerLink myRole="orderProcess" name="orderProcessPLT" partnerLinkType="ns2:orderProcessPLT"/>
+      <partnerLink myRole="pick-startProcess" name="ublOrderPLT" partnerLinkType="ns1-1:ublOrderPLT"/>
+   </partnerLinks>
+   <variables>
+      <variable messageType="ns1:orderMessage" name="orderMessage"/>
+      <variable messageType="ns2:orderProcessResponse" name="orderProcessResponse"/>
+      <variable messageType="ns1-1:ublOrderMessage" name="ublOrderMessage"/>
+      <variable messageType="ns1-1:customOutputMessage" name="customOutputMessage"/>
+      <variable messageType="ns1-1:ublOutputMessage" name="ublOutputMessage"/>
+   </variables>
+   <correlationSets>
+      <correlationSet name="Order" properties="ns2:PONum ns2:CustID"/>
+   </correlationSets>
+   <flow>
+      <sequence>
+         <receive createInstance="yes" operation="receiveOrder" partnerLink="orderProcessPLT" portType="ns2:OrderPT" variable="orderMessage">
+            <correlations>
+               <correlation initiate="join" set="Order"/>
+            </correlations>
+         </receive>
+         <assign name="CreateResponse">
+            <copy>
+               <from>concat('Received custom order with PO# ', $orderMessage.order/OrderHeader/PONo, ' from customer ', $orderMessage.order/OrderHeader/CustId)</from>
+               <to part="response" variable="orderProcessResponse"/>
+            </copy>
+            <copy>
+               <from part="order" variable="orderMessage">
+                  <query>OrderHeader/PONo</query>
+               </from>
+               <to part="PONum" variable="orderProcessResponse"/>
+            </copy>
+            <copy>
+               <from part="order" variable="orderMessage">
+                  <query>OrderHeader/CustId</query>
+               </from>
+               <to part="CustID" variable="orderProcessResponse"/>
+            </copy>
+         </assign>
+         <reply operation="receiveOrder" partnerLink="orderProcessPLT" portType="ns2:OrderPT" variable="orderProcessResponse">
+            <correlations>
+               <correlation initiate="no" set="Order"/>
+            </correlations>
+         </reply>
+      </sequence>
+      <sequence>
+         <receive createInstance="yes" operation="receiveUBLOrder" partnerLink="ublOrderPLT" portType="ns1-1:ublPT" variable="ublOrderMessage">
+            <correlations>
+               <correlation initiate="join" set="Order"/>
+            </correlations>
+         </receive>
+         <assign name="InitializeVariable">
+            <copy>
+               <from>
+                  <literal>
+                     <OrderResponseSimple xmlns="urn:oasis:names:specification:ubl:schema:xsd:OrderResponseSimple-1.0" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-1.0" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-1.0" xmlns:ccp="urn:oasis:names:specification:ubl:schema:xsd:CoreComponentParameters-1.0" xmlns:dsc="urn:oasis:names:specification:ubl:schema:xsd:DocumentStatusCode-1.0" xmlns:sdt="urn:oasis:names:specification:ubl:schema:xsd:SpecializedDatatypes-1.0" xmlns:udt="urn:oasis:names:specification:ubl:schema:xsd:UnspecializedDatatypes-1.0">
+	<ID>id</ID>
+	<cbc:IssueDate/>
+	<AcceptedIndicator>true</AcceptedIndicator>
+	<cac:OrderReference/>
+	<cac:BuyerParty/>
+	<cac:SellerParty/>
+</OrderResponseSimple>
+                  </literal>
+               </from>
+               <to part="output" variable="ublOutputMessage"/>
+            </copy>
+         </assign>
+         <assign name="CreateResponse">
+            <copy>
+               <from>concat('Received UBL order with PO# ', $ublOrderMessage.order/ns5:BuyersID, ' from customer ', $ublOrderMessage.order/ns7:BuyerParty/ns7:Party/ns7:PartyName/ns6:Name)</from>
+               <to part="PONum" variable="orderProcessResponse"/>
+            </copy>
+            <copy>
+               <from>'OK'</from>
+               <to part="output" variable="customOutputMessage"/>
+            </copy>
+            <copy>
+               <from part="order" variable="ublOrderMessage">
+                  <query>ns6:IssueDate</query>
+               </from>
+               <to part="output" variable="ublOutputMessage">
+                  <query>ns6:IssueDate</query>
+               </to>
+            </copy>
+         </assign>
+         <reply operation="receiveUBLOrder" partnerLink="ublOrderPLT" portType="ns1-1:ublPT" variable="ublOutputMessage"/>
+      </sequence>
+   </flow>
+</process>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<bpel:process
+
+	xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+
+	xmlns:lns="http://loans.org/wsdl/loanapproval"
+
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="loanapproval"
+
+	suppressJoinFailure="yes" targetNamespace="http://loanapproval">
+
+	<bpel:import importType="http://schemas.xmlsoap.org/wsdl/"
+
+		location="loanapproval.wsdl"
+
+		namespace="http://loans.org/wsdl/loanapproval" />
+
+	<bpel:partnerLinks>
+
+		<bpel:partnerLink myRole="loanService" name="customer"
+
+			partnerLinkType="loanServicePartnerLinkType" />
+
+		<bpel:partnerLink name="assessor"
+
+			partnerLinkType="riskAssessmentPartnerLinkType"
+
+			partnerRole="assessor" />
+
+		<bpel:partnerLink name="approver"
+
+			partnerLinkType="loanApprovalPartnerLinkType"
+
+			partnerRole="approver" />
+
+	</bpel:partnerLinks>
+
+	<bpel:variables>
+
+		<bpel:variable messageType="creditInformationMessage"
+
+			name="request" />
+
+		<bpel:variable messageType="approvalMessage"
+
+			name="approval" />
+
+		<bpel:variable messageType="riskAssessmentMesssage"
+
+			name="risk" />
+
+	</bpel:variables>
+
+	<bpel:flow>
+
+		<bpel:links>
+
+			<bpel:link name="receive-to-assess" />
+
+			<bpel:link name="receive-to-approve" />
+
+			<bpel:link name="assess-to-approve" />
+
+			<bpel:link name="assess-to-assign" />
+
+			<bpel:link name="approve-to-reply" />
+
+			<bpel:link name="assign-to-reply" />
+
+		</bpel:links>
+
+		<bpel:receive createInstance="yes"
+
+			name="ReceiveCustomerRequestforLoanAmt" operation="request"
+
+			partnerLink="customer" portType="lns:loanServicePT"
+
+			variable="request">
+
+			<bpel:sources>
+
+				<bpel:source linkName="receive-to-assess">
+
+					<bpel:transitionCondition
+
+						expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+
+						$request.amount &lt;10000
+
+					</bpel:transitionCondition> 
+
+				</bpel:source>
+
+				<bpel:source linkName="receive-to-approve">
+
+					<bpel:transitionCondition
+
+						expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+
+						$request.amount &gt;= 10000
+
+					</bpel:transitionCondition>
+
+				</bpel:source>
+
+			</bpel:sources>
+
+		</bpel:receive>
+
+		<bpel:reply name="AcceptMessageToCustomer" operation="request"
+
+			partnerLink="customer" portType="lns:loanServicePT"
+
+			variable="approval">
+
+			<bpel:targets>
+
+				<bpel:target linkName="assign-to-reply" />
+
+				<bpel:target linkName="approve-to-reply" />
+
+			</bpel:targets>
+
+		</bpel:reply>
+
+		<bpel:invoke inputVariable="request" name="InvokeLoanAssessor"
+
+			operation="check" outputVariable="risk" partnerLink="assessor"
+
+			portType="lns:riskAssessmentPT">
+
+			<bpel:targets>
+
+				<bpel:target linkName="receive-to-assess" />
+
+			</bpel:targets>
+
+			<bpel:sources>
+
+				<bpel:source linkName="assess-to-approve">
+
+					<bpel:transitionCondition
+
+						expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+
+						$risk.level != 'low'
+
+					</bpel:transitionCondition>
+
+				</bpel:source>
+
+				<bpel:source linkName="assess-to-assign">
+
+					<bpel:transitionCondition
+
+						expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+
+						$risk.level = 'low'
+
+					</bpel:transitionCondition>
+
+				</bpel:source>
+
+			</bpel:sources>
+
+		</bpel:invoke>
+
+		<bpel:invoke inputVariable="request" name="InvokeLoanApprover"
+
+			operation="approve" outputVariable="approval" partnerLink="approver"
+
+			portType="lns:loanApprovalPT">
+
+			<bpel:targets>
+
+				<bpel:target linkName="receive-to-approve" />
+
+				<bpel:target linkName="assess-to-approve" />
+
+			</bpel:targets>
+
+			<bpel:sources>
+
+				<bpel:source linkName="approve-to-reply" />
+
+			</bpel:sources>
+
+		</bpel:invoke>
+
+		<bpel:assign name="AssignYestoAccept">
+
+			<bpel:targets>
+
+				<bpel:target linkName="assess-to-assign" />
+
+			</bpel:targets>
+
+			<bpel:sources>
+
+				<bpel:source linkName="assign-to-reply" />
+
+			</bpel:sources>
+
+			<bpel:copy>
+
+				 <bpel:from>
+
+					<bpel:literal>yes</bpel:literal>
+
+				</bpel:from> 
+
+				<bpel:to part="accept" variable="approval" />
+
+			</bpel:copy> 
+
+		</bpel:assign>
+
+	</bpel:flow>
+
+</bpel:process>
+

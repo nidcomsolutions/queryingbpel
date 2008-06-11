@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/bpelTest2/src"
+    editDirectory="/bpelTest2.edit/src" editorDirectory="/bpelTest2.editor/src" modelPluginID="bpelTest2"
+    modelName="Ws-bpel_executable" importerID="org.eclipse.xsd.ecore.importer" complianceLevel="6.0"
+    copyrightFields="false" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/XMLNamespace.genmodel#//namespace">
+  <foreignModel>file:/D:/DG/Studium3/ZZZ_Diplom/ExampleFiles/XSDs/ws-bpel_executable.xsd</foreignModel>
+  <genPackages prefix="Executable" basePackage="org.open.oasis.docs.wsbpel._2._0.process"
+      resource="XML" disposableProviderFactory="true" loadInitialization="true" ecorePackage="executable.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="executable.ecore#//Boolean">
+      <genEnumLiterals ecoreEnumLiteral="executable.ecore#//Boolean/yes"/>
+      <genEnumLiterals ecoreEnumLiteral="executable.ecore#//Boolean/no"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="executable.ecore#//Initiate">
+      <genEnumLiterals ecoreEnumLiteral="executable.ecore#//Initiate/yes"/>
+      <genEnumLiterals ecoreEnumLiteral="executable.ecore#//Initiate/join"/>
+      <genEnumLiterals ecoreEnumLiteral="executable.ecore#//Initiate/no"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="executable.ecore#//Pattern">
+      <genEnumLiterals ecoreEnumLiteral="executable.ecore#//Pattern/request"/>
+      <genEnumLiterals ecoreEnumLiteral="executable.ecore#//Pattern/response"/>
+      <genEnumLiterals ecoreEnumLiteral="executable.ecore#//Pattern/requestResponse"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="executable.ecore#//Roles">
+      <genEnumLiterals ecoreEnumLiteral="executable.ecore#//Roles/myRole"/>
+      <genEnumLiterals ecoreEnumLiteral="executable.ecore#//Roles/partnerRole"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="executable.ecore#//BPELVariableName"/>
+    <genDataTypes ecoreDataType="executable.ecore#//BPELVariableNames"/>
+    <genDataTypes ecoreDataType="executable.ecore#//BPELVariableNamesBase"/>
+    <genDataTypes ecoreDataType="executable.ecore#//QNames"/>
+    <genDataTypes ecoreDataType="executable.ecore#//QNamesBase"/>
+    <genDataTypes ecoreDataType="executable.ecore#//BooleanObject"/>
+    <genDataTypes ecoreDataType="executable.ecore#//InitiateObject"/>
+    <genDataTypes ecoreDataType="executable.ecore#//PatternObject"/>
+    <genDataTypes ecoreDataType="executable.ecore#//RolesObject"/>
+    <genClasses ecoreClass="executable.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/branches"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/catch"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/catchAll"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/compensate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/compensateScope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/compensationHandler"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/completionCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/copy"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/correlationSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/correlationSets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/documentation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/else"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/elseif"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/empty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/eventHandlers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/exit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/extension"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/extensionActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/extensionAssignOperation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/extensions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/faultHandlers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/finalCounterValue"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/flow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/for"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/forEach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/from"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/fromPart"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/fromParts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/if"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/import"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/invoke"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/joinCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/link"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/links"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/literal"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/messageExchange"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/messageExchanges"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/onEvent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/onMessage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/partnerLink"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/partnerLinks"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/pick"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/process"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/query"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/receive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/repeatEvery"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/repeatUntil"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/reply"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/rethrow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/scope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/source"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/sources"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/startCounterValue"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/targets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/terminationHandler"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/throw"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/to"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/toPart"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/toParts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/transitionCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/until"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/validate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/variable"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/variables"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/wait"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//DocumentRoot/while"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Activity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Activity/targets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Activity/sources"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Activity/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Activity/suppressJoinFailure"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//ActivityContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/compensate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/compensateScope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/empty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/exit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/extensionActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/flow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/forEach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/if"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/invoke"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/pick"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/receive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/repeatUntil"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/reply"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/rethrow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/scope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/throw"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/validate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/wait"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ActivityContainer/while"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Assign">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//Assign/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Assign/copy"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Assign/extensionAssignOperation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Assign/validate"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//BooleanExpr"/>
+    <genClasses ecoreClass="executable.ecore#//Branches">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Branches/successfulBranchesOnly"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Catch">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Catch/faultElement"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Catch/faultMessageType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Catch/faultName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Catch/faultVariable"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Compensate"/>
+    <genClasses ecoreClass="executable.ecore#//CompensateScope">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//CompensateScope/target"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//CompletionCondition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//CompletionCondition/branches"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Condition"/>
+    <genClasses ecoreClass="executable.ecore#//Copy">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Copy/from"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Copy/to"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Copy/ignoreMissingFromData"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Copy/keepSrcElementName"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Correlation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Correlation/initiate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Correlation/set"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Correlations">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Correlations/correlation"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//CorrelationSet">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//CorrelationSet/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//CorrelationSet/properties"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//CorrelationSets">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//CorrelationSets/correlationSet"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//CorrelationsWithPattern">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//CorrelationsWithPattern/correlation"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//CorrelationWithPattern">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//CorrelationWithPattern/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//DeadlineExpr"/>
+    <genClasses ecoreClass="executable.ecore#//Documentation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//Documentation/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Documentation/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Documentation/lang"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Documentation/source"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//DurationExpr"/>
+    <genClasses ecoreClass="executable.ecore#//Elseif">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/compensate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/compensateScope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/empty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/exit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/extensionActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/flow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/forEach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/if"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/invoke"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/pick"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/receive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/repeatUntil"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/reply"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/rethrow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/scope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/throw"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/validate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/wait"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Elseif/while"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Empty"/>
+    <genClasses ecoreClass="executable.ecore#//EventHandlers">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//EventHandlers/onEvent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//EventHandlers/onAlarm"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Exit"/>
+    <genClasses ecoreClass="executable.ecore#//Expression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//Expression/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Expression/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Expression/expressionLanguage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//Expression/anyAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//ExtensibleElements">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ExtensibleElements/documentation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//ExtensibleElements/any"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//ExtensibleElements/anyAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Extension">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Extension/mustUnderstand"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Extension/namespace"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//ExtensionActivity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//ExtensionActivity/any"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//ExtensionAssignOperation"/>
+    <genClasses ecoreClass="executable.ecore#//Extensions">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Extensions/extension"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//FaultHandlers">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//FaultHandlers/catch"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//FaultHandlers/catchAll"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Flow">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Flow/links"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//Flow/activity"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/assign"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/compensate"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/compensateScope"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/empty"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/exit"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/extensionActivity"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/flow"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/forEach"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/if"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/invoke"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/pick"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/receive"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/repeatUntil"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/reply"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/rethrow"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/scope"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/sequence"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/throw"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/validate"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/wait"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Flow/while"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//ForEach">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ForEach/startCounterValue"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ForEach/finalCounterValue"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ForEach/completionCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ForEach/scope"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//ForEach/counterName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//ForEach/parallel"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//From">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//From/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//From/documentation"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//From/any"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//From/literal"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//From/query"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//From/endpointReference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//From/expressionLanguage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//From/part"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//From/partnerLink"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//From/property"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//From/variable"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//From/anyAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//FromPart">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//FromPart/part"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//FromPart/toVariable"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//FromParts">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//FromParts/fromPart"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//If">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/compensate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/compensateScope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/empty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/exit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/extensionActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/flow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/forEach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/if"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/invoke"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/pick"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/receive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/repeatUntil"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/reply"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/rethrow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/scope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/throw"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/validate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/wait"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/while"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/elseif"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//If/else"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Import">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Import/importType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Import/location"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Import/namespace"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Invoke">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Invoke/correlations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Invoke/catch"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Invoke/catchAll"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Invoke/compensationHandler"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Invoke/toParts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Invoke/fromParts"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Invoke/inputVariable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Invoke/operation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Invoke/outputVariable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Invoke/partnerLink"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Invoke/portType"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Link">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Link/name"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Links">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Links/link"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Literal">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//Literal/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Literal/any"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//MessageExchange">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//MessageExchange/name"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//MessageExchanges">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//MessageExchanges/messageExchange"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//OnAlarmEvent">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmEvent/for"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmEvent/until"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmEvent/repeatEvery"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmEvent/repeatEvery1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmEvent/scope"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//OnAlarmPick">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/for"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/until"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/compensate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/compensateScope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/empty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/exit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/extensionActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/flow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/forEach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/if"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/invoke"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/pick"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/receive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/repeatUntil"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/reply"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/rethrow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/scope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/throw"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/validate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/wait"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnAlarmPick/while"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//OnEvent">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnEvent/scope"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//OnEvent/element"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//OnEvent/messageType"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//OnMessage">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/compensate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/compensateScope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/empty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/exit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/extensionActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/flow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/forEach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/if"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/invoke"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/pick"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/receive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/repeatUntil"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/reply"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/rethrow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/scope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/throw"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/validate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/wait"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMessage/while"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//OnMsgCommon">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMsgCommon/correlations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//OnMsgCommon/fromParts"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//OnMsgCommon/messageExchange"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//OnMsgCommon/operation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//OnMsgCommon/partnerLink"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//OnMsgCommon/portType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//OnMsgCommon/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//PartnerLink">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//PartnerLink/initializePartnerRole"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//PartnerLink/myRole"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//PartnerLink/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//PartnerLink/partnerLinkType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//PartnerLink/partnerRole"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//PartnerLinks">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//PartnerLinks/partnerLink"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Pick">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Pick/onMessage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Pick/onAlarm"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Pick/createInstance"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Process">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/extensions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/import"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/partnerLinks"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/messageExchanges"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/variables"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/correlationSets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/faultHandlers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/eventHandlers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/compensate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/compensateScope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/empty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/exit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/extensionActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/flow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/forEach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/if"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/invoke"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/pick"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/receive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/repeatUntil"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/reply"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/rethrow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/scope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/throw"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/validate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/wait"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Process/while"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Process/exitOnStandardFault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Process/expressionLanguage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Process/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Process/queryLanguage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Process/suppressJoinFailure"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Process/targetNamespace"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Query">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//Query/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Query/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Query/queryLanguage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//Query/anyAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Receive">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Receive/correlations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Receive/fromParts"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Receive/createInstance"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Receive/messageExchange"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Receive/operation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Receive/partnerLink"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Receive/portType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Receive/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//RepeatUntil">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/compensate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/compensateScope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/empty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/exit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/extensionActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/flow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/forEach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/if"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/invoke"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/pick"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/receive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/repeatUntil"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/reply"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/rethrow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/scope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/throw"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/validate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/wait"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/while"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//RepeatUntil/condition"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Reply">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Reply/correlations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Reply/toParts"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Reply/faultName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Reply/messageExchange"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Reply/operation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Reply/partnerLink"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Reply/portType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Reply/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Rethrow"/>
+    <genClasses ecoreClass="executable.ecore#//Scope">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/partnerLinks"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/messageExchanges"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/variables"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/correlationSets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/faultHandlers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/compensationHandler"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/terminationHandler"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/eventHandlers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/compensate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/compensateScope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/empty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/exit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/extensionActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/flow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/forEach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/if"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/invoke"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/pick"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/receive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/repeatUntil"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/reply"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/rethrow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/scope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/throw"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/validate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/wait"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Scope/while"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Scope/exitOnStandardFault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Scope/isolated"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Sequence">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//Sequence/activity"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/assign"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/compensate"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/compensateScope"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/empty"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/exit"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/extensionActivity"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/flow"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/forEach"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/if"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/invoke"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/pick"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/receive"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/repeatUntil"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/reply"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/rethrow"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/scope"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/sequence"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/throw"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/validate"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/wait"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//Sequence/while"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Source">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Source/transitionCondition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Source/linkName"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Sources">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Sources/source"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Target">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Target/linkName"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Targets">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Targets/joinCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Targets/target"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Throw">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Throw/faultName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Throw/faultVariable"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//To">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//To/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//To/documentation"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//To/any"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference executable.ecore#//To/query"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//To/expressionLanguage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//To/part"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//To/partnerLink"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//To/property"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//To/variable"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute executable.ecore#//To/anyAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//ToPart">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//ToPart/fromVariable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//ToPart/part"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//ToParts">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//ToParts/toPart"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Validate">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Validate/variables"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Variable">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Variable/from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Variable/element"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Variable/messageType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Variable/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute executable.ecore#//Variable/type"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Variables">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Variables/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//Wait">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Wait/for"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//Wait/until"/>
+    </genClasses>
+    <genClasses ecoreClass="executable.ecore#//While">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/compensate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/compensateScope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/empty"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/exit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/extensionActivity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/flow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/forEach"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/if"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/invoke"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/pick"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/receive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/repeatUntil"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/reply"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/rethrow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/scope"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/throw"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/validate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/wait"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference executable.ecore#//While/while"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

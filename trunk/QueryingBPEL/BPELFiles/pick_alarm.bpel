@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0.0 (http://www.active-endpoints.com)
+-->
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ns1="http://docs.active-endpoints.com/activebpel/sample/wsdl/order/2006/09/order.wsdl" xmlns:ns2="http://docs.active-endpoints.com/activebpel/sample/wsdl/orderProcess/2006/09/orderProcess.wsdl" xmlns:ns3="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns4="http://schemas.active-endpoints.com/sample/orderTypes/2006/09/orderTypes.xsd" xmlns:ns5="http://docs.active-endpoints.com/activebpel/sample/wsdl/pick_start/2006/09/pick_start.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Pick-start" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/pick_alarm/2006/09/pick_alarm.bpel">
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/order.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/order/2006/09/order.wsdl"/>
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/orderProcess.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/orderProcess/2006/09/orderProcess.wsdl"/>
+   <import importType="http://schemas.xmlsoap.org/wsdl/" location="project:/BPEL_Samples/Resources/WSDL/pick_start.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/pick_start/2006/09/pick_start.wsdl"/>
+   <partnerLinks>
+      <partnerLink myRole="orderProcess" name="orderProcessPLT" partnerLinkType="ns2:orderProcessPLT"/>
+   </partnerLinks>
+   <variables>
+      <variable messageType="ns1:orderMessage" name="orderMessage"/>
+      <variable messageType="ns2:orderProcessResponse" name="orderProcessResponse"/>
+      <variable messageType="ns2:partialShipChoice" name="partialShipChoice"/>
+   </variables>
+   <correlationSets>
+      <correlationSet name="CS1" properties="ns2:PONum ns2:CustID"/>
+   </correlationSets>
+   <sequence>
+      <receive createInstance="yes" operation="receiveOrder" partnerLink="orderProcessPLT" portType="ns2:OrderPT" variable="orderMessage">
+         <correlations>
+            <correlation initiate="yes" set="CS1"/>
+         </correlations>
+      </receive>
+      <empty name="PretendOneWayInvoke"/>
+      <pick>
+         <onMessage operation="receivePartialShipChoice" partnerLink="orderProcessPLT" portType="ns2:OrderPT" variable="partialShipChoice">
+            <correlations>
+               <correlation initiate="no" set="CS1"/>
+            </correlations>
+            <assign name="SetConfirmation">
+               <copy>
+                  <from>concat('PO ', $orderMessage.order/OrderHeader/PONo, ' will be shipped: ', $partialShipChoice.accepted)</from>
+                  <to part="response" variable="orderProcessResponse"/>
+               </copy>
+               <copy>
+                  <from part="order" variable="orderMessage">
+                     <query>OrderHeader/PONo</query>
+                  </from>
+                  <to part="PONum" variable="orderProcessResponse"/>
+               </copy>
+               <copy>
+                  <from part="order" variable="orderMessage">
+                     <query>OrderHeader/CustId</query>
+                  </from>
+                  <to part="CustID" variable="orderProcessResponse"/>
+               </copy>
+            </assign>
+         </onMessage>
+         <!-- Auto-reject after 5 minutes -->
+         <onAlarm>
+            <for>'PT5M'</for>
+            <assign name="SetCanceled">
+               <copy>
+                  <from>concat('Canceled PO ', $orderMessage.order/OrderHeader/PONo, ' after waiting for response for 5 minutes.')</from>
+                  <to part="response" variable="orderProcessResponse"/>
+               </copy>
+               <copy>
+                  <from part="order" variable="orderMessage">
+                     <query>OrderHeader/PONo</query>
+                  </from>
+                  <to part="PONum" variable="orderProcessResponse"/>
+               </copy>
+               <copy>
+                  <from part="order" variable="orderMessage">
+                     <query>OrderHeader/CustId</query>
+                  </from>
+                  <to part="CustID" variable="orderProcessResponse"/>
+               </copy>
+            </assign>
+         </onAlarm>
+      </pick>
+      <reply operation="receiveOrder" partnerLink="orderProcessPLT" portType="ns2:OrderPT" variable="orderProcessResponse"/>
+   </sequence>
+</process>

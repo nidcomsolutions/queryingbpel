@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(r) Designer Version 4.1.0 (http://www.active-endpoints.com)
+-->
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ns1="http://example.com/loan-approval/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SequenceInvoke" suppressJoinFailure="yes" targetNamespace="http://SequenceInvoke">
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../ActiveBPEL_Samples/Completed Tutorial/WSDL/loanServicePT.wsdl" namespace="http://example.com/loan-approval/wsdl/"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="approver" name="loanApprovalLT" partnerLinkType="ns1:loanApprovalLT" partnerRole="approver"/>
+      <bpel:partnerLink myRole="assessor" name="PL1" partnerLinkType="ns1:riskAssessmentLT"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="ns1:creditInformationMessage" name="creditInformationMessage"/>
+      <bpel:variable messageType="ns1:approvalMessage" name="approvalMessage"/>
+   </bpel:variables>
+   <bpel:sequence name="SeqA">
+      <bpel:receive createInstance="yes" name="ReceiveA" operation="approve" partnerLink="loanApprovalLT" portType="ns1:loanApprovalPT" variable="creditInformationMessage"/>
+      <bpel:reply name="Reply" operation="approve" partnerLink="loanApprovalLT" portType="ns1:loanApprovalPT" variable="approvalMessage"/>
+      <bpel:invoke inputVariable="creditInformationMessage" name="InvokeA" operation="approve" outputVariable="approvalMessage" partnerLink="loanApprovalLT" portType="ns1:loanApprovalPT"/>
+   </bpel:sequence>
+</bpel:process>

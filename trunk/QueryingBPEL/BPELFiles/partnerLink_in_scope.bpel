@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+BPEL Process Definition
+Edited using ActiveBPEL(tm) Designer Version 3.0 (http://www.active-endpoints.com)
+-->
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:prc="http://docs.active-endpoints.com/activebpel/sample/wsdl/procurement/2006/08/procurement.wsdl" xmlns:prcs="http://schemas.active-endpoints.com/activebpel/sample/schema/procurement/2006/08/procurement.wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2003/03/addressing" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="partnerLink_in_scope" suppressJoinFailure="yes" targetNamespace="http://docs.active-endpoints.com/activebpel/sample/bpel/partnerLink_in_scope/2006/08/partnerLink_in_scope.bpel">
+   <bpel:import importType="http://schemas.xmlsoap.org/wsdl/" location="../../Resources/WSDL/procurement.wsdl" namespace="http://docs.active-endpoints.com/activebpel/sample/wsdl/procurement/2006/08/procurement.wsdl"/>
+   <bpel:partnerLinks>
+      <bpel:partnerLink myRole="ServiceProvider" name="ProcurementLink" partnerLinkType="prc:ProcurementPLT"/>
+   </bpel:partnerLinks>
+   <bpel:variables>
+      <bpel:variable messageType="prc:GetQuotesOpRequest" name="GetQuotesOpRequestVar"/>
+      <bpel:variable messageType="prc:GetQuotesOpResponse" name="GetQuotesOpResponseVar"/>
+      <bpel:variable messageType="prc:GetQuotesOpGetQuotesFault" name="GetQuotesFaultVar"/>
+   </bpel:variables>
+   <bpel:faultHandlers>
+      <bpel:catch faultMessageType="prc:GetVendorQuoteOpItemNotAvailableFault" faultName="prc:ItemNotAvailableFault" faultVariable="ItemNotAvailFautMessage">
+         <bpel:sequence>
+            <bpel:assign name="AssignFaultMessage">
+               <bpel:copy>
+                  <bpel:from>concat('Unable to generate the inquiry result due to the following reason: ', $ItemNotAvailFautMessage.Document)</bpel:from>
+                  <bpel:to part="Document" variable="GetQuotesFaultVar"/>
+               </bpel:copy>
+            </bpel:assign>
+            <bpel:reply faultName="prc:GetQuotesFault" name="ReplyWithFault" operation="GetQuotesOp" partnerLink="ProcurementLink" portType="prc:ProcurementPortType" variable="GetQuotesFaultVar"/>
+         </bpel:sequence>
+      </bpel:catch>
+   </bpel:faultHandlers>
+   <bpel:sequence>
+      <bpel:receive createInstance="yes" name="ReceiveProcurementInquiry" operation="GetQuotesOp" partnerLink="ProcurementLink" portType="prc:ProcurementPortType" variable="GetQuotesOpRequestVar"/>
+      <bpel:assign name="InitializeVariable">
+         <bpel:copy>
+            <bpel:from>
+               <bpel:literal>
+                  <procurementResponse xmlns="http://schemas.active-endpoints.com/activebpel/sample/schema/procurement/2006/08/procurement.wsdl">
+<TotalCost>0</TotalCost>
+</procurementResponse>
+               </bpel:literal>
+            </bpel:from>
+            <bpel:to part="Document" variable="GetQuotesOpResponseVar"/>
+         </bpel:copy>
+      </bpel:assign>
+      <bpel:forEach counterName="VendorIndex" name="GetQuotesFromEachVendors" parallel="yes">
+         <bpel:startCounterValue expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">'1'</bpel:startCounterValue>
+         <bpel:finalCounterValue expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">count( $GetQuotesOpRequestVar.Document/prcs:VendorInquiryRequest )</bpel:finalCounterValue>
+         <bpel:scope>
+            <bpel:partnerLinks>
+               <bpel:partnerLink initializePartnerRole="yes" name="VendorLink" partnerLinkType="prc:VendorPLT" partnerRole="Vendor"/>
+            </bpel:partnerLinks>
+            <bpel:variables>
+               <bpel:variable messageType="prc:GetVendorQuoteOpRequest" name="GetVendorQuoteReqVar"/>
+               <bpel:variable messageType="prc:GetVendorQuoteOpResponse" name="GetVendorQuoteRespVar"/>
+            </bpel:variables>
+            <bpel:sequence>
+               <bpel:assign name="AssignRequest">
+                  <bpel:copy>
+                     <bpel:from>$GetQuotesOpRequestVar.Document/prcs:VendorInquiryRequest[$VendorIndex]/prcs:ItemInfo</bpel:from>
+                     <bpel:to part="Document" variable="GetVendorQuoteReqVar"/>
+                  </bpel:copy>
+               </bpel:assign>
+               <bpel:assign name="AssignVendorEPR">
+                  <bpel:copy>
+                     <bpel:from>
+                        <bpel:literal>
+                           <svrf:service-ref xmlns:svrf="http://docs.oasis-open.org/wsbpel/2.0/serviceref">
+        <wsa:EndpointReference xmlns:prcc="http://docs.active-endpoints.com/activebpel/sample/wsdl/procurement/2006/08/procurement.wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2003/03/addressing">
+			<wsa:Address>http://localhost:8080/active-bpel/services/VendorService</wsa:Address>
+			<wsa:ServiceName PortName="VendorPort">prcc:VendorService</wsa:ServiceName>
+		</wsa:EndpointReference>
+</svrf:service-ref>
+                        </bpel:literal>
+                     </bpel:from>
+                     <bpel:to partnerLink="VendorLink"/>
+                  </bpel:copy>
+               </bpel:assign>
+               <bpel:invoke inputVariable="GetVendorQuoteReqVar" name="QueryVendor" operation="GetVendorQuoteOp" outputVariable="GetVendorQuoteRespVar" partnerLink="VendorLink" portType="prc:VendorPortType"/>
+               <bpel:scope isolated="yes">
+                  <bpel:assign name="AssignResult">
+                     <bpel:copy>
+                        <bpel:from>$GetQuotesOpResponseVar.Document/prcs:TotalCost +( $GetVendorQuoteRespVar.Document/prcs:Quantity * $GetVendorQuoteRespVar.Document/prcs:UnitPrice )</bpel:from>
+                        <bpel:to part="Document" variable="GetQuotesOpResponseVar">
+                           <bpel:query>prcs:TotalCost</bpel:query>
+                        </bpel:to>
+                     </bpel:copy>
+                  </bpel:assign>
+               </bpel:scope>
+            </bpel:sequence>
+         </bpel:scope>
+      </bpel:forEach>
+      <bpel:reply name="ReplyWithTotalCost" operation="GetQuotesOp" partnerLink="ProcurementLink" portType="prc:ProcurementPortType" variable="GetQuotesOpResponseVar"/>
+   </bpel:sequence>
+</bpel:process>
