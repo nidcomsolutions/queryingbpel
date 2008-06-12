@@ -107,12 +107,11 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 			if (!querygraph.isRoot(qact) && !queryNodeStreamMap.get(qact).isEmpty()) {
 				cleanStack(parentQact, tqactFirst.getPreorderRank());
 			}
-			
-			if (!queryNodeStreamMap.get(qact).isEmpty()) {
-				cleanStack(qact, tqactFirst.getPreorderRank());
-			}
 				
 			if (querygraph.isRoot(qact) || !queryNodeStackMap.get(parentQact).isEmpty()) {
+				if (!queryNodeStreamMap.get(qact).isEmpty()) {
+					cleanStack(qact, tqactFirst.getPreorderRank());
+				}
 				moveStreamToStack(qact);					
 				if (querygraph.isLeaf(qact)) {
 					actLeafNode = qact;
@@ -120,7 +119,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 					// **** Change ****
 					leafStackID = queryNodeStackMap.get(qact).get(0).getNode().getActivityID();
 					leafSolution = processgraph.getActivityName(leafStackID) + ": " + leafStackID + "  ||  ";
-					showSolutions(qact, 0, null, leafSolution);
+					showSolutions2(qact, 0, null, leafSolution);
 					//processSolutions(qact, 0, null, 0);
 					// To avoid output actual path solution twice, we link the root and its child in partial
 					// solution pool after showing this path.
@@ -322,16 +321,16 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
     * @param q query node q.
     * @param stackpos the position in q's stack that we are interested in for the current solution.
     * @param childPI last created pool element of q's child node.
-    * @param childStackPos the position of child stack.
+    * @param partialPath partial path from leaf node to q.
     *
     */ 
     // Version 2: Direction from child to parent
- 	protected void showSolutions(ActivityNode q, int stackpos, PoolItem childPI, String partialPath) {
+ 	protected void showSolutions2(ActivityNode q, int stackpos, PoolItem childPI, String partialPath) {
  		ActivityNode temp;
  		Stack<NodeInStack> tempStack;
- 		String tempString = "";
+// 		String tempString = "";
  		String tempID = "";
- 		int parentStackIndex, tempIndex;
+ 		int parentStackIndex;
  		PoolItem cPI;
  		
  		queryNodeStackPositionMap.put(q, new Integer(stackpos));
@@ -342,17 +341,16 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  		
  		if (querygraph.isRoot(q)) {
  			logger.warn("Output path solution");
- 			temp = actLeafNode;
- 			
- 			while (temp != null) {
- 				tempStack = queryNodeStackMap.get(temp);
- 				tempIndex = queryNodeStackPositionMap.get(temp).intValue();
- 				tempID = tempStack.get(tempIndex).getNode().getActivityID();
- 				tempString = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ tempString;
- 				temp = querygraph.parent(temp);
- 			}
- 			//System.out.println(tempString);
- 			logger.warn(tempString);
+// 			temp = actLeafNode;		
+// 			while (temp != null) {
+// 				tempStack = queryNodeStackMap.get(temp);
+// 				tempIndex = queryNodeStackPositionMap.get(temp).intValue();
+// 				tempID = tempStack.get(tempIndex).getNode().getActivityID();
+// 				tempString = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ tempString;
+// 				temp = querygraph.parent(temp);
+// 			}
+// 			logger.warn(tempString);
+ 			logger.warn(partialPath);
  			
  		} else {
  			
@@ -366,7 +364,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  			for (int i = 0; i <= parentStackIndex; i++) {
  				tempID = tempStack.get(i).getNode().getActivityID();
  				partialPath = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ partialPath;
- 				showSolutions(temp, i, cPI, partialPath);				
+ 				showSolutions2(temp, i, cPI, partialPath);				
  			}			
  		}		
  	}
