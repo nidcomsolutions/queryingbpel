@@ -3,6 +3,7 @@
  */
 package de.uni.stuttgart.bpelSearching.matching;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -82,6 +83,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 		LinkedList<NodeRegionEncoding> tqact, tParentQact, tRoot;
 		Stack<NodeInStack> sqact, sParentQact, sRoot;
 		String leafStackID, leafSolution;
+		//ArrayList<NodeRegionEncoding> partialPath;
 		
 		NodeRegionEncoding tqactFirst;		
 
@@ -92,6 +94,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 			//qact = getMinSource(q);
 			qact = getNextExt(q);
 			parentQact = querygraph.parent(qact);
+			tqactFirst = queryNodeStreamMap.get(qact).getFirst();
 		
 			tqact = queryNodeStreamMap.get(qact);
 			sqact = queryNodeStackMap.get(qact);
@@ -101,9 +104,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 		
 			tRoot = queryNodeStreamMap.get(root);
 			sRoot = queryNodeStackMap.get(root);
-		
-			tqactFirst = queryNodeStreamMap.get(qact).getFirst();
-			
+					
 			if (!querygraph.isRoot(qact) && !queryNodeStreamMap.get(qact).isEmpty()) {
 				cleanStack(parentQact, tqactFirst.getPreorderRank());
 			}
@@ -114,17 +115,16 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 				}
 				moveStreamToStack(qact);					
 				if (querygraph.isLeaf(qact)) {
-					actLeafNode = qact;
-					
+					actLeafNode = qact;					
 					// **** Change ****
 					leafStackID = queryNodeStackMap.get(qact).get(0).getNode().getActivityID();
 					leafSolution = processgraph.getActivityName(leafStackID) + ": " + leafStackID + "  ||  ";
-					showSolutions2(qact, 0, null, leafSolution);
+					
+					showSolutions2Ext(qact, 0, null, leafSolution);
 					//processSolutions(qact, 0, null, 0);
 					// To avoid output actual path solution twice, we link the root and its child in partial
 					// solution pool after showing this path.
-					rootChildPI.addParent(rootPI);
-					
+					rootChildPI.addParent(rootPI);					
 					queryNodeStackMap.get(qact).pop();										
 				}							
 			} else {
@@ -325,7 +325,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
     *
     */ 
     // Version 2: Direction from child to parent
- 	protected void showSolutions2(ActivityNode q, int stackpos, PoolItem childPI, String partialPath) {
+ 	protected void showSolutions2Ext(ActivityNode q, int stackpos, PoolItem childPI, String partialPath) {
  		ActivityNode temp;
  		Stack<NodeInStack> tempStack;
 // 		String tempString = "";
@@ -364,7 +364,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  			for (int i = 0; i <= parentStackIndex; i++) {
  				tempID = tempStack.get(i).getNode().getActivityID();
  				partialPath = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ partialPath;
- 				showSolutions2(temp, i, cPI, partialPath);				
+ 				showSolutions2Ext(temp, i, cPI, partialPath);				
  			}			
  		}		
  	}
@@ -567,27 +567,125 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
    }
    
    /**
-    * Check the new incoming pool element tqPI with each element from child pool, in case
-    * of ancestor-descendant relationship, link both elements and process the new emerging
-    * path. 
+    * Create a new pool element tqPI with tq and put it in the pool, check tqPI with each element 
+    * from child pool, in case of ancestor-descendant relationship, link both elements and process 
+    * the new emerging path. 
     *
     * @param q query node q.
     * @param tq current element of q's stream.
-    * @param tqPI q's pool element.
     * 
     */
-  protected void sweepPartialSolutions2(ActivityNode q, NodeRegionEncoding tq, PoolItem tqPI) { 
+  protected void sweepPartialSolutionsTSD2(ActivityNode q, NodeRegionEncoding tq) { 
+	  PoolItem tqPI = new PoolItem(q, tq);
+	  partialSolutionPoolMap.get(q).add(tqPI);
 	  Set<ActivityNode> childrenQ = querygraph.children(q);
+	  boolean hasExtendSolutions = false;
+	  String qSolution;
+	  int stackPos;
+	  
 	  for (ActivityNode childQi : childrenQ) {
 		 for (PoolItem h : partialSolutionPoolMap.get(childQi)) {
 			if (checkContainment2(tq, h.getProcessnode())) {
 				h.addParent(tqPI);
-				// To Do: Output corresponding path solutions
+				hasExtendSolutions = true;
 			} 			
 		 }		 
-	 }	  
+	 }
+	  
+	 if(hasExtendSolutions) {
+		 stackPos = queryNodeStackMap.get(q).size() - 1;
+		 qSolution = processgraph.getActivityName(tq.getActivityID()) + ": " + tq.getActivityID() + "  ||  ";
+		 showExpandedSolutions(q, stackPos, tqPI, qSolution);		 
+	 }
   }
+  
+  /**
+   * Outputs expanded solutions rooted by q in partial solution pools in root-to-leaf order.
+   * 
+   * @param q query node q.
+   * @param stackpos the position in q's stack that we are interested in for the current solution.
+   * @param tqPI last created pool element with tq.
+   * @param partialPath partial path from leaf node to q.
+   * 
+   */ 
+	protected void showExpandedSolutions(ActivityNode q, int stackpos, PoolItem tqPI, String partialPath) {
+		ActivityNode temp;
+		Stack<NodeInStack> tempStack;
+//		String tempString = "";
+		String tempID = "";
+		int parentStackIndex;
+		
+		queryNodeStackPositionMap.put(q, new Integer(stackpos));
+		
+		if (querygraph.isRoot(q)) {
+//			logger.warn("Output path solution");
+//			temp = actLeafNode;		
+//			while (temp != null) {
+//				tempStack = queryNodeStackMap.get(temp);
+//				tempIndex = queryNodeStackPositionMap.get(temp).intValue();
+//				tempID = tempStack.get(tempIndex).getNode().getActivityID();
+//				tempString = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ tempString;
+//				temp = querygraph.parent(temp);
+//			}
+//			logger.warn(tempString);
+			
+			//logger.warn(partialPath);
+			
+			// To do: output pool solutions rooted at tqPI
+			//outputPoolSolutions(tqPI, partialPath);
+			outputPoolSolutionsRootedAtTqPI(tqPI, partialPath);
+		} else {			
+			NodeInStack parentNodeInStack = queryNodeStackMap.get(q).get(stackpos).getNext();
+			temp = querygraph.parent(q);
+			tempStack = queryNodeStackMap.get(temp);
+			parentStackIndex = tempStack.indexOf(parentNodeInStack);
+			
+			//qStackposID = queryNodeStackMap.get(q).get(stackpos).getNode().getActivityID();
+			//partialPath = processgraph.getActivityName(qStackposID) + ": " + qStackposID + "  ||  "+ partialPath;
+			for (int i = 0; i <= parentStackIndex; i++) {
+				tempID = tempStack.get(i).getNode().getActivityID();
+				partialPath = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ partialPath;
+				showSolutions2Ext(temp, i, tqPI, partialPath);				
+			}			
+		}		
+	}
   	
+	
+	/**
+	 * Output path solutions rooted at pool element tqPI with the given
+	 * partial path solution. 
+	 *
+	 * @param tqPI q's pool element.
+	 * @param partialPath partial path from leaf node to q.
+	 * 
+	 */
+	protected void outputPoolSolutionsRootedAtTqPI(PoolItem tqPI, String partialPath) {
+		String tempSolution = partialPath;
+		String tempID = "";
+		List<PoolItem> tempparents;
+		
+		if (querygraph.isLeaf(tqPI.getQuerynode())) {
+			logger.warn(partialPath);
+		} else {
+			Set<ActivityNode> childrenQ = querygraph.children(tqPI.getQuerynode());
+			for (ActivityNode childQ : childrenQ) {
+				for (PoolItem h : partialSolutionPoolMap.get(childQ)) {				
+					if ((tempparents = h.getParents()) != null) {
+						for (PoolItem tempparent : tempparents) {
+							if (tempparent.getProcessnode().getActivityID().compareTo
+									(tqPI.getProcessnode().getActivityID()) == 0) {
+								tempID = h.getProcessnode().getActivityID();
+								tempSolution = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ partialPath;
+								outputPoolSolutionsRootedAtTqPI(h, tempSolution);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+		
   /**
    * Output path solutions started at pool element tqPI with the given
    * partial path solution. 
