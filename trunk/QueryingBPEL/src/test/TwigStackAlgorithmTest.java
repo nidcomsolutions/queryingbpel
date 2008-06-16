@@ -235,20 +235,20 @@ public class TwigStackAlgorithmTest {
 		query1Seq_start = new ActivityNode("q1SeqStart", "SeqHp1_start", ActivityType.SEQUENCE);
 		query1Seq_end = new ActivityNode("q1SeqEnd", "SeqHp1_end", ActivityType.SEQUENCE);
 		query1Receive = new ActivityNode("q1Receive", "Receive*", ActivityType.RECEIVE);
-//		query1ReceiveB = new ActivityNode("q1ReceiveB", "ReceiveBp1", ActivityType.RECEIVE);
+		query1ReceiveB = new ActivityNode("q1ReceiveB", "ReceiveBp1", ActivityType.RECEIVE);
 		
 		query1.addVertex(query1Invoke);
 		query1.addVertex(query1Assign);
 		query1.addVertex(query1Seq_start);
 		query1.addVertex(query1Seq_end);
 		query1.addVertex(query1Receive);
-//		query1.addVertex(query1ReceiveB);
+		query1.addVertex(query1ReceiveB);
 		
 		query1.addEdge(query1Invoke, query1Assign);
 		query1.addEdge(query1Invoke, query1Seq_start);
 		query1.addEdge(query1Seq_start, query1Seq_end);
 		query1.addEdge(query1Assign, query1Receive);
-//		query1.addEdge(query1ReceiveB, query1Invoke);
+		query1.addEdge(query1ReceiveB, query1Invoke);
 		
 		processGraph1 = new ProcessFlowGraph("processTwigStackTest", "www", "100", process1);
 		queryGraph1 = new QueryGraph(query1);
