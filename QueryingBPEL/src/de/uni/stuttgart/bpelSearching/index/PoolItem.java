@@ -50,7 +50,7 @@ public class PoolItem {
 	public String toString() {
 		String tempStr = "";
 		
-		if (parents == null) {
+		if ((parents == null) || (parents.isEmpty())) {
 			tempStr += (processnode.getActivityID() + " - Null" );
 		} else {
 			for (PoolItem parent : parents) {
