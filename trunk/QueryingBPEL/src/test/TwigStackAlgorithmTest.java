@@ -15,7 +15,7 @@ import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityType;
 
 public class TwigStackAlgorithmTest {
 
-	static Logger logger = Logger.getLogger(QueryGraphTest.class);
+	static Logger logger = Logger.getLogger(TwigStackAlgorithmTest.class);
 
 	private static DirectedGraph<ActivityNode, DefaultEdge> process1;
 	private static DirectedGraph<ActivityNode, DefaultEdge> query1;
@@ -431,11 +431,6 @@ public class TwigStackAlgorithmTest {
 		setUp();
 		MatchingBPEL matchBPEL = new MatchingBPEL(queryGraph1, processGraph1, true);
 		matchBPEL.match();
-		System.exit(0);
-		
-	}
-	
-	
-	
-	
+		System.exit(0);		
+	}	
 }
