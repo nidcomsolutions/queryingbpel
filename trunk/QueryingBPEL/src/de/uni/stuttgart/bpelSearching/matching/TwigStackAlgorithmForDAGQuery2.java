@@ -3,7 +3,6 @@
  */
 package de.uni.stuttgart.bpelSearching.matching;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -36,26 +35,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
      */	
 	protected HashMap<ActivityNode, Set<PoolItem>> partialSolutionPoolMap = 
 		new HashMap<ActivityNode, Set<PoolItem>>();	
-	//protected HashMap<ActivityNode, Set<NodeInStack>> partialSolutionPoolMap = 
-	//new HashMap<ActivityNode, Set<NodeInStack>>();
 	
-    /**
-     * Temporary store element from partial solution pool of query root node.
-     */
-	protected PoolItem rootPI;
-	
-    /**
-     * Temporary store element from partial solution pool of query root child node.
-     */
-	protected PoolItem rootChildPI;
-	
-    /**
-     * A data structure to temporarily hold partial solution pool nodes which can
-     * be expanded as partial solutions.
-     * 
-     */
-	//protected HashMap<ActivityNode, Set<NodeInStack>> candidateSetMap = 
-			//new HashMap<ActivityNode, Set<NodeInStack>>();
 
 	/**
 	 * Creates a new TwigStackAlgorithmForDAGQuery2 object for the specified query tree 
@@ -70,7 +50,6 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 		Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
 		for (ActivityNode queryNode : vertexSetQuery) {	
 			partialSolutionPoolMap.put(queryNode, new HashSet<PoolItem>());
-			//candidateSetMap.put(queryNode, new HashSet<NodeInStack>());
 		}
 	}
 
@@ -82,11 +61,9 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 		ActivityNode qact, parentQact, root;
 		LinkedList<NodeRegionEncoding> tqact, tParentQact, tRoot;
 		Stack<NodeInStack> sqact, sParentQact, sRoot;
-		//String leafStackID, leafSolution;
-		//ArrayList<NodeRegionEncoding> partialPath;
 		
-		NodeRegionEncoding tqactFirst;		
-
+		NodeRegionEncoding tqactFirst;
+		
 		root = querygraph.getStartVertex();
 		
 		while (!end(q)) {
@@ -114,28 +91,18 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 					cleanStack(qact, tqactFirst.getPreorderRank());
 				}
 				moveStreamToStack(qact);
-				// *** Change ***
 				sweepPartialSolutionsTSD2(qact, tqactFirst);
 				
 				if (querygraph.isLeaf(qact)) {
 					actLeafNode = qact;					
-					// *** Change ***
-					//leafStackID = queryNodeStackMap.get(qact).get(0).getNode().getActivityID();
-					//leafSolution = processgraph.getActivityName(leafStackID) + ": " + leafStackID + "  ||  ";
-					
 					showSolutions2Ext(qact, 0, null, null, "");
 					//processSolutions(qact, 0, null, 0);
-					// To avoid output actual path solution twice, we link the root and its child in partial
-					// solution pool after showing this path.
-					if ((rootChildPI != null) && (rootPI != null)) {
-						rootChildPI.addParent(rootPI);
-					}
 					queryNodeStackMap.get(qact).pop();										
-				}							
+				} 						
 			} else {
 				if (!queryNodeStreamMap.get(qact).isEmpty()) {						
-						queryNodeStreamMap.get(qact).removeFirst();
-					}
+					queryNodeStreamMap.get(qact).removeFirst();
+				}
 			}	
 		}
 		
@@ -154,9 +121,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 //		}
 		// **** end debug ****
 	
-		mergeAllPathSolutions(q);		
-//		printSolutionsForExactMatch(q);
-//	}		
+		mergeAllPathSolutions(q);			
 	}
 
 	
@@ -168,17 +133,18 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 		// TODO Auto-generated method stub
 
 	}
+
 	
-    /**
-     * The modified version to check whether a process node is descendant of another process node 
-     * in process graph by recursively looking up predecessors in SSPI.
-     *
-     * @param tq current node region encoding of query node q's stream.
-     * @param h  positional representation of a node in Pool[child(q)].
-     *
-     * @return <code>true</code> if <code>h</code> is descendant of <code>tq</code>,
-     * otherwise <code>false</code>.
-     */
+  /**
+    * The modified version to check whether a process node is descendant of another process node 
+    * in process graph by recursively looking up predecessors in SSPI.
+    *
+    * @param tq current node region encoding of query node q's stream.
+    * @param h  positional representation of a node in Pool[child(q)].
+    *
+    * @return <code>true</code> if <code>h</code> is descendant of <code>tq</code>,
+    * otherwise <code>false</code>.
+   */
    protected boolean checkContainment2(NodeRegionEncoding tq, NodeRegionEncoding h) {
 	   boolean found = false;
 	   Predecessors2 predecessorsH, predecessorsfirstPLh;
@@ -193,7 +159,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 	   if (predecessorsH != null) {
 		   if (!predecessorsH.isOriginal()) {
 			   predecessorsH.getCurrentPredecessors().clear();
-			   // ???
+			   // ? Not Sure
 			   predecessorsH.getCurrentPredecessors().addAll(predecessorsH.getOriginalPredecessors());
 			   predecessorsH.setOriginal(true);
 		   }
@@ -322,8 +288,8 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 	
   /**
    * Create a new pool element tqPI with tq and put it in the pool, check tqPI with each element 
-   * in its child pool, in case of ancestor-descendant relationship, link both elements and process 
-   * the new emerging path. 
+   * in its children pools, in case of ancestor-descendant relationship, link both elements and 
+   * process the new emerging paths. 
    *
    * @param q query node q.
    * @param tq current element of q's stream.
@@ -332,6 +298,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
   protected void sweepPartialSolutionsTSD2(ActivityNode q, NodeRegionEncoding tq) { 
 	  PoolItem tqPI = new PoolItem(q, tq);
 	  partialSolutionPoolMap.get(q).add(tqPI);
+	  
 	  Set<ActivityNode> childrenQ = querygraph.children(q);
 	  boolean hasExtendedSolutions = false;
 	  String qSolution;
@@ -354,7 +321,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
   }
   
   /**
-   * Outputs expanded solutions rooted by q in partial solution pools in root-to-leaf order.
+   * Outputs expanded solutions rooted at tqPI in partial solution pools in root-to-leaf order.
    * 
    * @param q query node q.
    * @param stackpos the position in q's stack that we are interested in for the current solution.
@@ -365,28 +332,12 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 	protected void showExpandedSolutions(ActivityNode q, int stackpos, PoolItem tqPI, String partialPath) {
 		ActivityNode temp;
 		Stack<NodeInStack> tempStack;
-//		String tempString = "";
 		String tempID = "";
 		int parentStackIndex;
 		
 		queryNodeStackPositionMap.put(q, new Integer(stackpos));
 		
 		if (querygraph.isRoot(q)) {
-//			logger.warn("Output path solution");
-//			temp = actLeafNode;		
-//			while (temp != null) {
-//				tempStack = queryNodeStackMap.get(temp);
-//				tempIndex = queryNodeStackPositionMap.get(temp).intValue();
-//				tempID = tempStack.get(tempIndex).getNode().getActivityID();
-//				tempString = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ tempString;
-//				temp = querygraph.parent(temp);
-//			}
-//			logger.warn(tempString);
-			
-			//logger.warn(partialPath);
-			
-			// To do: output pool solutions rooted at tqPI
-			//outputPoolSolutions(tqPI, partialPath);
 			outputPoolSolutionsRootedAtTqPI(tqPI, partialPath);
 		} else {			
 			NodeInStack parentNodeInStack = queryNodeStackMap.get(q).get(stackpos).getNext();
@@ -394,8 +345,6 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 			tempStack = queryNodeStackMap.get(temp);
 			parentStackIndex = tempStack.indexOf(parentNodeInStack);
 			
-			//qStackposID = queryNodeStackMap.get(q).get(stackpos).getNode().getActivityID();
-			//partialPath = processgraph.getActivityName(qStackposID) + ": " + qStackposID + "  ||  "+ partialPath;
 			for (int i = 0; i <= parentStackIndex; i++) {
 				tempID = tempStack.get(i).getNode().getActivityID();
 				partialPath = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ partialPath;
@@ -409,7 +358,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 	 * Output path solutions rooted at pool element tqPI with the given
 	 * partial path solution. 
 	 *
-	 * @param tqPI q's pool element.
+	 * @param tqPI pool element created with tq.
 	 * @param partialPath partial path from leaf node to q.
 	 * 
 	 */
@@ -447,7 +396,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
     * @param q query node q.
     * @param stackpos the position in q's stack that we are interested in for the current solution.
     * @param tchildq positional representation of childq (a process node matches q's child)
-    * @param childPI last created pool element in q's child pool.
+    * @param childPI pool element in q's child pool.
     * @param partialPath partial path from leaf node to q.
     *
     */ 
@@ -455,13 +404,9 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  	protected void showSolutions2Ext(ActivityNode q, int stackpos, NodeRegionEncoding tchildq, PoolItem childPI, String partialPath) {
  		ActivityNode temp;
  		Stack<NodeInStack> tempStack;
-// 		String tempString = "";
- 		String tempID = "";
  		int parentStackIndex;
  		PoolItem cPI;
- 		
- 		queryNodeStackPositionMap.put(q, new Integer(stackpos));
- 		
+ 	
  		// Modification to original algorithm: Direction from child to parent
  		NodeRegionEncoding tq = queryNodeStackMap.get(q).get(stackpos).getNode();
  		cPI = expandStackPathSolution(q, tq, tchildq, childPI, partialPath);
@@ -469,29 +414,14 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  		
  		if (querygraph.isRoot(q)) {
  			logger.warn("Output path solution in partial solution stack");
-// 			temp = actLeafNode;		
-// 			while (temp != null) {
-// 				tempStack = queryNodeStackMap.get(temp);
-// 				tempIndex = queryNodeStackPositionMap.get(temp).intValue();
-// 				tempID = tempStack.get(tempIndex).getNode().getActivityID();
-// 				tempString = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ tempString;
-// 				temp = querygraph.parent(temp);
-// 			}
-// 			logger.warn(tempString);
- 			logger.warn(partialPath);
- 			
- 		} else {
- 						
+ 			logger.warn(partialPath);			
+ 		} else { 						
  			NodeInStack parentNodeInStack = queryNodeStackMap.get(q).get(stackpos).getNext();
  			temp = querygraph.parent(q);
  			tempStack = queryNodeStackMap.get(temp);
  			parentStackIndex = tempStack.indexOf(parentNodeInStack);
  			
- 			//qStackposID = queryNodeStackMap.get(q).get(stackpos).getNode().getActivityID();
- 			//partialPath = processgraph.getActivityName(qStackposID) + ": " + qStackposID + "  ||  "+ partialPath;
  			for (int i = 0; i <= parentStackIndex; i++) {
- 				//tempID = tempStack.get(i).getNode().getActivityID();
- 				//partialPath = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ partialPath;
  				showSolutions2Ext(temp, i, tq, cPI, partialPath);				
  			}			
  		}		
@@ -500,14 +430,14 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  	 /**
  	  * A operation associated with the partial solution pool. This operation is called during 
  	  * the processing of output the path solution, whose order is from leaf to root. For each 
- 	  * node tq along the path we create a new item in associated partial solution pool. Except that, 
- 	  * if we find, that tq has a node tp in the parent partial solution pool, which is ancestor 
- 	  * of tq, then we build a parent pointer from it to tp .
+ 	  * node tq along the path we find corresponding pool item tpPI in the partial solution pool. 
+ 	  * Except that, if we find, that tqPI has a parent tpPI in the parent partial solution pool, 
+ 	  * which will not be output in current path, then we build a parent pointer from tqPI to tpPI.
  	  *
  	  * @param q query node q.
  	  * @param tq current element of q's stream.
- 	  * @param tchildq positional representation of childq (a process node matches q's child)
- 	  * @param childPI last created pool element in q's child pool.
+ 	  * @param tchildq positional representation of a node from childq's stream.
+ 	  * @param childPI pool element in q's child pool.
  	  * @param partialPathQ partial path from leaf node to q 
  	  * 
  	  * @return the new created pool element for tq
@@ -518,8 +448,8 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  		 // Create a new pool element for tq, we have created tqPI in function sweepPartialSolutionTSD2
  		 // and added it in the pool, so we don't add it in pool this time.
  		 PoolItem tqPI = new PoolItem(q, tq);
- 		 //partialSolutionPoolMap.get(q).add(tqPI);
- 			  
+ 		
+ 		 // Retrieve tqPI from the Pool[q]
  		 Set<PoolItem> qPoolItems = partialSolutionPoolMap.get(q);			  
  		 for (PoolItem qPoolItem : qPoolItems) {
  			if (qPoolItem.getProcessnode().getActivityID().compareTo(tq.getActivityID()) == 0) {
@@ -529,58 +459,52 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  		 }
  			  	  
  		if (childPI != null) {
- 			if (querygraph.isRoot(q)) { 
- 	 			 rootPI = tqPI;
- 	 			 rootChildPI = childPI;		
- 			} else {
- 	 			// Add the new pool element to previous created element from child pool
- 	 			childPI.addParent(tqPI);							
- 			}
+ 	 		childPI.addParent(tqPI);							
  		}
- 		 //else {
- 		 //  To Do: Sweep tq with parent pool
- 		 if(!querygraph.isLeaf(q)) {
- 			sweepPartialSolutionsReverse(q, tq, tchildq, childPI, partialPathQ);  
- 		 }
- 		 //}	
+
+ 		if(!querygraph.isLeaf(q)) {
+ 			sweepPartialSolutionsReverse(q, tchildq, childPI, partialPathQ);  
+ 		}
  			  
  		 return tqPI;
  	   }
- 	   
+	  
  	/**
  	 * Check the new incoming pool element tqPI with each element from parent pool, in case
  	 * of descendant-ancestor relationship, link both elements and process the new emerging
  	 * path. 
  	 *
  	 * @param q query node q.
- 	 * @param tq current element of q's stream.
  	 * @param tchildq positional representation of childq (a process node matches q's child)
  	 * @param childPI last created pool element in q's child pool.
  	 * @param pathQ partial path from leaf node to q.
  	 * 
  	 */
- 	 protected void sweepPartialSolutionsReverse(ActivityNode q, NodeRegionEncoding tq, NodeRegionEncoding tchildq, PoolItem childPI, String pathQ) {
-// 	 	  Set<PoolItem> poolParentQ = partialSolutionPoolMap.get(querygraph.parent(q));
-// 	 	  if (poolParentQ != null) {
-// 	 	    for (PoolItem poolParentQItem : poolParentQ) {	 	    		
-// 	 	    	if (checkContainment2(poolParentQItem.getProcessnode(), tq)) {
-// 	 	    		tqPI.addParent(poolParentQItem);
-// 	 	    		outputPoolSolutions(tqPI, pathQ);		 
-// 	 	    	}			 
-// 	 	   }
-// 	 	}		   
- 		Set<PoolItem> poolQ = partialSolutionPoolMap.get(q); 
- 		//if (poolQ != null) {
+ 	 protected void sweepPartialSolutionsReverse(ActivityNode q, NodeRegionEncoding tchildq, PoolItem childPI, String pathQ) {		   
+ 		Set<PoolItem> poolQ = partialSolutionPoolMap.get(q);
+ 		Stack<NodeInStack> stackQ = queryNodeStackMap.get(q);
+ 		boolean belongsToCurrentPaths;
+ 		String tempID = "";
  		for (PoolItem poolQItem : poolQ) {
  			// Check whether pool item 
- 			if (poolQItem.getProcessnode().getActivityID().compareTo(tq.getActivityID()) != 0) {
+ 			belongsToCurrentPaths = false;		
+ 			for (NodeInStack stackQitem: stackQ) {
+ 				if (poolQItem.getProcessnode().getActivityID().compareTo(stackQitem.getNode().getActivityID()) == 0) {
+ 					belongsToCurrentPaths = true;
+ 					break;
+ 				}				
+ 			}
+ 			
+ 			if (!belongsToCurrentPaths) {
  				if (checkContainment2(poolQItem.getProcessnode(), tchildq)) {
  					childPI.addParent(poolQItem);
- 					outputPoolSolutions(childPI, pathQ);
+ 					// *** Change ***
+ 					tempID = poolQItem.getProcessnode().getActivityID();
+ 					pathQ = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ pathQ;
+ 					outputPoolSolutions(poolQItem, pathQ);
  				}
  			}
- 		}	  
- 		//}		  
+ 		}	    
  	}
  	   
  	/**
@@ -592,7 +516,6 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  	  * 
  	  */
  	protected void outputPoolSolutions(PoolItem tqPI, String partialPath) {
- 		String tempSolution = partialPath;
  		String tempID = "";
  		List<PoolItem> tempparents;
  			
@@ -602,8 +525,8 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  			if ((tempparents = tqPI.getParents()) != null) {
  				for (PoolItem tempparent : tempparents) {
  					tempID = tempparent.getProcessnode().getActivityID();
- 					tempSolution = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ partialPath;
- 					outputPoolSolutions(tempparent, tempSolution);
+ 					partialPath = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ partialPath;
+ 					outputPoolSolutions(tempparent, partialPath);
  				}
  			}
  		}	
