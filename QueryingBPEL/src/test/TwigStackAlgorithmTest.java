@@ -242,13 +242,13 @@ public class TwigStackAlgorithmTest {
 		query1.addVertex(query1Seq_start);
 		query1.addVertex(query1Seq_end);
 		query1.addVertex(query1Receive);
-		query1.addVertex(query1ReceiveB);
+//		query1.addVertex(query1ReceiveB);
 		
 		query1.addEdge(query1Invoke, query1Assign);
 		query1.addEdge(query1Invoke, query1Seq_start);
 		query1.addEdge(query1Seq_start, query1Seq_end);
 		query1.addEdge(query1Assign, query1Receive);
-		query1.addEdge(query1ReceiveB, query1Invoke);
+//		query1.addEdge(query1ReceiveB, query1Invoke);
 		
 		processGraph1 = new ProcessFlowGraph("processTwigStackTest", "www", "100", process1);
 		queryGraph1 = new QueryGraph(query1);

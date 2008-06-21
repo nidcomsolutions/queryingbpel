@@ -3,8 +3,10 @@
  */
 package de.uni.stuttgart.bpelSearching.matching;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Stack;
 
 import de.uni.stuttgart.bpelSearching.index.NodeInStack;
@@ -20,7 +22,7 @@ import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
  *
  */
 public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
-
+	
 	/**
 	 * Creates a new TwigStackAlgorithmBasic object for the specified query tree 
 	 * and process tree, initialize stream and solution stack for each query
