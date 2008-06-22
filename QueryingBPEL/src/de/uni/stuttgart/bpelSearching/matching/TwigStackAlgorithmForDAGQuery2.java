@@ -306,7 +306,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 	  
 	  for (ActivityNode childQi : childrenQ) {
 		 for (PoolItem h : partialSolutionPoolMap.get(childQi)) {
-			if (checkContainment2(tq, h.getProcessnode())) {
+			if (checkContainment2(tq, h.getDatanode())) {
 				h.addParent(tqPI);
 				hasExtendedSolutions = true;
 			} 			
@@ -371,13 +371,13 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
 			logger.warn(partialPath);
 		} else {
 			Set<ActivityNode> childrenQ = querygraph.children(tqPI.getQuerynode());
-			tqID = tqPI.getProcessnode().getActivityID();
+			tqID = tqPI.getDatanode().getActivityID();
 			for (ActivityNode childQ : childrenQ) {
 				for (PoolItem h : partialSolutionPoolMap.get(childQ)) {				
 					if ((tempparents = h.getParents()) != null) {
 						for (PoolItem tempparent : tempparents) {
-							if (tempparent.getProcessnode().getActivityID().compareTo(tqID) == 0) {
-								hID = h.getProcessnode().getActivityID();
+							if (tempparent.getDatanode().getActivityID().compareTo(tqID) == 0) {
+								hID = h.getDatanode().getActivityID();
 								tempSolution = partialPath + processgraph.getActivityName(hID) + ": " + hID + "  ||  ";
 								outputPoolSolutionsRootedAtTqPI(h, tempSolution);
 								break;
@@ -452,7 +452,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  		 // Retrieve tqPI from the Pool[q]
  		 Set<PoolItem> qPoolItems = partialSolutionPoolMap.get(q);			  
  		 for (PoolItem qPoolItem : qPoolItems) {
- 			if (qPoolItem.getProcessnode().getActivityID().compareTo(tq.getActivityID()) == 0) {
+ 			if (qPoolItem.getDatanode().getActivityID().compareTo(tq.getActivityID()) == 0) {
  				 tqPI = qPoolItem;
  				 break;
  			}				  
@@ -489,17 +489,17 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  			// Check whether pool item 
  			belongsToCurrentPaths = false;		
  			for (NodeInStack stackQitem: stackQ) {
- 				if (poolQItem.getProcessnode().getActivityID().compareTo(stackQitem.getNode().getActivityID()) == 0) {
+ 				if (poolQItem.getDatanode().getActivityID().compareTo(stackQitem.getNode().getActivityID()) == 0) {
  					belongsToCurrentPaths = true;
  					break;
  				}				
  			}
  			
  			if (!belongsToCurrentPaths) {
- 				if (checkContainment2(poolQItem.getProcessnode(), tchildq)) {
+ 				if (checkContainment2(poolQItem.getDatanode(), tchildq)) {
  					childPI.addParent(poolQItem);
  					// *** Change ***
- 					tempID = poolQItem.getProcessnode().getActivityID();
+ 					tempID = poolQItem.getDatanode().getActivityID();
  					pathQ = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ pathQ;
  					outputPoolSolutions(poolQItem, pathQ);
  				}
@@ -524,7 +524,7 @@ public class TwigStackAlgorithmForDAGQuery2 extends TwigStackAlgorithm {
  		} else {
  			if ((tempparents = tqPI.getParents()) != null) {
  				for (PoolItem tempparent : tempparents) {
- 					tempID = tempparent.getProcessnode().getActivityID();
+ 					tempID = tempparent.getDatanode().getActivityID();
  					partialPath = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ partialPath;
  					outputPoolSolutions(tempparent, partialPath);
  				}

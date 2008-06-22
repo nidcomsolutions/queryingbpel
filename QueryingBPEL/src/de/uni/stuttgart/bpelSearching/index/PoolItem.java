@@ -10,8 +10,10 @@ import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
 /**
  * 
- * The PoolItem class represents an element in the partial solution pool 
- * of a query node.
+ * PoolItem class represents an element in the partial solution pool associated 
+ * with a query node. Each pool element consists of three components: query node, 
+ * data node (which matches the query node), a list of references to the pool 
+ * elements in its parent pool.
  * 
  * @author luwei
  *
@@ -19,31 +21,36 @@ import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 public class PoolItem {
 
 	private ActivityNode querynode;
-	private NodeRegionEncoding processnode;
+	private NodeRegionEncoding datanode;
 	private List<PoolItem> parents;
 
 	
 	/**
+	 * Create a new pool element with the given query node and process node. 
+	 * 
 	 * @param querynode
-	 * @param processnode
+	 * @param datanode
 	 */
-	public PoolItem(ActivityNode querynode, NodeRegionEncoding processnode) {
+	public PoolItem(ActivityNode querynode, NodeRegionEncoding datanode) {
 		super();
 		this.querynode = querynode;
-		this.processnode = processnode;
+		this.datanode = datanode;
 		this.parents = new ArrayList<PoolItem>();
 	}
 
 	/**
+	 * Create a new pool element with the given query node and process node 
+	 * and parents.
+	 * 
 	 * @param querynode
-	 * @param processnode
+	 * @param datanode
 	 * @param parents
 	 */
-	public PoolItem(ActivityNode querynode, NodeRegionEncoding processnode,
+	public PoolItem(ActivityNode querynode, NodeRegionEncoding datanode,
 			List<PoolItem> parents) {
 		super();
 		this.querynode = querynode;
-		this.processnode = processnode;
+		this.datanode = datanode;
 		this.parents = parents;
 	}
 
@@ -51,10 +58,10 @@ public class PoolItem {
 		String tempStr = "";
 		
 		if ((parents == null) || (parents.isEmpty())) {
-			tempStr += (processnode.getActivityID() + " - Null" );
+			tempStr += (datanode.getActivityID() + " - Null" );
 		} else {
 			for (PoolItem parent : parents) {
-				tempStr += (processnode.getActivityID() + " - " + parent.getProcessnode().getActivityID() + " || ");
+				tempStr += (datanode.getActivityID() + " - " + parent.getDatanode().getActivityID() + " || ");
 			}		
 		}		
 		return tempStr;
@@ -72,12 +79,12 @@ public class PoolItem {
 		this.querynode = querynode;
 	}
 
-	public NodeRegionEncoding getProcessnode() {
-		return processnode;
+	public NodeRegionEncoding getDatanode() {
+		return datanode;
 	}
 
-	public void setProcessnode(NodeRegionEncoding processnode) {
-		this.processnode = processnode;
+	public void setDatanode(NodeRegionEncoding datanode) {
+		this.datanode = datanode;
 	}
 
 	public List<PoolItem> getParents() {

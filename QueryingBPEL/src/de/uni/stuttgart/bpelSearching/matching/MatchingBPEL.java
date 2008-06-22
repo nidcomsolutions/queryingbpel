@@ -89,7 +89,7 @@ public class MatchingBPEL {
      */
     public void match(){
     	TwigStackAlgorithmBasic twigStB; 
-    	TwigStackAlgorithmForDAGQuery2 twigStDAGquery;
+    	TwigStackAlgorithmForDAGQuery3 twigStDAGquery;
     	if((querygraph.getQueryGraphType() == GraphType.TREE) && (processgraph.getProcessGraphType() == GraphType.TREE)) {
     		twigStB = new TwigStackAlgorithmBasic(querygraph, processgraph);
     		if (isExactMatching) {
@@ -99,7 +99,7 @@ public class MatchingBPEL {
     			//logger.warn("Matching Similarity: " + twigSt.getMatchingSimilarity());
     		}   		
     	} else if ((querygraph.getQueryGraphType() == GraphType.TREE) && (processgraph.getProcessGraphType() == GraphType.DAG_CONNECTED)) {
-    		twigStDAGquery = new TwigStackAlgorithmForDAGQuery2(querygraph, processgraph);
+    		twigStDAGquery = new TwigStackAlgorithmForDAGQuery3(querygraph, processgraph);
     		if (isExactMatching) {
     			twigStDAGquery.twigStackExactMatch(querygraph.getStartVertex());
     		} else {
