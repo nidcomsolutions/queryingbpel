@@ -4,8 +4,6 @@ import org.apache.log4j.Logger;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import de.uni.stuttgart.bpelSearching.matching.MatchingBPEL;
 import de.uni.stuttgart.bpelSearching.query.QueryGraph;
@@ -242,13 +240,13 @@ public class TwigStackAlgorithmTest {
 		query1.addVertex(query1Seq_start);
 		query1.addVertex(query1Seq_end);
 		query1.addVertex(query1Receive);
-//		query1.addVertex(query1ReceiveB);
+		query1.addVertex(query1ReceiveB);
 		
 		query1.addEdge(query1Invoke, query1Assign);
 		query1.addEdge(query1Invoke, query1Seq_start);
 		query1.addEdge(query1Seq_start, query1Seq_end);
 		query1.addEdge(query1Assign, query1Receive);
-//		query1.addEdge(query1ReceiveB, query1Invoke);
+		query1.addEdge(query1ReceiveB, query1Invoke);
 		
 		processGraph1 = new ProcessFlowGraph("processTwigStackTest", "www", "100", process1);
 		queryGraph1 = new QueryGraph(query1);
