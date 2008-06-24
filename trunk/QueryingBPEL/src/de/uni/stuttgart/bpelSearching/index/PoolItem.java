@@ -67,6 +67,11 @@ public class PoolItem {
 		return tempStr;
 	}
 	
+    /**
+     * Add a reference to the parent pool element.
+     *
+     * @param child an element stored in parent pool
+     */
 	public void addParent(PoolItem parent) {
 		this.parents.add(parent);	
 	}
