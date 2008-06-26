@@ -55,26 +55,14 @@ public abstract class TwigStackAlgorithm {
      */
 	protected HashMap<ActivityNode, LinkedList<NodeRegionEncoding>> queryNodeStreamMap = 
 			new HashMap<ActivityNode, LinkedList<NodeRegionEncoding>>();
-
-	// ******* Second Version *********** deals with duplicated query node
-//	protected HashMap<String, LinkedList<NodeRegionEncoding>> queryNodeStreamMap = 
-//		new HashMap<String, LinkedList<NodeRegionEncoding>>();
 	
     /**
-     * Stores the node region encoding of children nodes from the solutionStackMap for
-     * query nodes with more than one child node. 
-     * 
+     * Stores all query leaf nodes which have associated path solutions. 
      */
-//	protected HashMap<String, LinkedList<NodeRegionEncoding>> childrenSolutionMap = 
-//		new HashMap<String, LinkedList<NodeRegionEncoding>>();
-	
-	
 	protected Set<ActivityNode> queryLeafNodesSolution;
 	
     /**
-     * Stores the node region encoding of children nodes for
-     * each joined results of joined node. 
-     * 
+     * Stores the node region encoding of children nodes for each joined results of joined node. 
      */
 	protected HashMap<StringBuffer, LinkedList<NodeRegionEncoding>> joinedResultsChildrenNodesMap = 
 		new HashMap<StringBuffer, LinkedList<NodeRegionEncoding>>();
@@ -157,11 +145,13 @@ public abstract class TwigStackAlgorithm {
 	
     /**
      * Implements TwigStack algorithm for inexact matching, which computes answers 
-     * to a query twig pattern.
+     * to a query graph.
      *
      * @param q a query node.
+     * @param threshold the below threshold for returning of inexact matching results.
+     * 
      */
-	public abstract void twigStackInExactMatch(ActivityNode q);
+	public abstract void twigStackInExactMatch(ActivityNode q, float threshold);
 	
     /**
      * Determine whether all streams of q's subtree nodes are not empty.
@@ -183,15 +173,78 @@ public abstract class TwigStackAlgorithm {
 		return true;
 	}	
 	
-
+	
     /**
-     * Gets the next node to be processed, which has a minimal solution extension.
+     * Gets the next node to be processed, which has a minimal solution extension,
+     * for exact matching.
      *
      * @param q a query node.
      *
      * @return the next processing node.
      */
-	protected ActivityNode getNext(ActivityNode q){
+	protected ActivityNode getNextForExactMatch(ActivityNode q){
+		ActivityNode ni, nmin;
+		int minL, maxL, niL;
+		boolean existGetNextChildStreamEmpty = false;
+		
+		minL = processgraph.getMaxPostOrder();
+		maxL = 0;
+		niL = 0;
+		nmin = q;
+		
+		if (querygraph.isLeaf(q)) {
+			return q;
+		}
+		
+		Set<ActivityNode> childrenQ = querygraph.children(q);
+		
+		for (ActivityNode childQi : childrenQ) {
+			ni = getNextForExactMatch(childQi);
+			//if (ni.getActivityID().compareTo(childQi.getActivityID()) != 0) {
+			if ((ni.getActivityID().compareTo(childQi.getActivityID()) != 0) 
+				|| existGetNextChildStreamEmpty) {
+				return ni;
+			}
+			
+			if (!queryNodeStreamMap.get(ni).isEmpty()) {
+				niL = queryNodeStreamMap.get(ni).getFirst().getPreorderRank();			
+				if (niL < minL) {
+					minL = niL;
+					nmin = ni;
+				}			
+				if (niL > maxL) {
+					maxL = niL;
+				}
+			} else {
+				// There is a child solution whose data stream is empty
+				existGetNextChildStreamEmpty = true;				
+			}
+		}
+		
+		while (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).getFirst().getPostorderRank() < maxL)) {			
+			queryNodeStreamMap.get(q).removeFirst();
+		}
+			
+		// For inexact matching
+		//if (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).getFirst().getPreorderRank() < minL)) {
+		// For exact matching, but still has problem if sibling nodes the same are
+		if (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).getFirst().getPreorderRank()
+				< minL) && !existGetNextChildStreamEmpty) {
+			return q;			
+		} else {
+			return nmin;			
+		}
+	}
+	
+    /**
+     * Gets the next node to be processed, which has a minimal solution extension, 
+     * for inexact matching.
+     *
+     * @param q a query node.
+     *
+     * @return the next processing node.
+     */
+	protected ActivityNode getNextForInexactMatch(ActivityNode q){
 		ActivityNode ni, nmin;
 		int minL, maxL, niL;
 		//boolean existGetNextChildStreamEmpty;
@@ -209,7 +262,7 @@ public abstract class TwigStackAlgorithm {
 		Set<ActivityNode> childrenQ = querygraph.children(q);
 		
 		for (ActivityNode childQi : childrenQ) {
-			ni = getNext(childQi);
+			ni = getNextForInexactMatch(childQi);
 			if (ni.getActivityID().compareTo(childQi.getActivityID()) != 0) {
 			//if ((ni.getActivityID().compareTo(childQi.getActivityID()) != 0) 
 			//	|| existGetNextChildStreamEmpty) {
@@ -238,8 +291,7 @@ public abstract class TwigStackAlgorithm {
 		
 		// For exact matching, but still has problem if sibling nodes the same are
 //		if (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).getFirst().getPreorderRank()
-//				< minL) && !existGetNextChildStreamEmpty) {
-		
+//				< minL) && !existGetNextChildStreamEmpty) {		
 		// For inexact matching
 		if (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).getFirst().getPreorderRank() < minL)) {
 			return q;			
@@ -248,6 +300,7 @@ public abstract class TwigStackAlgorithm {
 		}
 	}
 	
+
 	
     /**
      * Gets the next node to be processed, whose first stream element has a minimal pre-order rank.
@@ -347,10 +400,11 @@ public abstract class TwigStackAlgorithm {
 		for (ActivityNode childQi : childrenQ) {
 			i++;
 			
-			if (i == childrenQSize)
+			if (i == childrenQSize) {
 				lastChild = true;
-			else
+			} else {
 				lastChild = false;
+			}
 			
 			mergeAllPathSolutions(childQi);
 			joinParentChildSolutions(q, childQi, lastChild);						
@@ -638,9 +692,10 @@ public abstract class TwigStackAlgorithm {
      * Print encoded inexact match solutions of the query root node. 
      *
      * @param q query root node.
+     * @param threshold the below threshold for returning of inexact matching results.
      *
      */	
-	public void printSolutionsForInExactMatch(ActivityNode q) {
+	public void printSolutionsForInExactMatch(ActivityNode q, float threshold) {
 		
 		NodePair nPair;
 		ListIterator< StringBuffer > iterator;
@@ -650,7 +705,7 @@ public abstract class TwigStackAlgorithm {
 		// Means query graph contains only one node, if query graph connected is 
 		boolean qHasNoChild = (querygraph.children(q).size() == 0);
 		
-		if (matchSimilarity > 0.3) {
+		if (matchSimilarity > threshold) {
 			
 			resultProcessInfo = "process ID: " + processgraph.getProcessID() + 
 			"  process namespace: " + processgraph.getProcessNamespace() + 

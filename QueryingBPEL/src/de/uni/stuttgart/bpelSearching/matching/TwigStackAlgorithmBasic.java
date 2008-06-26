@@ -3,10 +3,8 @@
  */
 package de.uni.stuttgart.bpelSearching.matching;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Stack;
 
 import de.uni.stuttgart.bpelSearching.index.NodeInStack;
@@ -49,7 +47,7 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 			// Phase 1: Some (but not all) solutions to individual
 			// query root-to-leaf paths are computed.
 			while (!end(q)) {			
-				qact = getNext(q);			
+				qact = getNextForExactMatch(q);			
 				parentQact = querygraph.parent(qact);
 						
 				if (!querygraph.isRoot(qact) && !queryNodeStreamMap.get(qact).isEmpty()) {
@@ -91,7 +89,7 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
      * @see TwigStackAlgorithm#twigStackInExactMatch(ActivityNode q)
      */
 	@Override
-	public void twigStackInExactMatch(ActivityNode q){		
+	public void twigStackInExactMatch(ActivityNode q, float threshold){		
 		ActivityNode qact, parentQact, root;
 		LinkedList<NodeRegionEncoding> tqact;
 		Stack<NodeInStack> sqact;
@@ -101,15 +99,13 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 		Stack<NodeInStack> sRoot;
 		Stack<NodeInStack> sA, sB, sC1, sC2;
 		ActivityNode query2A, query2B, query2C1, query2C2;
-		
-//		if (allQuerySubtreeNodesStreamsNotEmpty(q)) {
 
 //			root = querygraph.getStartVertex();
 		
 			// Phase 1: Some (but not all) solutions to individual
 			// query root-to-leaf paths are computed.
 			while (!end(q)) {			
-				qact = getNext(q);			
+				qact = getNextForInexactMatch(q);			
 				parentQact = querygraph.parent(qact);
 			
 				tqact = queryNodeStreamMap.get(qact);
@@ -144,19 +140,14 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 						//showSolutions(qact, 0);
 						processSolutions(qact, 0);
 						queryNodeStackMap.get(qact).pop();					
-					}				
-					//queryNodeStackMap.put(qact, sqact);				
+					}							
 				} else {
 					if (!queryNodeStreamMap.get(qact).isEmpty()) {
 						queryNodeStreamMap.get(qact).removeFirst();
 					}
-				}			
-				//queryNodeStreamMap.put(qact, tqact);			
+				}					
 			}
 			
-			// Phase 2: These solutions are merge joined to computer the answers to 
-			// the query twig pattern.
-				
 			// **** for debug ****
 //			Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
 //			ActivityNode cNode;
@@ -168,10 +159,12 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 //				}
 //			}
 			// **** end debug ****
-		
+			
+			// Phase 2: These solutions are merge joined to computer the answers to 
+			// the query twig pattern.		
 			mergeAllPathSolutions(q);		
-			printSolutionsForInExactMatch(q);
-//		}		
+			printSolutionsForInExactMatch(q, threshold);
+	
 	}
 	
 	

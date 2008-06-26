@@ -7,14 +7,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
 import de.uni.stuttgart.bpelSearching.index.NodeInStack;
 import de.uni.stuttgart.bpelSearching.index.NodeRegionEncoding;
-import de.uni.stuttgart.bpelSearching.index.PoolItem3;
 import de.uni.stuttgart.bpelSearching.index.PoolItem3Ext;
 import de.uni.stuttgart.bpelSearching.query.QueryGraph;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.Predecessors2;
@@ -37,16 +35,10 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
      * A data structure to temporarily hold the stack popped nodes to be grown from 
      * intermediate partial solutions to full solutions in a bottom-up fashion.
      * 
-     */	
-//	protected HashMap<ActivityNode, List<PoolItem3>> partialSolutionPoolMap = 
-//		new HashMap<ActivityNode, List<PoolItem3>>();	
+     */		
 	protected HashMap<ActivityNode, Set<PoolItem3Ext>> partialSolutionPoolMap = 
 		new HashMap<ActivityNode, Set<PoolItem3Ext>>();
 
-	protected HashMap<ActivityNode, Integer> poolPositionMap = 
-		new HashMap<ActivityNode, Integer>();
-	
-	
 	/**
 	 * Creates a new TwigStackAlgorithmForDAGQuery2 object for the specified query tree 
 	 * and process graph, initialize stream, solution stack, partial solution pool for 
@@ -59,9 +51,7 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 		super(qg, pg);
 		Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
 		for (ActivityNode queryNode : vertexSetQuery) {	
-//			partialSolutionPoolMap.put(queryNode, new ArrayList<PoolItem3>());
 			partialSolutionPoolMap.put(queryNode, new HashSet<PoolItem3Ext>());
-			poolPositionMap.put(queryNode, 0);
 		}
 	}
 
@@ -73,7 +63,92 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 		ActivityNode qact, parentQact, root;
 		LinkedList<NodeRegionEncoding> tqact, tParentQact, tRoot;
 		Stack<NodeInStack> sqact, sParentQact, sRoot;
+		float matchSimilarity;
+		NodeRegionEncoding tqactFirst;
 		
+		if (allQuerySubtreeNodesStreamsNotEmpty(q)) {
+			root = querygraph.getStartVertex();
+		
+			while (!end(q)) {
+				// **** Change ****
+				//qact = getMinSource(q);
+				qact = getNextExt(q);
+				parentQact = querygraph.parent(qact);
+				tqactFirst = queryNodeStreamMap.get(qact).getFirst();
+		
+				tqact = queryNodeStreamMap.get(qact);
+				sqact = queryNodeStackMap.get(qact);
+		
+				tParentQact = queryNodeStreamMap.get(parentQact);
+				sParentQact = queryNodeStackMap.get(parentQact);
+		
+				tRoot = queryNodeStreamMap.get(root);
+				sRoot = queryNodeStackMap.get(root);
+					
+				if (!querygraph.isRoot(qact) && !queryNodeStreamMap.get(qact).isEmpty()) {
+					cleanStack(parentQact, tqactFirst.getPreorderRank());
+				}
+				
+				if (querygraph.isRoot(qact) || !queryNodeStackMap.get(parentQact).isEmpty()) {
+					if (!queryNodeStreamMap.get(qact).isEmpty()) {
+						cleanStack(qact, tqactFirst.getPreorderRank());
+					}
+					moveStreamToStack(qact);
+					sweepPartialSolutionsTSD2(qact, tqactFirst);
+				
+					if (querygraph.isLeaf(qact)) {
+						actLeafNode = qact;					
+						showSolutions2Ext(qact, 0, null, null, "");
+						//processSolutions(qact, 0, null, 0);
+						queryLeafNodesSolution.add(qact);
+						queryNodeStackMap.get(qact).pop();										
+					} 						
+				} else {
+					if (!queryNodeStreamMap.get(qact).isEmpty()) {						
+						queryNodeStreamMap.get(qact).removeFirst();
+					}
+				}	
+			}
+		
+			// Phase 2: These solutions are merge joined to computer the answers to 
+			// the query twig pattern.
+		
+			//mergeAllPathSolutions(q);
+			matchSimilarity = getMatchingSimilarity();
+			if (matchSimilarity == 1.0) {
+				outputAllExactMatchingSolutionsInPartialSolutionPools();
+			}
+			
+			// **** for debug ****
+//			Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
+//			ActivityNode cNode;
+//			Stack<NodePair> sNPair;
+//			for (ActivityNode queryNode : vertexSetQuery) { 			
+//				sNPair = solutionStackMap.get(queryNode);
+//				if (sNPair.size() > 0) {
+//					cNode = sNPair.get(0).getNode();
+//				}
+//			}
+		
+//			Set<PoolItem3Ext> q1ReceiveBPool = partialSolutionPoolMap.get(querygraph.getActivityNode("q1ReceiveB"));
+//			logger.warn("Show q1ReceiveBPool's pool: ");
+//			for (PoolItem3Ext q1PoolItem : q1ReceiveBPool) {
+//				logger.warn(q1PoolItem);
+//			}
+			// **** end debug ****
+		}
+	}
+
+	
+    /**
+     * @see TwigStackAlgorithm#twigStackInExactMatch(ActivityNode q)
+     */
+	@Override
+	public void twigStackInExactMatch(ActivityNode q, float threshold) {
+		ActivityNode qact, parentQact, root;
+		LinkedList<NodeRegionEncoding> tqact, tParentQact, tRoot;
+		Stack<NodeInStack> sqact, sParentQact, sRoot;
+		float matchSimilarity;
 		NodeRegionEncoding tqactFirst;
 		
 		root = querygraph.getStartVertex();
@@ -109,6 +184,7 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 					actLeafNode = qact;					
 					showSolutions2Ext(qact, 0, null, null, "");
 					//processSolutions(qact, 0, null, 0);
+					queryLeafNodesSolution.add(qact);
 					queryNodeStackMap.get(qact).pop();										
 				} 						
 			} else {
@@ -121,38 +197,11 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 		// Phase 2: These solutions are merge joined to computer the answers to 
 		// the query twig pattern.
 		
-		
-		mergeAllPathSolutions(q);
-		outputAllSolutionsInPartialSolutionPools();
-			
-		// **** for debug ****
-//		Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
-//		ActivityNode cNode;
-//		Stack<NodePair> sNPair;
-//		for (ActivityNode queryNode : vertexSetQuery) { 			
-//			sNPair = solutionStackMap.get(queryNode);
-//			if (sNPair.size() > 0) {
-//				cNode = sNPair.get(0).getNode();
-//			}
-//		}
-		
-//		Set<PoolItem3Ext> q1ReceiveBPool = partialSolutionPoolMap.get(querygraph.getActivityNode("q1ReceiveB"));
-//		logger.warn("Show q1ReceiveBPool's pool: ");
-//		for (PoolItem3Ext q1PoolItem : q1ReceiveBPool) {
-//			logger.warn(q1PoolItem);
-//		}
-		// **** end debug ****
-
-	}
-
-	
-    /**
-     * @see TwigStackAlgorithm#twigStackInExactMatch(ActivityNode q)
-     */
-	@Override
-	public void twigStackInExactMatch(ActivityNode q) {
-		// TODO Auto-generated method stub
-
+		//mergeAllPathSolutions(q);
+		matchSimilarity = getMatchingSimilarity();
+		if (matchSimilarity > threshold) {
+			outputAllInexactMatchingSolutionsInPartialSolutionPools(matchSimilarity);
+		}		
 	}
 
 	
@@ -246,7 +295,7 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 		for (ActivityNode childQi : childrenQ) {
 			ni = getNextExt(childQi);
 			// *** Change ***
-			if (ni.getActivityID().compareTo(childQi.getActivityID()) != 0) { 
+			if (ni.getActivityID().compareTo(childQi.getActivityID()) != 0) {
 					//|| existGetNextChildStreamEmpty) {
 				return ni;
 			}
@@ -559,14 +608,41 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
  	
  	
     /**
-     * After processing all path solutions, we output the final results stored in 
+     * After processing all path solutions, we output all exact matching results stored in 
      * partial solution pools.
      *
      */
- 	protected void outputAllSolutionsInPartialSolutionPools() {
- 		Set<PoolItem3Ext> queryRootPool = partialSolutionPoolMap.get(querygraph.getStartVertex());
-
- 		logger.warn("Output all solutions in partial solution pools");		
+ 	protected void outputAllExactMatchingSolutionsInPartialSolutionPools() {
+		String resultProcessInfo = "process ID: " + processgraph.getProcessID() + 
+		"  process namespace: " + processgraph.getProcessNamespace() + 
+		"  process name: " + processgraph.getProcessName();
+		
+		logger.warn(resultProcessInfo);
+		
+		logger.warn("It has following exact matching results: ");		
+ 		Set<PoolItem3Ext> queryRootPool = partialSolutionPoolMap.get(querygraph.getStartVertex());	
+ 		for (PoolItem3Ext queryRootPoolItem : queryRootPool) {
+ 			outputSolutionsForSpecificElementInRootPool(queryRootPoolItem);
+ 		}		
+ 	}
+ 	
+    /**
+     * After processing all path solutions, we output all inexact matching results stored in 
+     * partial solution pools.
+     *
+     * @param similarity similarity between query graph and matching part of data graph.
+     *
+     */
+ 	protected void outputAllInexactMatchingSolutionsInPartialSolutionPools(float similarity) {
+		String resultProcessInfo = "process ID: " + processgraph.getProcessID() + 
+		"  process namespace: " + processgraph.getProcessNamespace() + 
+		"  process name: " + processgraph.getProcessName();
+		
+		logger.warn(resultProcessInfo);
+		
+		logger.warn("Has matching Similarity: " + similarity + " with following matching results: ");
+		
+ 		Set<PoolItem3Ext> queryRootPool = partialSolutionPoolMap.get(querygraph.getStartVertex());		
  		for (PoolItem3Ext queryRootPoolItem : queryRootPool) {
  			outputSolutionsForSpecificElementInRootPool(queryRootPoolItem);
  		}		

@@ -175,7 +175,7 @@ public class TwigStackAlgorithmForDAGQuery extends TwigStackAlgorithm {
      * @see TwigStackAlgorithm#twigStackInExactMatch(ActivityNode q)
      */
 	@Override
-	public void twigStackInExactMatch(ActivityNode q) {
+	public void twigStackInExactMatch(ActivityNode q, float threshold) {
 		// TODO Auto-generated method stub
 
 	}	
