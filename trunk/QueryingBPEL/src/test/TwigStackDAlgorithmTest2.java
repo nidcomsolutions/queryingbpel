@@ -42,6 +42,7 @@ public class TwigStackDAlgorithmTest2 {
 	private static ActivityNode query1C;
 	private static ActivityNode query1B;
 	private static ActivityNode query1E;
+	private static ActivityNode query1Y;
 	
 	@BeforeClass
 	public static void setUp() {
@@ -94,13 +95,16 @@ public class TwigStackDAlgorithmTest2 {
 		query1C = new ActivityNode("q1C", "c", 1);
 		query1B = new ActivityNode("q1B", "b", 1);
 		query1E = new ActivityNode("q1E", "e", 1);
+		query1Y = new ActivityNode("q1Y", "y", 1);
 		
 		query1.addVertex(query1C);
 		query1.addVertex(query1B);
 		query1.addVertex(query1E);
+		query1.addVertex(query1Y);
 		
 		query1.addEdge(query1C, query1B);
 		query1.addEdge(query1C, query1E);
+		query1.addEdge(query1C, query1Y);
 		
 		queryGraph1 = new QueryGraph(query1);
 	}
@@ -108,7 +112,7 @@ public class TwigStackDAlgorithmTest2 {
 	
 	public static void main(String[] args) {		
 		setUp();
-		MatchingBPEL matchBPEL = new MatchingBPEL(queryGraph1, processFlowGraph1, true);
+		MatchingBPEL matchBPEL = new MatchingBPEL(queryGraph1, processFlowGraph1, false);
 		matchBPEL.match();
 		System.exit(0);		
 	}

@@ -1,7 +1,6 @@
 package de.uni.stuttgart.bpelSearching.matching;
 
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -37,14 +36,63 @@ public class MatchingBPEL {
 	private QueryGraph querygraph;
 	private ProcessFlowGraph processgraph;
 	private boolean isExactMatching;
+	private float minMatchingSimilarity = 0.2f;
 	
     /**
-     * Creates a new matching instance between query graph and process graph.
+     * Creates a new matching instance with the specified query graph, process graph, a parameter indicates 
+     * whether exact matching is, minimal matching similarity.
      *
      * @param qg the query graph.
      * @param pg the process graph.
-     * @param isExactMatching indicate, whether perform exact search.
-     *  
+     * @param isExactMatching indicate whether perform exact search.
+     * @param minMatchingSimilarity the minimal allowable similarity between data graph and query graph
+     * 
+     * @throws IllegalArgumentException if <code>pg==null</code> or <code>qg==null</code>
+     * or <code>pg</code> <code>qg</code> is not of type <code>GraphType.TREE</code> or 
+     * <code>GraphType.DAG_CONNECTED</code>
+     */
+    @SuppressWarnings("unchecked")
+	public MatchingBPEL(QueryGraph qg, ProcessFlowGraph pg, boolean isExactMatching, float minMatchingSimilarity)
+    {
+    	querygraph = qg;
+    	
+    	if ((pg == null) || (qg == null)) {
+            throw new IllegalArgumentException("graph must not be null");
+        }
+    	
+        processgraph = pg;
+                        
+    	GraphAnalyse ga = new GraphAnalyse(processgraph.getProcessGraph(), processgraph.getStartActivity());
+    	
+    	if(processgraph.getStartActivity() == null){
+    		processgraph.setStartActivity(ga.getStartVertex());   		  		
+    	}
+    	    	
+    	processgraph.setProcessGraphType(ga.checkGraphType());
+    	
+    	if(processgraph.getProcessGraphType() == GraphType.TREE) {
+    		calculateNodeRegionEncoding();
+    	} else if (processgraph.getProcessGraphType() == GraphType.DAG_CONNECTED) {
+    		//calculateNodeRegionEncodingAndSSPI(); 
+    		//calculatePathCount();
+    		calculateNodeRegionEncodingAndSSPI2();
+    	} else {
+    		logger.warn(processgraph.getProcessName());
+    		throw new IllegalArgumentException("graph must be a tree or connected directed acyclic graph");
+    	}
+    	
+    	this.isExactMatching = isExactMatching;
+    	this.minMatchingSimilarity = minMatchingSimilarity;
+    }
+    
+    /**
+     * Creates a new matching instance with the specified query graph, process graph, a parameter indicates 
+     * whether exact matching is.
+     *
+     * @param qg the query graph.
+     * @param pg the process graph.
+     * @param isExactMatching indicate whether perform exact search.
+     * 
      * @throws IllegalArgumentException if <code>pg==null</code> or <code>qg==null</code>
      * or <code>pg</code> <code>qg</code> is not of type <code>GraphType.TREE</code> or 
      * <code>GraphType.DAG_CONNECTED</code>
@@ -72,14 +120,60 @@ public class MatchingBPEL {
     		calculateNodeRegionEncoding();
     	} else if (processgraph.getProcessGraphType() == GraphType.DAG_CONNECTED) {
     		//calculateNodeRegionEncodingAndSSPI(); 
-    		calculatePathCount();
+    		//calculatePathCount();
     		calculateNodeRegionEncodingAndSSPI2();
     	} else {
     		logger.warn(processgraph.getProcessName());
     		throw new IllegalArgumentException("graph must be a tree or connected directed acyclic graph");
     	}
     	
-    	this.isExactMatching = isExactMatching;       
+    	this.isExactMatching = isExactMatching;
+    	this.minMatchingSimilarity = 0.2f;
+    }
+    
+    
+    /**
+     * Creates a new matching instance with the specified query graph, process graph.
+     *
+     * @param qg the query graph.
+     * @param pg the process graph.
+     * 
+     * @throws IllegalArgumentException if <code>pg==null</code> or <code>qg==null</code>
+     * or <code>pg</code> <code>qg</code> is not of type <code>GraphType.TREE</code> or 
+     * <code>GraphType.DAG_CONNECTED</code>
+     */
+    @SuppressWarnings("unchecked")
+	public MatchingBPEL(QueryGraph qg, ProcessFlowGraph pg)
+    {
+    	querygraph = qg;
+    	
+    	if ((pg == null) || (qg == null)) {
+            throw new IllegalArgumentException("graph must not be null");
+        }
+    	
+        processgraph = pg;
+                        
+    	GraphAnalyse ga = new GraphAnalyse(processgraph.getProcessGraph(), processgraph.getStartActivity());
+    	
+    	if(processgraph.getStartActivity() == null){
+    		processgraph.setStartActivity(ga.getStartVertex());   		  		
+    	}
+    	    	
+    	processgraph.setProcessGraphType(ga.checkGraphType());
+    	
+    	if(processgraph.getProcessGraphType() == GraphType.TREE) {
+    		calculateNodeRegionEncoding();
+    	} else if (processgraph.getProcessGraphType() == GraphType.DAG_CONNECTED) {
+    		//calculateNodeRegionEncodingAndSSPI(); 
+    		//calculatePathCount();
+    		calculateNodeRegionEncodingAndSSPI2();
+    	} else {
+    		logger.warn(processgraph.getProcessName());
+    		throw new IllegalArgumentException("graph must be a tree or connected directed acyclic graph");
+    	}
+    	
+    	this.isExactMatching = false;
+    	this.minMatchingSimilarity = 0.2f;
     }
     
 
@@ -95,7 +189,7 @@ public class MatchingBPEL {
     		if (isExactMatching) {
     			twigStB.twigStackExactMatch(querygraph.getStartVertex());
     		} else {
-    			twigStB.twigStackInExactMatch(querygraph.getStartVertex());
+    			twigStB.twigStackInExactMatch(querygraph.getStartVertex(), minMatchingSimilarity);
     			//logger.warn("Matching Similarity: " + twigSt.getMatchingSimilarity());
     		}   		
     	} else if ((querygraph.getQueryGraphType() == GraphType.TREE) && (processgraph.getProcessGraphType() == GraphType.DAG_CONNECTED)) {
@@ -103,7 +197,7 @@ public class MatchingBPEL {
     		if (isExactMatching) {
     			twigStDAGquery.twigStackExactMatch(querygraph.getStartVertex());
     		} else {
-    			twigStDAGquery.twigStackInExactMatch(querygraph.getStartVertex());
+    			twigStDAGquery.twigStackInExactMatch(querygraph.getStartVertex(), minMatchingSimilarity);
     			//logger.warn("Matching Similarity: " + twigSt.getMatchingSimilarity());
     		}	   		
     	}
@@ -332,6 +426,16 @@ public class MatchingBPEL {
 
 	public void setProcessgraph(ProcessFlowGraph processgraph) {
 		this.processgraph = processgraph;
+	}
+
+
+	public float getMinMatchingSimilarity() {
+		return minMatchingSimilarity;
+	}
+
+
+	public void setMinMatchingSimilarity(float minMatchingSimilarity) {
+		this.minMatchingSimilarity = minMatchingSimilarity;
 	}
 	
 	

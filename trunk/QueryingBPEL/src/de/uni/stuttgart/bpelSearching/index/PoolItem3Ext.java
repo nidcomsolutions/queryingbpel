@@ -30,7 +30,7 @@ public class PoolItem3Ext {
 	
 	private ActivityNode querynode;
 	private NodeRegionEncoding datanode;
-	private Map<ActivityNode, PoolItem3ChildReference> childrenReferencesMap;	
+	private Map<ActivityNode, PoolItem3ExtChildReferences> childrenReferencesMap;	
 	
 	/**
 	 * Creates a new pool element with the given query node and process node 
@@ -41,7 +41,7 @@ public class PoolItem3Ext {
 	 * @param childrenReferencesMap
 	 */
 	public PoolItem3Ext(ActivityNode querynode, NodeRegionEncoding datanode,
-			Map<ActivityNode, PoolItem3ChildReference> childrenReferencesMap) {
+			Map<ActivityNode, PoolItem3ExtChildReferences> childrenReferencesMap) {
 		super();
 		this.querynode = querynode;
 		this.datanode = datanode;
@@ -58,7 +58,7 @@ public class PoolItem3Ext {
 		super();
 		this.querynode = querynode;
 		this.datanode = datanode;
-		childrenReferencesMap = new HashMap<ActivityNode, PoolItem3ChildReference>();
+		childrenReferencesMap = new HashMap<ActivityNode, PoolItem3ExtChildReferences>();
 	}
 	
 	
@@ -84,14 +84,14 @@ public class PoolItem3Ext {
      * the children references map; <tt>false</tt> otherwise.
      */
 	public boolean addChild(PoolItem3Ext childPI) {
-		PoolItem3ChildReference cPIRef;
+		PoolItem3ExtChildReferences cPIRef;
 		
 		if (childPI != null) {
 			ActivityNode cNode = childPI.getQuerynode();
 			if ((cPIRef = childrenReferencesMap.get(cNode)) != null) {
 				cPIRef.addChildReference(childPI);		
 			} else {
-				childrenReferencesMap.put(cNode, new PoolItem3ChildReference(childPI));
+				childrenReferencesMap.put(cNode, new PoolItem3ExtChildReferences(childPI));
 			}
 			return true;
 		} else {
@@ -107,11 +107,11 @@ public class PoolItem3Ext {
 	public Set<PoolItem3Ext> getChildren() {
 		Set<PoolItem3Ext> result = new HashSet<PoolItem3Ext>();
 		if (childrenReferencesMap != null) {
-			Iterator<PoolItem3ChildReference> childrenReferencesIter = childrenReferencesMap.
+			Iterator<PoolItem3ExtChildReferences> childrenReferencesIter = childrenReferencesMap.
 			values().iterator();		
 			while (childrenReferencesIter.hasNext()) {
-				PoolItem3ChildReference cRef = childrenReferencesIter.next();
-				result.addAll(cRef.getChildrenReferences());
+				PoolItem3ExtChildReferences cRef = childrenReferencesIter.next();
+				result.addAll(cRef.getChildReferences());
 			}
 		}
 		return result;
@@ -142,7 +142,7 @@ public class PoolItem3Ext {
      * with <code>childQ</code>; <tt>false</tt> otherwise.
      */
 	public boolean hasNextChild(ActivityNode childQ) {
-		PoolItem3ChildReference childQRef = childrenReferencesMap.get(childQ);
+		PoolItem3ExtChildReferences childQRef = childrenReferencesMap.get(childQ);
 		if (childQRef == null) {
 			return false;
 		} else {
@@ -166,12 +166,12 @@ public class PoolItem3Ext {
 		this.datanode = datanode;
 	}
 
-	public Map<ActivityNode, PoolItem3ChildReference> getChildrenReferencesMap() {
+	public Map<ActivityNode, PoolItem3ExtChildReferences> getChildrenReferencesMap() {
 		return childrenReferencesMap;
 	}
 
 	public void setChildrenReferencesMap(
-			Map<ActivityNode, PoolItem3ChildReference> childrenReferencesMap) {
+			Map<ActivityNode, PoolItem3ExtChildReferences> childrenReferencesMap) {
 		this.childrenReferencesMap = childrenReferencesMap;
 	}
 	
@@ -180,40 +180,60 @@ public class PoolItem3Ext {
      * A data structure used to store references to child pool elements for a 
      * specified child node.
      */
-	private class PoolItem3ChildReference {
+	private class PoolItem3ExtChildReferences {
 		private int currentPosition;
-		private List<PoolItem3Ext> childrenReferences;
+		private List<PoolItem3Ext> childReferences;
 		
 		/**
-		 * Creates a new references object of a child node.
+		 * Creates a new child references object for a query child node.
 		 * 
 		 */
-		public PoolItem3ChildReference() {
+		public PoolItem3ExtChildReferences() {
 			super();
 			this.currentPosition = 0;
-			this.childrenReferences = new ArrayList<PoolItem3Ext>();
+			this.childReferences = new ArrayList<PoolItem3Ext>();
 		}
 		
-		public PoolItem3ChildReference(PoolItem3Ext childPI) {
+		/**
+		 * Creates a new child references object for a query child node, 
+		 * add <code>childPI</code> to references.
+		 * 
+		 * @param childPI a child pool element
+		 * 
+		 */
+		public PoolItem3ExtChildReferences(PoolItem3Ext childPI) {
 			super();
 			this.currentPosition = 0;
-			this.childrenReferences = new ArrayList<PoolItem3Ext>();
-			this.childrenReferences.add(childPI);
+			this.childReferences = new ArrayList<PoolItem3Ext>();
+			this.childReferences.add(childPI);
 		}
 		
 		public String toString() {
 			String tempStr = "";
 
-			for (PoolItem3Ext childRef : childrenReferences) {
+			for (PoolItem3Ext childRef : childReferences) {
 				tempStr += (childRef.getDatanode().getActivityID() + " || ");
 			}		
 		
 			return tempStr;
 		}
-				
-		public void addChildReference(PoolItem3Ext childPI) {
+		
+	    /**
+	     * Adds the specified child pool element, childPI, to this child references object 
+	     * if it contains no reference childPI2 such that childPI2.equals(childPI). If this 
+	     * object already contains such reference, the call leaves it unchanged and returns 
+	     * false. In combination with the restriction on constructors, this ensures that child 
+	     * references object never contain duplicate references.
+	     * 
+	     * @param childPI a child pool element
+	     * 
+	     * @return true if this child references did not already contain the specified child 
+	     * pool element.
+	     * 
+	     */
+		public boolean addChildReference(PoolItem3Ext childPI) {
 			boolean alreadyExist = false;
-			for (PoolItem3Ext childRef : childrenReferences) {
+			for (PoolItem3Ext childRef : childReferences) {
 				if(childRef == childPI) {
 					alreadyExist = true;
 					break;
@@ -221,29 +241,46 @@ public class PoolItem3Ext {
 			}
 			
 			if(!alreadyExist) {
-				this.childrenReferences.add(childPI);
+				this.childReferences.add(childPI);
 			}
-		}
+			
+			return (!alreadyExist);
+		}		
 		
-		public void incrementCurrentPosition() {
-			this.currentPosition++;
-		}
+//		public void incrementCurrentPosition() {
+//			this.currentPosition++;
+//		}
 		
+	    /**
+	     * Returns the next to be processed element in the child pool, if current position is 
+	     * not out of bound, otherwise null.
+	     * 
+	     * @return the next to be processed element in the child pool, if current position is 
+	     * not out of bound, otherwise null.
+	     * 
+	     */
 		public PoolItem3Ext getNext() {
 			int tempPosition;
-			if(currentPosition < childrenReferences.size()) {
+			if(currentPosition < childReferences.size()) {
 				tempPosition = currentPosition;
-				if(childrenReferences.size() > 1) {
+				if(childReferences.size() > 1) {
 					currentPosition++;
 				}
-				return childrenReferences.get(tempPosition);
+				return childReferences.get(tempPosition);
 			} else {
 				return null;
 			}
 		}
-		
+	
+	    /**
+	     * Determines whether the child references has more elements to be processed.
+	     * 
+	     * @return <tt>true</tt> if there are more elements in the child references to be
+	     * processed; <tt>false</tt> otherwise.
+	     * 
+	     */
 		public boolean hasNext() {
-			int tempSize = childrenReferences.size();
+			int tempSize = childReferences.size();
 			if((tempSize > 1) && (currentPosition < tempSize)) {
 				return true;
 			} else {
@@ -259,12 +296,12 @@ public class PoolItem3Ext {
 			this.currentPosition = currentPosition;
 		}
 
-		public List<PoolItem3Ext> getChildrenReferences() {
-			return childrenReferences;
+		public List<PoolItem3Ext> getChildReferences() {
+			return childReferences;
 		}
 
-		public void setChildrenReferences(List<PoolItem3Ext> childrenReferences) {
-			this.childrenReferences = childrenReferences;
+		public void setChildReferences(List<PoolItem3Ext> childReferences) {
+			this.childReferences = childReferences;
 		}
 		
 		
