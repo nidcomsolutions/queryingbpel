@@ -1,9 +1,9 @@
-package de.uni.stuttgart.gerlacdt.bpel.GraphMapping;
+package de.uni.stuttgart.bpelSearching.index;
 
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import de.uni.stuttgart.bpelSearching.index.NodeRegionEncoding;
 import de.uni.stuttgart.bpelSearching.matching.NodeRegionEncodingComparator;
 
 /**
@@ -45,7 +45,26 @@ public class Predecessors2 {
 		this.currentPredecessors = currentPredecessors;
 		this.isOriginal = isOriginal;
 	}
+	
+	
+	public String toString() {
+		String tempStr = "Original Predecessors [";
+		if (originalPredecessors != null) {
+			for (NodeRegionEncoding originalPredecessor : originalPredecessors) {
+				tempStr += (originalPredecessor.toString() + " , " );
+			}	
+			if (isOriginal)  {
+				tempStr += " ] " + " Current predecessors equals original predecessors";
+			} else {
+				tempStr += " ] " + " Current predecessors differs original predecessors";
+			}
+		} else {
+			tempStr = " Null";	
+		}		
+		return tempStr;
+	}
 
+	
 	public SortedSet<NodeRegionEncoding> getOriginalPredecessors() {
 		return originalPredecessors;
 	}

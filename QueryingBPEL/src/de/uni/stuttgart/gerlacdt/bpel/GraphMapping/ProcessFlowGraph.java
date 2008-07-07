@@ -13,6 +13,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import de.uni.stuttgart.bpelSearching.index.NodeRegionEncoding;
 import de.uni.stuttgart.bpelSearching.index.PathCount;
+import de.uni.stuttgart.bpelSearching.index.Predecessors2;
 import de.uni.stuttgart.bpelSearching.util.GraphType;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 

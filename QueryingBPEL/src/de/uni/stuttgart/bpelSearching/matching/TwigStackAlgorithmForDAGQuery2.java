@@ -14,8 +14,8 @@ import java.util.Stack;
 import de.uni.stuttgart.bpelSearching.index.NodeInStack;
 import de.uni.stuttgart.bpelSearching.index.NodeRegionEncoding;
 import de.uni.stuttgart.bpelSearching.index.PoolItem;
+import de.uni.stuttgart.bpelSearching.index.Predecessors2;
 import de.uni.stuttgart.bpelSearching.query.QueryGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.Predecessors2;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
