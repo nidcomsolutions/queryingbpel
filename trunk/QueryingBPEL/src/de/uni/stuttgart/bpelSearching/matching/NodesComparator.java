@@ -255,7 +255,7 @@ public class NodesComparator implements Comparator<ActivityNode> {
 	
 	private boolean patternMatching(String p, String m) {
         try{
-            pattern = Pattern.compile(p, Pattern.CASE_INSENSITIVE);
+            pattern = Pattern.compile("^"+p, Pattern.CASE_INSENSITIVE);
             matcher = pattern.matcher(m);
         }
         catch(PatternSyntaxException pse){

@@ -12,13 +12,13 @@ import org.jgrapht.graph.DefaultEdge;
 
 import de.uni.stuttgart.bpelSearching.index.NodeRegionEncoding;
 import de.uni.stuttgart.bpelSearching.index.PathCount;
+import de.uni.stuttgart.bpelSearching.index.Predecessors2;
 import de.uni.stuttgart.bpelSearching.query.QueryGraph;
 import de.uni.stuttgart.bpelSearching.util.BreadthFirstTraverse;
 import de.uni.stuttgart.bpelSearching.util.DepthFirstTraverseExtension;
 import de.uni.stuttgart.bpelSearching.util.DepthFirstTraverseExtensionSSPI;
 import de.uni.stuttgart.bpelSearching.util.GraphAnalyse;
 import de.uni.stuttgart.bpelSearching.util.GraphType;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.Predecessors2;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
@@ -336,7 +336,7 @@ public class MatchingBPEL {
     		predecessorsQ = predecessorsMap.get(vertexPg);
     		if (!predecessorsQ.isEmpty()) {
         		processgraph.predecessors2.put(vertexPg.getActivityID(), new Predecessors2());
-//        		logger.warn("Node: " + vertexPg.getActivityName() + "   Predecessors: " + predecessorsQ);
+//        		logger.warn("Node: " + vertexPg.getActivityName() + ":" + vertexPg.getActivityID() + "   Predecessors: " + predecessorsQ);
     			for (String preQ : predecessorsQ) {
     				processgraph.predecessors2.get(vertexPg.getActivityID()).getOriginalPredecessors()
     				.add(processgraph.getNodeRegionEncoding(preQ));    				

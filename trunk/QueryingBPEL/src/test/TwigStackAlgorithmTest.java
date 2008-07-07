@@ -104,7 +104,7 @@ public class TwigStackAlgorithmTest {
 	//@BeforeClass
 	public static void setUp() {
 		
-		// process1
+		// ********* process1 ***********
 		process1 = new DefaultDirectedGraph<ActivityNode, DefaultEdge>(
 		DefaultEdge.class);
 		
@@ -255,6 +255,8 @@ public class TwigStackAlgorithmTest {
 		
 		
 		// ********** process2 ************
+		// This graph is taken from article "Holistic Twig Joins on Indexed 
+		// XML Documents"
 		process2 = new DefaultDirectedGraph<ActivityNode, DefaultEdge>(
 		DefaultEdge.class);
 		

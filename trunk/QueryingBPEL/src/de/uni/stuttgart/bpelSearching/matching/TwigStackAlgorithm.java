@@ -125,9 +125,10 @@ public abstract class TwigStackAlgorithm {
 		queryLeafNodesSolution = new HashSet<ActivityNode>();
 		
 		// Only for debug
+//		logger.warn("Output stream list");
 //		for (ActivityNode queryNode : vertexSetQuery) {
-//			streamList = queryNodeStreamMap.get(queryNode);	
-//			streamList.size();
+//			streamList = queryNodeStreamMap.get(queryNode);
+//			logger.warn(streamList);
 //		}
 		
 		
