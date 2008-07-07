@@ -331,7 +331,7 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 		int minL, maxL, niL;
 		boolean containsAll;
 		//boolean existGetNextChildStreamEmpty = false;
-		NodeRegionEncoding nextQ;
+		NodeRegionEncoding nextQ, tchildQNext;
 		
 		minL = processgraph.getMaxPostOrder();
 		maxL = 0;
@@ -346,7 +346,8 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 		Set<ActivityNode> childrenQ = querygraph.children(q);
 		// *** Change ***
 		// Hold the first elements of returned stream nodes
-		Set<QueryNodeDataNodeRegionEncoding> childrenNextQueryDataNodes = new HashSet<QueryNodeDataNodeRegionEncoding>();
+//		Set<QueryNodeDataNodeRegionEncoding> childrenNextQueryDataNodes = new HashSet<QueryNodeDataNodeRegionEncoding>();
+		Set<ActivityNode> childrenNextQueryNodes = new HashSet<ActivityNode>();
 //		childrenNextQueryDataNodes.clear();
 		
 		for (ActivityNode childQi : childrenQ) {
@@ -359,7 +360,8 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 			
 			if (!queryNodeStreamMap.get(ni).isEmpty()) {
 				// *** Change ***
-				childrenNextQueryDataNodes.add(new QueryNodeDataNodeRegionEncoding(ni, queryNodeStreamMap.get(ni).getFirst()));
+//				childrenNextQueryDataNodes.add(new QueryNodeDataNodeRegionEncoding(ni, queryNodeStreamMap.get(ni).getFirst()));
+				childrenNextQueryNodes.add(ni);
 				niL = queryNodeStreamMap.get(ni).getFirst().getPreorderRank();			
 				if (niL < minL) {
 					minL = niL;
@@ -396,14 +398,17 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 				containsAll = true;
 				nextQ = queryNodeStreamMap.get(q).getFirst();
 //				logger.warn("q: " + q.getActivityID() + "  childrenNextQueryDataNodes: " + childrenNextQueryDataNodes);
-				for (QueryNodeDataNodeRegionEncoding childNext : childrenNextQueryDataNodes) {
-					if (nextQ.getPreorderRank() > childNext.getDataNodeRegionEncoding().getPreorderRank()) {
-						if (!checkContainment2(nextQ, childNext.getDataNodeRegionEncoding())) {
-							containsAll = false;
-							returnChildNode = childNext.getQueryNode();
-							break;
-						}
-					}				
+				for (ActivityNode childQNext : childrenNextQueryNodes) {
+					if (!queryNodeStreamMap.get(childQNext).isEmpty()) {
+						tchildQNext = queryNodeStreamMap.get(childQNext).getFirst();
+//						if (nextQ.getPreorderRank() > tchildQNext.getPreorderRank()) {
+							if (!checkContainment2(nextQ, tchildQNext)) {
+								containsAll = false;
+								returnChildNode = childQNext;
+								break;
+							}
+//						}
+					}
 				}
 							
 				if(containsAll) {
@@ -433,7 +438,7 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 		ActivityNode ni, nmin, returnChildNode;
 		int minL, maxL, niL;
 		boolean containsAll;
-		NodeRegionEncoding nextQ;
+		NodeRegionEncoding nextQ, tchildQNext;
 		
 		minL = processgraph.getMaxPostOrder();
 		maxL = 0;
@@ -446,7 +451,7 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 		Set<ActivityNode> childrenQ = querygraph.children(q);
 		// *** Change ***
 		// Hold the first elements of returned stream nodes
-		Set<QueryNodeDataNodeRegionEncoding> childrenNextQueryDataNodes = new HashSet<QueryNodeDataNodeRegionEncoding>();
+		Set<ActivityNode> childrenNextQueryNodes = new HashSet<ActivityNode>();
 //		childrenNextQueryDataNodes.clear();
 		
 		for (ActivityNode childQi : childrenQ) {
@@ -457,7 +462,7 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 			
 			if (!queryNodeStreamMap.get(ni).isEmpty()) {
 				// *** Change ***
-				childrenNextQueryDataNodes.add(new QueryNodeDataNodeRegionEncoding(ni, queryNodeStreamMap.get(ni).getFirst()));
+				childrenNextQueryNodes.add(ni);
 				niL = queryNodeStreamMap.get(ni).getFirst().getPreorderRank();			
 				if (niL < minL) {
 					minL = niL;
@@ -486,14 +491,17 @@ public class TwigStackAlgorithmForDAGQuery3 extends TwigStackAlgorithm {
 			if (!queryNodeStreamMap.get(q).isEmpty()) {
 				containsAll = true;
 				nextQ = queryNodeStreamMap.get(q).getFirst();				
-				for (QueryNodeDataNodeRegionEncoding childNext : childrenNextQueryDataNodes) {
-					if (nextQ.getPreorderRank() > childNext.getDataNodeRegionEncoding().getPreorderRank()) {
-						if (!checkContainment2(nextQ, childNext.getDataNodeRegionEncoding())) {
-							containsAll = false;
-							returnChildNode = childNext.getQueryNode();
-							break;
+				for (ActivityNode childQNext : childrenNextQueryNodes) {
+					if (!queryNodeStreamMap.get(childQNext).isEmpty()) {
+						tchildQNext = queryNodeStreamMap.get(childQNext).getFirst();
+//						if (nextQ.getPreorderRank() > tchildQNext.getPreorderRank()) {
+							if (!checkContainment2(nextQ, tchildQNext)) {
+								containsAll = false;
+								returnChildNode = childQNext;
+								break;
+//							}
 						}
-					}				
+					}
 				}
 							
 				if(containsAll) {
