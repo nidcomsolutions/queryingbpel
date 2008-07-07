@@ -260,7 +260,7 @@ public class TwigStackDAlgorithmTest2 {
 	
 	public static void main(String[] args) {		
 		setUp();
-		MatchingBPEL matchBPEL = new MatchingBPEL(queryGraph2, processFlowGraph2, true);
+		MatchingBPEL matchBPEL = new MatchingBPEL(queryGraph1, processFlowGraph1, true);
 		matchBPEL.match();
 		System.exit(0);		
 	}
