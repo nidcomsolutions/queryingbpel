@@ -120,7 +120,7 @@ public class QueryGraphTest {
 	@Test
 	public void getSubTreeNodesTest() {
 		
-		Set<ActivityNode> subNodes = queryGraph6.subtreeNodes(query6SeqA_start);
+		Set<ActivityNode> subNodes = queryGraph6.getSubtreeNodes(query6SeqA_start);
 		//Set<ActivityNode> childrenNodes = queryGraph6.children(query6ReceiveA);
 		String resultString = " ";
 		

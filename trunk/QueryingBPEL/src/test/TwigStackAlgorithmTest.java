@@ -17,9 +17,11 @@ public class TwigStackAlgorithmTest {
 
 	private static DirectedGraph<ActivityNode, DefaultEdge> process1;
 	private static DirectedGraph<ActivityNode, DefaultEdge> query1;
+	private static DirectedGraph<ActivityNode, DefaultEdge> query1b;
 	
 	private static ProcessFlowGraph processGraph1;
 	private static QueryGraph queryGraph1;
+	private static QueryGraph queryGraph1b;
 	
 	private static DirectedGraph<ActivityNode, DefaultEdge> process2;
 	private static DirectedGraph<ActivityNode, DefaultEdge> query2;
@@ -59,6 +61,7 @@ public class TwigStackAlgorithmTest {
 	private static ActivityNode query1WaitQ;
 		
 	private static ActivityNode query1Invoke;
+	private static ActivityNode query1Invoke2;
 	private static ActivityNode query1Assign;
 	private static ActivityNode query1Seq_start;
 	private static ActivityNode query1Seq_end;
@@ -111,7 +114,8 @@ public class TwigStackAlgorithmTest {
 		process1FlowA_start = new ActivityNode("P1", "FlowAp1_start",
 		ActivityType.FLOW);
 		process1FlowA_end = new ActivityNode("P2", "FlowAp1_end",
-		ActivityType.FLOW);		
+		ActivityType.FLOW);	
+		// *********
 		process1ReceiveB = new ActivityNode("P3", "ReceiveBp1",
 		ActivityType.RECEIVE);
 		process1InvokeC = new ActivityNode("P4", "InvokeCp1",
@@ -155,46 +159,60 @@ public class TwigStackAlgorithmTest {
 		process1.addVertex(process1FlowA_end);
 		process1.addVertex(process1ReceiveB);
 		process1.addVertex(process1InvokeC);
-		process1.addVertex(process1InvokeD);
+		
+//		process1.addVertex(process1InvokeD);
+		
 		process1.addVertex(process1InvokeE);
 		process1.addVertex(process1AssignF);
 		process1.addVertex(process1ReceiveG);
 		process1.addVertex(process1SeqH_start);
 		process1.addVertex(process1SeqH_end);
 		process1.addVertex(process1EmptyI);
-		process1.addVertex(process1AssignJ);
-		process1.addVertex(process1ReplyK);
-		process1.addVertex(process1SeqL_start);		
-		process1.addVertex(process1SeqL_end);
-		process1.addVertex(process1WaitM);
+		
+//		process1.addVertex(process1AssignJ);
+//		process1.addVertex(process1ReplyK);
+//		process1.addVertex(process1SeqL_start);		
+//		process1.addVertex(process1SeqL_end);
+//		process1.addVertex(process1WaitM);
+		
 		process1.addVertex(process1AssignN);
 		process1.addVertex(process1ReceiveO);
 		process1.addVertex(process1SeqP_start);
-		process1.addVertex(process1SeqP_end);
+		
+//		process1.addVertex(process1SeqP_end);
+		
 		process1.addVertex(process1WaitQ);
 		
 		process1.addEdge(process1FlowA_start, process1FlowA_end);
 		process1.addEdge(process1FlowA_start, process1ReceiveB);
 		process1.addEdge(process1ReceiveB, process1InvokeC);
-		process1.addEdge(process1ReceiveB, process1InvokeD);
+		
+//		process1.addEdge(process1ReceiveB, process1InvokeD);
+		
 		process1.addEdge(process1ReceiveB, process1InvokeE);
 		process1.addEdge(process1InvokeC, process1AssignF);
 		process1.addEdge(process1AssignF, process1ReceiveG);
 		process1.addEdge(process1InvokeC, process1SeqH_start);
 		process1.addEdge(process1SeqH_start, process1EmptyI);
 		process1.addEdge(process1EmptyI, process1SeqH_end);
-		process1.addEdge(process1InvokeD, process1AssignJ);
-		process1.addEdge(process1AssignJ, process1ReplyK);
-		process1.addEdge(process1InvokeD, process1SeqL_start);
-		process1.addEdge(process1SeqL_start, process1WaitM);
-		process1.addEdge(process1WaitM, process1SeqL_end);
+		
+//		process1.addEdge(process1InvokeD, process1AssignJ);
+//		process1.addEdge(process1AssignJ, process1ReplyK);
+//		process1.addEdge(process1InvokeD, process1SeqL_start);
+//		process1.addEdge(process1SeqL_start, process1WaitM);
+//		process1.addEdge(process1WaitM, process1SeqL_end);
+		
 		process1.addEdge(process1InvokeE, process1AssignN);
 		process1.addEdge(process1AssignN, process1ReceiveO);
 		process1.addEdge(process1InvokeE, process1SeqP_start);
 		process1.addEdge(process1SeqP_start, process1WaitQ);
-		process1.addEdge(process1WaitQ, process1SeqP_end);
+		
+//		process1.addEdge(process1WaitQ, process1SeqP_end);
+		
 		//******** DAG Test **********
-		process1.addEdge(process1InvokeD, process1SeqH_start);
+		
+//		process1.addEdge(process1InvokeD, process1SeqH_start);
+		
 		process1.addEdge(process1InvokeE, process1SeqH_start);
 		process1.addEdge(process1FlowA_end, process1InvokeE);
 		//******** End DAG Test **********
@@ -202,6 +220,8 @@ public class TwigStackAlgorithmTest {
 
 		// query1
 		query1 = new DefaultDirectedGraph<ActivityNode, DefaultEdge>(
+				DefaultEdge.class);
+		query1b = new DefaultDirectedGraph<ActivityNode, DefaultEdge>(
 				DefaultEdge.class);
 
 //		query1FlowA_start = new ActivityNode("q1", "FlowAp1_start", ActivityType.FLOW);
@@ -229,10 +249,12 @@ public class TwigStackAlgorithmTest {
 //		query1.addEdge(query1WaitQ, query1SeqP_end);
 				
 		query1Invoke = new ActivityNode("q1Invoke", "Invoke*", ActivityType.INVOKE);
+		query1Invoke2 = new ActivityNode("q1InvokeB", "Invoke*", ActivityType.INVOKE);
 		query1Assign = new ActivityNode("q1Assign", "Assign*", ActivityType.ASSIGN);
 		query1Seq_start = new ActivityNode("q1SeqStart", "SeqHp1_start", ActivityType.SEQUENCE);
 		query1Seq_end = new ActivityNode("q1SeqEnd", "SeqHp1_end", ActivityType.SEQUENCE);
 		query1Receive = new ActivityNode("q1Receive", "Receive*", ActivityType.RECEIVE);
+		//**********
 		query1ReceiveB = new ActivityNode("q1ReceiveB", "ReceiveBp1", ActivityType.RECEIVE);
 		
 		query1.addVertex(query1Invoke);
@@ -251,8 +273,18 @@ public class TwigStackAlgorithmTest {
 		processGraph1 = new ProcessFlowGraph("processTwigStackTest", "www", "100", process1);
 		queryGraph1 = new QueryGraph(query1);
 		
-	
+		// ******* query1b *******
+		query1b.addVertex(query1ReceiveB);
+		query1b.addVertex(query1Invoke);
+		query1b.addVertex(query1Invoke2);
+		query1b.addVertex(query1Seq_start);
 		
+		query1b.addEdge(query1ReceiveB, query1Invoke);
+		query1b.addEdge(query1ReceiveB, query1Invoke2);
+		query1b.addEdge(query1Invoke, query1Seq_start);
+		query1b.addEdge(query1Invoke2, query1Seq_start);
+		
+		queryGraph1b = new QueryGraph(query1b);
 		
 		// ********** process2 ************
 		// This graph is taken from article "Holistic Twig Joins on Indexed 
