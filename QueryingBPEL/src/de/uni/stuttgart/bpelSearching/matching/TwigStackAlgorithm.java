@@ -129,9 +129,7 @@ public abstract class TwigStackAlgorithm {
 //		for (ActivityNode queryNode : vertexSetQuery) {
 //			streamList = queryNodeStreamMap.get(queryNode);
 //			logger.warn(streamList);
-//		}
-		
-		
+//		}		
 	}
 	
 	
@@ -164,7 +162,7 @@ public abstract class TwigStackAlgorithm {
      */	
 	protected boolean allQuerySubtreeNodesStreamsNotEmpty(ActivityNode q) {
 		
-		Set<ActivityNode> subtreeNodesQ = querygraph.subtreeNodes(q);
+		Set<ActivityNode> subtreeNodesQ = querygraph.getSubtreeNodes(q);
 		
 		for (ActivityNode nodeQ : subtreeNodesQ) {			
 			if (queryNodeStreamMap.get(nodeQ).isEmpty()) {
@@ -197,7 +195,7 @@ public abstract class TwigStackAlgorithm {
 			return q;
 		}
 		
-		Set<ActivityNode> childrenQ = querygraph.children(q);
+		Set<ActivityNode> childrenQ = querygraph.getChildren(q);
 		
 		for (ActivityNode childQi : childrenQ) {
 			ni = getNextForExactMatch(childQi);
@@ -260,7 +258,7 @@ public abstract class TwigStackAlgorithm {
 			return q;
 		}
 		
-		Set<ActivityNode> childrenQ = querygraph.children(q);
+		Set<ActivityNode> childrenQ = querygraph.getChildren(q);
 		
 		for (ActivityNode childQi : childrenQ) {
 			ni = getNextForInexactMatch(childQi);
@@ -315,7 +313,7 @@ public abstract class TwigStackAlgorithm {
 		int tempL, minL;
 		minL = processgraph.getMaxPostOrder();
 		
-		Set<ActivityNode> subtreeNodesQ = querygraph.subtreeNodes(q);		
+		Set<ActivityNode> subtreeNodesQ = querygraph.getSubtreeNodes(q);		
 		for (ActivityNode subtreeNodeQi : subtreeNodesQ) {
 			if(!queryNodeStreamMap.get(subtreeNodeQi).isEmpty()) {
 				tempL = queryNodeStreamMap.get(subtreeNodeQi).getFirst().getPreorderRank();
@@ -339,7 +337,7 @@ public abstract class TwigStackAlgorithm {
      * otherwise <code>false</code>.
      */
 	protected boolean end(ActivityNode n){
-		Set<ActivityNode> subNodes = querygraph.subtreeNodes(n);
+		Set<ActivityNode> subNodes = querygraph.getSubtreeNodes(n);
 		
 //		if (queryNodeStreamMap.get(n).isEmpty())
 //			return true;
@@ -366,7 +364,7 @@ public abstract class TwigStackAlgorithm {
 		if (querygraph.isRoot(q)) {
 			queryNodeStackMap.get(q).push(new NodeInStack(queryNodeStreamMap.get(q).getFirst(), null));
 		} else {
-			queryNodeStackMap.get(q).push(new NodeInStack(queryNodeStreamMap.get(q).getFirst(), queryNodeStackMap.get(querygraph.parent(q)).lastElement()));
+			queryNodeStackMap.get(q).push(new NodeInStack(queryNodeStreamMap.get(q).getFirst(), queryNodeStackMap.get(querygraph.getParent(q)).lastElement()));
 		}
 		queryNodeStreamMap.get(q).removeFirst();		
 	}
@@ -394,7 +392,7 @@ public abstract class TwigStackAlgorithm {
 	public void mergeAllPathSolutions(ActivityNode q) {	
 		int i, childrenQSize;
 		boolean lastChild;
-		Set<ActivityNode> childrenQ = querygraph.children(q);		
+		Set<ActivityNode> childrenQ = querygraph.getChildren(q);		
 		i = 0;
 		childrenQSize =  childrenQ.size();
 		
@@ -439,7 +437,7 @@ public abstract class TwigStackAlgorithm {
 		
 			pSize = parentqStack.size();
 			cSize = childqStack.size();
-			hasMultipleChildrenP = querygraph.getIsJoined(nodeParent);
+			hasMultipleChildrenP = querygraph.isJoinedNode(nodeParent);
 		
 			for (i = 0; i < pSize; i++) {
 				
@@ -663,7 +661,7 @@ public abstract class TwigStackAlgorithm {
 		String resultProcessInfo;
 		
 		// Means query graph contains only one node, if query graph connected is 
-		boolean qHasNoChild = (querygraph.children(q).size() == 0);
+		boolean qHasNoChild = (querygraph.getChildren(q).size() == 0);
 		
 		Stack<NodePair> qStack = solutionStackMap.get(q);
 		
@@ -704,7 +702,7 @@ public abstract class TwigStackAlgorithm {
 		float matchSimilarity = getMatchingSimilarity();
 		int matchingResultsCount = 0;
 		// Means query graph contains only one node, if query graph connected is 
-		boolean qHasNoChild = (querygraph.children(q).size() == 0);
+		boolean qHasNoChild = (querygraph.getChildren(q).size() == 0);
 		
 		if (matchSimilarity > threshold) {
 			

@@ -80,7 +80,7 @@ public abstract class AbstractGraphTraverse {
      * traverse the graph.
      *
      */
-    protected abstract void traverse();
+    public abstract void traverse();
     
     
     /**
@@ -92,7 +92,8 @@ public abstract class AbstractGraphTraverse {
      */
     public ActivityNode getAdjUnvisitedVertex(ActivityNode v)
     {   	
-		Set<DefaultEdge> edgeSetForV = graph.edgesOf(v);
+		//Set<DefaultEdge> edgeSetForV = graph.edgesOf(v);
+    	Set<DefaultEdge> edgeSetForV = graph.outgoingEdgesOf(v);
 		ActivityNode targetForV;
     	    	
     	for (DefaultEdge edgeForV : edgeSetForV) {

@@ -183,7 +183,8 @@ public class MatchingBPEL {
      */
     public void match(){
     	TwigStackAlgorithmBasic twigStB; 
-    	TwigStackAlgorithmForDAGQuery3 twigStDAGquery;
+    	TwigStackAlgorithmForDAGQuery twigStDAGquery;
+    	DagStackDAlgorithm dagStackD;
     	if((querygraph.getQueryGraphType() == GraphType.TREE) && (processgraph.getProcessGraphType() == GraphType.TREE)) {
     		twigStB = new TwigStackAlgorithmBasic(querygraph, processgraph);
     		if (isExactMatching) {
@@ -193,11 +194,19 @@ public class MatchingBPEL {
     			//logger.warn("Matching Similarity: " + twigSt.getMatchingSimilarity());
     		}   		
     	} else if ((querygraph.getQueryGraphType() == GraphType.TREE) && (processgraph.getProcessGraphType() == GraphType.DAG_CONNECTED)) {
-    		twigStDAGquery = new TwigStackAlgorithmForDAGQuery3(querygraph, processgraph);
+    		twigStDAGquery = new TwigStackAlgorithmForDAGQuery(querygraph, processgraph);
     		if (isExactMatching) {
     			twigStDAGquery.twigStackExactMatch(querygraph.getStartVertex());
     		} else {
     			twigStDAGquery.twigStackInExactMatch(querygraph.getStartVertex(), minMatchingSimilarity);
+    			//logger.warn("Matching Similarity: " + twigSt.getMatchingSimilarity());
+    		}	   		
+    	} else if ((querygraph.getQueryGraphType() == GraphType.DAG_CONNECTED) && (processgraph.getProcessGraphType() == GraphType.DAG_CONNECTED)) {
+    		dagStackD = new DagStackDAlgorithm(querygraph, processgraph);
+    		if (isExactMatching) {
+    			dagStackD.twigStackExactMatch(querygraph.getStartVertex());
+    		} else {
+    			dagStackD.twigStackInExactMatch(querygraph.getStartVertex(), minMatchingSimilarity);
     			//logger.warn("Matching Similarity: " + twigSt.getMatchingSimilarity());
     		}	   		
     	}

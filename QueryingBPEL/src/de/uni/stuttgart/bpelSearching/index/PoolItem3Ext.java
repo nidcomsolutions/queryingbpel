@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,14 +65,19 @@ public class PoolItem3Ext {
 	
 	public String toString() {
 		String tempStr = "";
-		Set<PoolItem3Ext> children = getChildren();
-		if (children.isEmpty()) {
-			tempStr += (datanode.getActivityID() + " - Null" );
-		} else {
-			for (PoolItem3Ext child : children) {
-				tempStr += (datanode.getActivityID() + " - " + child.getDatanode().getActivityID() + " || ");
-			}		
-		}		
+		if ((querynode != null) && (datanode != null)) {
+			tempStr += ("Q: " + querynode.getActivityID() + " D: " + datanode.getActivityID());
+			Set<PoolItem3Ext> children = getChildren();
+			if (children.isEmpty()) {
+				tempStr += " - Null";
+			} else {
+				tempStr += "  children: ";
+				for (PoolItem3Ext child : children) {
+					tempStr += ("CQ: " + child.getQuerynode().getActivityID() + " CD: " +
+							child.getDatanode().getActivityID() + " || ");
+				}		
+			}
+		}
 		return tempStr;
 	}
 	
@@ -118,17 +124,51 @@ public class PoolItem3Ext {
 	}
 	
     /**
-     * Gets the next to be processed child pool element associated with <code>childQ</code>.
+     * Gets the current child pool element to be processed associated with <code>childQ</code>.
      * 
      * @param childQ a child node of <code>querynode</code>
      * 
-     * @return the next processing child pool element associated with <code>childQ</code>.
+     * @return the current child pool element associated with <code>childQ</code>.
      */
-	public PoolItem3Ext getNextChild(ActivityNode childQ) {
+	public PoolItem3Ext getCurrentChild(ActivityNode childQ) {
 		if (childrenReferencesMap.get(childQ) == null) {
 			return null;
 		} else {
-			return childrenReferencesMap.get(childQ).getNext();
+			return childrenReferencesMap.get(childQ).getCurrentItem();
+		}
+	}
+	
+	
+    /**
+     * Gets the current child pool element to be processed associated with <code>childQ</code>, 
+     * and move cursor to the next child pool element (if any).
+     * 
+     * @param childQ a child node of <code>querynode</code>
+     * 
+     * @return the current child pool element associated with <code>childQ</code>.
+     */
+	public PoolItem3Ext getCurrentChildAndMoveToNext(ActivityNode childQ) {
+		if (childrenReferencesMap.get(childQ) == null) {
+			return null;
+		} else {
+			return childrenReferencesMap.get(childQ).getCurrentItemAndMoveToNext();
+		}
+	}
+	
+    /**
+     * Move cursor to the next child pool element (if any)associated with <code>childQ</code>.
+     * 
+     * @param childQ a child node of <code>querynode</code>
+     * 
+     * @return return <tt>true</tt> if the cursor has been moved to the next child pool 
+     * element associated with <code>childQ</code>; <tt>false</tt> otherwise.
+     * 
+     */
+	public boolean moveToNext(ActivityNode childQ) {
+		if (childrenReferencesMap.get(childQ) == null) {
+			return false;
+		} else {	
+			return childrenReferencesMap.get(childQ).moveToNext();
 		}
 	}
 	
@@ -148,6 +188,20 @@ public class PoolItem3Ext {
 		} else {
 			return childQRef.hasNext();
 		}	
+	}
+
+    /**
+     * Gets all referenced elements.
+     * 
+     * @return all referenced elements.
+     */
+	public List<PoolItem3Ext> getAllChildrenReferences() {
+		List<PoolItem3Ext> childrenPIlist = new LinkedList<PoolItem3Ext>();
+		Iterator<PoolItem3ExtChildReferences> iter = childrenReferencesMap.values().iterator();
+		while (iter.hasNext()) {
+			childrenPIlist.addAll(iter.next().getChildReferences());
+		}
+		return childrenPIlist;
 	}
 	
 	public ActivityNode getQuerynode() {
@@ -251,6 +305,7 @@ public class PoolItem3Ext {
 //			this.currentPosition++;
 //		}
 		
+		
 	    /**
 	     * Returns the next to be processed element in the child pool, if current position is 
 	     * not out of bound, otherwise null.
@@ -259,7 +314,27 @@ public class PoolItem3Ext {
 	     * not out of bound, otherwise null.
 	     * 
 	     */
-		public PoolItem3Ext getNext() {
+		public PoolItem3Ext getCurrentItem() {
+			int tempPosition;
+			tempPosition = currentPosition;
+			tempPosition++;
+			if(currentPosition < childReferences.size()) {
+				return childReferences.get(currentPosition);
+			} else {
+				return null;
+			}
+		}
+		
+		
+	    /**
+	     * Returns the next to be processed element in the child pool, if current position is 
+	     * not out of bound, otherwise null.
+	     * 
+	     * @return the next to be processed element in the child pool, if current position is 
+	     * not out of bound, otherwise null.
+	     * 
+	     */
+		public PoolItem3Ext getCurrentItemAndMoveToNext() {
 			int tempPosition;
 			if(currentPosition < childReferences.size()) {
 				tempPosition = currentPosition;
@@ -271,6 +346,27 @@ public class PoolItem3Ext {
 				return null;
 			}
 		}
+		
+		
+	    /**
+	     * Move cursor to the next child pool element, if the next position is not out of bound.
+	     * 
+	     * @return <tt>true</tt> if the next position is not out of bound; <tt>false</tt> otherwise.
+	     * 
+	     */
+		public boolean moveToNext() {
+			int tempPosition;
+			tempPosition = currentPosition;
+			tempPosition++;
+			int cRefsize = childReferences.size();
+			if ((cRefsize > 1) && (currentPosition < (cRefsize))) {
+				currentPosition++;
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 	
 	    /**
 	     * Determines whether the child references has more elements to be processed.

@@ -48,10 +48,10 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 			// query root-to-leaf paths are computed.
 			while (!end(q)) {			
 				qact = getNextForExactMatch(q);			
-				parentQact = querygraph.parent(qact);
+				parentQact = querygraph.getParent(qact);
 						
 				if (!querygraph.isRoot(qact) && !queryNodeStreamMap.get(qact).isEmpty()) {
-					cleanStack(querygraph.parent(qact), queryNodeStreamMap.get(qact).getFirst().getPreorderRank());
+					cleanStack(querygraph.getParent(qact), queryNodeStreamMap.get(qact).getFirst().getPreorderRank());
 				}
 			
 				if (querygraph.isRoot(qact) || !queryNodeStackMap.get(parentQact).isEmpty()) {
@@ -106,7 +106,7 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 			// query root-to-leaf paths are computed.
 			while (!end(q)) {			
 				qact = getNextForInexactMatch(q);			
-				parentQact = querygraph.parent(qact);
+				parentQact = querygraph.getParent(qact);
 			
 				tqact = queryNodeStreamMap.get(qact);
 				sqact = queryNodeStackMap.get(qact);
@@ -124,7 +124,7 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 			
 			
 				if (!querygraph.isRoot(qact) && !queryNodeStreamMap.get(qact).isEmpty()) {
-					cleanStack(querygraph.parent(qact), queryNodeStreamMap.get(qact).getFirst().getPreorderRank());
+					cleanStack(querygraph.getParent(qact), queryNodeStreamMap.get(qact).getFirst().getPreorderRank());
 				}
 			
 				if (querygraph.isRoot(qact) || !queryNodeStackMap.get(parentQact).isEmpty()) {
@@ -193,7 +193,7 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 				tempIndex = queryNodeStackPositionMap.get(temp).intValue();
 				tempID = tempStack.get(tempIndex).getNode().getActivityID();
 				tempString = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ tempString;
-				temp = querygraph.parent(temp);
+				temp = querygraph.getParent(temp);
 			}
 			//System.out.println(tempString);
 			logger.warn(tempString);
@@ -201,8 +201,8 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 		} else {
 			
 			NodeInStack parentNodeInStack = queryNodeStackMap.get(q).get(stackpos).getNext();
-			temp = querygraph.parent(q);
-			tempStack = queryNodeStackMap.get(querygraph.parent(q));
+			temp = querygraph.getParent(q);
+			tempStack = queryNodeStackMap.get(querygraph.getParent(q));
 			parentStackIndex = tempStack.indexOf(parentNodeInStack);
 			
 			for (int i = 0; i <= parentStackIndex; i++) {
@@ -245,7 +245,7 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 				nodePairExist = false;
 				nodeParentExist = false;
 				
-				tempParent = querygraph.parent(temp);
+				tempParent = querygraph.getParent(temp);
 				if (tempParent == null) {
 					tempSolutionParentNode  = null;
 					while (stackIter.hasNext() && !nodePairExist) {
@@ -283,17 +283,17 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 					solutionStackMap.get(temp).push(new NodePair(tempSolutionNode, tempSolutionParentNode, 
 							new LinkedList<StringBuffer>(), nodeParentExist, 0)); 
 					}
-				temp = querygraph.parent(temp);				
+				temp = querygraph.getParent(temp);				
 			}
 			
 		} else {
 			
 			parentNodeInStack = queryNodeStackMap.get(q).get(stackpos).getNext();
-			parentStack = queryNodeStackMap.get(querygraph.parent(q));
+			parentStack = queryNodeStackMap.get(querygraph.getParent(q));
 			parentStackIndex = parentStack.indexOf(parentNodeInStack);
 			
 			for (int i = 0; i <= parentStackIndex; i++) {
-				processSolutions(querygraph.parent(q), i);				
+				processSolutions(querygraph.getParent(q), i);				
 			}			
 		}		
 	}

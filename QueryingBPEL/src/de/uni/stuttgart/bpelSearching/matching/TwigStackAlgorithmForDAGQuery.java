@@ -84,7 +84,7 @@ public class TwigStackAlgorithmForDAGQuery extends TwigStackAlgorithm {
 		
 		while (!end(q)) {			
 			qmin = getMinSource(q);			
-			parentQmin = querygraph.parent(qmin);
+			parentQmin = querygraph.getParent(qmin);
 		
 			tqmin = queryNodeStreamMap.get(qmin);
 			sqmin = queryNodeStackMap.get(qmin);
@@ -102,7 +102,7 @@ public class TwigStackAlgorithmForDAGQuery extends TwigStackAlgorithm {
 		
 			missingNodes = getMissings(qmin, queryNodeStreamMap.get(qmin).getFirst());
 			if (!querygraph.isRoot(qmin) && !queryNodeStreamMap.get(qmin).isEmpty()) {
-				cleanStack(querygraph.parent(qmin), queryNodeStreamMap.get(qmin).getFirst().getPreorderRank());
+				cleanStack(querygraph.getParent(qmin), queryNodeStreamMap.get(qmin).getFirst().getPreorderRank());
 			}
 			
 			if (sweepPartialSolutions(qmin, missingNodes)) {
@@ -270,7 +270,7 @@ public class TwigStackAlgorithmForDAGQuery extends TwigStackAlgorithm {
 	 int pos, tQiSize;
 	 boolean allInSync;
 	 Set<ActivityNode> missingNodes = new HashSet<ActivityNode>();
-	 Set<ActivityNode> childrenQ = querygraph.children(q);
+	 Set<ActivityNode> childrenQ = querygraph.getChildren(q);
 	 Set<ActivityNode> mi;
 	 
 	 for (ActivityNode childQi : childrenQ) {
@@ -394,7 +394,7 @@ public class TwigStackAlgorithmForDAGQuery extends TwigStackAlgorithm {
   */
  protected boolean sweepPartialSolutions(ActivityNode q, Set<ActivityNode> missings) {
 	 
-	 Set<ActivityNode> childrenQ = querygraph.children(q);
+	 Set<ActivityNode> childrenQ = querygraph.getChildren(q);
 	 NodeRegionEncoding nextTq = queryNodeStreamMap.get(q).getFirst();
 	 	 
 	 for (ActivityNode childQi : childrenQ) {
@@ -431,7 +431,7 @@ public class TwigStackAlgorithmForDAGQuery extends TwigStackAlgorithm {
   * 
   */
  protected void sweepParentsPartialSolutionsForLeafNode(ActivityNode q, NodeRegionEncoding qFirstNRE, NodeInStack qNIS) {
-	Set<ActivityNode> parentsq = querygraph.parents(q);
+	Set<ActivityNode> parentsq = querygraph.getParents(q);
 	for (ActivityNode parentq : parentsq) {		
 		for (NodeInStack h : partialSolutionPoolMap.get(parentq)) {
 			if (checkContainment(h.getNode(), qFirstNRE)) {
@@ -487,7 +487,7 @@ public class TwigStackAlgorithmForDAGQuery extends TwigStackAlgorithm {
 				tempIndex = queryNodeStackPositionMap.get(temp).intValue();
 				tempID = tempStack.get(tempIndex).getNode().getActivityID();
 				tempString = processgraph.getActivityName(tempID) + ": " + tempID + "  ||  "+ tempString;
-				temp = querygraph.parent(temp);
+				temp = querygraph.getParent(temp);
 			}
 			//System.out.println(tempString);
 			logger.warn(tempString);
@@ -495,8 +495,8 @@ public class TwigStackAlgorithmForDAGQuery extends TwigStackAlgorithm {
 		} else {
 			
 			NodeInStack parentNodeInStack = queryNodeStackMap.get(q).get(stackpos).getNext();
-			temp = querygraph.parent(q);
-			tempStack = queryNodeStackMap.get(querygraph.parent(q));
+			temp = querygraph.getParent(q);
+			tempStack = queryNodeStackMap.get(querygraph.getParent(q));
 			parentStackIndex = tempStack.indexOf(parentNodeInStack);
 			
 			for (int i = 0; i <= parentStackIndex; i++) {
