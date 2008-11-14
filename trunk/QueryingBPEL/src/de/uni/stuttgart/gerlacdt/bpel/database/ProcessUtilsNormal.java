@@ -24,7 +24,7 @@ import org.open.oasis.docs.wsbpel._2._0.process.executable.Process;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.util.ExecutableResourceFactoryImpl;
 
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraphFactory;
+import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraphFactory2;
 import de.uni.stuttgart.gerlacdt.bpel.controller.DbGraphPropertiesFactory;
 
 /**

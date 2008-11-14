@@ -149,6 +149,29 @@ public abstract class ProcessUtils {
 		session.close();
 		return processes;
 	}
+	
+	/**
+	 * Returns all processes from the database with the given SQL query.
+	 * LAZY_LOADING= false.
+	 * 
+	 * @param sqlQuery
+	 *            the given SQL query.
+	 * @return all processes which have the appropriate name.
+	 */
+	public List<Process> getProcessesFromDBviaSQL(String sqlQuery) {
+		final Session session = sessionFactory.openSession();
+
+		Process process = null;
+		// start Transaction
+		session.beginTransaction();
+		// load BPEL-processes from repository with given id
+		Query query = session.createQuery(sqlQuery);
+		List<Process> processes = (List<Process>) query.list();
+		// commit Transaction
+		session.getTransaction().commit();
+		session.close();
+		return processes;
+	}
 
 	/**
 	 * Returns a
@@ -239,7 +262,7 @@ public abstract class ProcessUtils {
 
 		Query query = session.createQuery("FROM Process");
 		List<Process> processes = (List<Process>) query.list();
-		// test if process is correct loaded
+		// de.uni.stuttgart.bpelSearching.matching.test if process is correct loaded
 		for (Process process : processes) {
 
 			session.delete(process);
