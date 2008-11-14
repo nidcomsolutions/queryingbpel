@@ -9,8 +9,11 @@ import org.open.oasis.docs.wsbpel._2._0.process.executable.Receive;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.Reply;
 
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.NewStructuredProcessFlowGraphFactory;
+import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.NewStructuredQueryGraphFactory;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraphFactory;
+import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.QueryGraphFactory;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.StandardProcessFlowGraphFactory;
+import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.StandardQueryGraphFactory;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityInvokeNode;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityReceiveNode;
@@ -83,6 +86,25 @@ public class DbGraphPropertiesFactory {
 					process);
 		}
 		return processFlowGraphFactory;
+	}
+	
+	
+	/**
+	 * Returns a QueryGraphFactory which corresponds to the properties in
+	 * the user property file.
+	 * 
+	 * @return a QueryGraphFactory
+	 */
+	public QueryGraphFactory getQueryGraphFactory() {
+		QueryGraphFactory queryGraphFactory = null;
+		if (PropertyLoader.getInstance().getUserProperties().getProperty(
+				"processGraph").equals("standard")) {
+			queryGraphFactory = new StandardQueryGraphFactory();
+		} else if (PropertyLoader.getInstance().getUserProperties()
+				.getProperty("processGraph").equals("structured")) {
+			queryGraphFactory = new NewStructuredQueryGraphFactory();
+		}
+		return queryGraphFactory;
 	}
 
 	/**
@@ -258,7 +280,6 @@ public class DbGraphPropertiesFactory {
 			int activityType = ActivityType.getActivityType(activity);
 
 			String id = IdentifierCacheHandler.getID(activity).toString();
-
 			String name = null;
 			if (activity.getName() == null) {
 				name = "";
@@ -280,10 +301,7 @@ public class DbGraphPropertiesFactory {
 			if (activity.eContainer() != null) {
 				// construct the activity node
 				EObject container = activity.eContainer();
-//				node = new StructuredActivityNode(IdentifierCacheHandler.getID(
-//						activity).toString(), name, activityType,
-//						IdentifierCacheHandler.getID(container).toString(),
-//						isStartNode);
+
 				node = new StructuredActivityNode(id, name, activityType,
 						IdentifierCacheHandler.getID(container).toString(),
 						isStartNode);
