@@ -24,8 +24,7 @@ public class GraphAnalyse {
 	private final DirectedGraph<ActivityNode, DefaultEdge> digraph;
     private ActivityNode startVertex;
     private boolean hasRoot;
-    
-    
+     
     /**
      * Creates a analyze class for the given graph and start vertex. If the specified start vertex is <code>
      * null</code>, we choose an arbitrary graph vertex as start vertex.
@@ -38,40 +37,32 @@ public class GraphAnalyse {
      */
     public GraphAnalyse(DirectedGraph<ActivityNode, DefaultEdge> g, ActivityNode startVertex)
     {
-        if (g == null) {
-            throw new IllegalArgumentException("graph must not be null");
-        }
-        
+    	Iterator<ActivityNode> vertexIterator;
+    	if (g == null) {
+    		throw new IllegalArgumentException("graph must not be null");
+    	}      
         digraph = g;
-         
-        Iterator<ActivityNode> vertexIterator = g.vertexSet().iterator();
-        
-        if (startVertex == null) {
-            // pick a start vertex
-              if (chooseRoot()) {
-            	  hasRoot = true;
+           
+        if ((startVertex != null) && g.containsVertex(startVertex)
+        		&& isConnected(startVertex)) {
+            hasRoot = true;
+            this.startVertex = startVertex;
+         } else {
+        	 // pick a start vertex
+        	 if (chooseRoot()) {
+        		 hasRoot = true;
               }else{            	  
             	  hasRoot = false;
+                  vertexIterator = g.vertexSet().iterator();
             	  // pick a start vertex if graph not empty
                   if (vertexIterator.hasNext()) {
-                      this.startVertex = vertexIterator.next();
+                	  this.startVertex = vertexIterator.next();
                   } else {
                 	  throw new IllegalArgumentException("graph must contain the start vertex," +
-                	  		" and every node is reachable from the start vertex");
-                  }
-              } 
-        } else if (g.containsVertex(startVertex)) {
-            this.startVertex = startVertex;
-            if(isConnected(startVertex)){
-            	hasRoot = true;
-            } else {
-            	hasRoot = false;
-            }
-        } else {
-            throw new IllegalArgumentException(
-                "graph must contain the start vertex, and every node is reachable from the start vertex");
+                	  	" and every node is reachable from the start vertex");
+                 }
+             }
         }
-    	
     }
   
     /**
@@ -105,10 +96,9 @@ public class GraphAnalyse {
     * @return <tt>true</tt> if a vertex as root is selected <tt>false</tt> if 
     * no such vertex exist.
     */   
-   public boolean chooseRoot(){
-	   
-	   Iterator<ActivityNode> iter = new TopologicalOrderIterator<ActivityNode, DefaultEdge>(digraph);
-	   
+   public boolean chooseRoot(){   
+	   Iterator<ActivityNode> iter = new TopologicalOrderIterator
+	   		<ActivityNode, DefaultEdge>(digraph);	   
        while (iter.hasNext()) {
     	   ActivityNode nextNode = iter.next();     	   
     	   if(digraph.incomingEdgesOf(nextNode).isEmpty()){   		   
@@ -120,16 +110,14 @@ public class GraphAnalyse {
         		   return false;
         	   }
     	   }
-       }
-       
+       }  
        this.startVertex = null;
-       return false;
-	   
+       return false;   
    }
    
    
    /**
-    * Determines type for a given graph: tree, connected dag, unconnected dag, other.
+    * Determines type for a given graph: tree, rooted dag, unrooted dag, other.
     *
     * @return the graph type.
     */    
@@ -139,14 +127,14 @@ public class GraphAnalyse {
 			Set<ActivityNode> vertexSetG = digraph.vertexSet();			
 			for (ActivityNode vertexG : vertexSetG) {
 				if (digraph.incomingEdgesOf(vertexG).size() > 1){
-					return GraphType.DAG_CONNECTED;
+					return GraphType.ROOTED_DAG;
 				}
 			}			
 			return GraphType.TREE;		   
 	   }
 	   
 	  if(checkAcyclic()){
-		  return GraphType.DAG_UNCONNECTED;
+		  return GraphType.UNROOTED_DAG;
 	  } else {
 		  return GraphType.OTHER_GRAPH;
 	  }   
