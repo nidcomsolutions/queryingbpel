@@ -3,44 +3,40 @@ package de.uni.stuttgart.bpelSearching.matching;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
-
 /**
- * The NodePair class represents a pair of nodes (node, parent(node)) 
- * and its temporary results joined with its children, they are 
- * stored in final solution stack. 
+ * The ProcessNodePair class represents an element stored in final solution stack,
+ * that consists a pair of process nodes ID and the temporary 
+ * results by joining the descendant results. 
  *
  * @author Wei Lu
  */
-public class NodePair {
-
-	private ActivityNode node;
-	private ActivityNode parentNode;
+public class ProcessNodePair {
+	private String nodeID;
+	private String parentNodeID;
 	private LinkedList<StringBuffer> joinedResults;
 	private boolean existMultipleParentsInStack;
-	//private LinkedList<StringBuffer> originalJoinedResults;
 	private int originalJoinedResultsSize;
+	
 	/**
-	 * Initializes a newly created NodePair with the given node, parentNode.
+	 * Initializes a newly created ProcessNodePair with the given nodeID, parentNodeID.
 	 * 
-	 * @param node
-	 *            an node which participates solution
-	 * @param parentNode
-	 *            the parent node
+	 * @param nodeID
+	 *            ID of a process node which participates solution
+	 * @param parentNodeID
+	 *            ID of the parent node
 	 * @param joinedResults
 	 *            the temporary results joined with its children
 	 * @param existMultipleParentsInStack
-	 *            indicates whether there are more than one NodePair with the same parentNode in the stack
+	 *            indicates whether there are more than one ProcessNodePair with the same parentNodeID in the stack
 	 * @param originalJoinedResultsSize
 	 *            number of the old join results computed before the current join processing
 	 */
-	
-	public NodePair(ActivityNode node, ActivityNode parentNode, LinkedList<StringBuffer> joinedResults, 
+	public ProcessNodePair(String nodeID, String parentNodeID, LinkedList<StringBuffer> joinedResults, 
 			boolean existMultipleParentsInStack, int originalJoinedResultsSize) {
 		super();
 		
-		this.node = node;
-		this.parentNode = parentNode;
+		this.nodeID = nodeID;
+		this.parentNodeID = parentNodeID;
 		this.joinedResults = joinedResults;
 		this.existMultipleParentsInStack = existMultipleParentsInStack;
 		//this.originalJoinedResults = originalJoinedResults;
@@ -49,10 +45,10 @@ public class NodePair {
 
 	public String toString() {
 		String temp = "";
-		if (parentNode == null) {
-			temp = node.getActivityID() + ": NULL  MultipleParents: "+ String.valueOf(existMultipleParentsInStack) + "  JoinedResults:  " ;
+		if (parentNodeID == "") {
+			temp = nodeID + ": NULL  MultipleParents: "+ String.valueOf(existMultipleParentsInStack) + "  JoinedResults:  " ;
 		} else {
-			temp = node.getActivityID() + ": " + parentNode.getActivityID() + "  MultipleParents: "+ String.valueOf(existMultipleParentsInStack) + "  JoinedResults:  " ;
+			temp = nodeID + ": " + parentNodeID + "  MultipleParents: "+ String.valueOf(existMultipleParentsInStack) + "  JoinedResults:  " ;
 		}
 		ListIterator< StringBuffer > iterator = joinedResults.listIterator();
 		while (iterator.hasNext()) {	
@@ -63,23 +59,23 @@ public class NodePair {
 		
 	}
 
-	public ActivityNode getNode() {
-		return node;
+	public String getNodeID() {
+		return nodeID;
 	}
 
 
-	public void setNode(ActivityNode node) {
-		this.node = node;
+	public void setNodeID(String nodeID) {
+		this.nodeID = nodeID;
 	}
 
 
-	public ActivityNode getParentNode() {
-		return parentNode;
+	public String getParentNodeID() {
+		return parentNodeID;
 	}
 
 
-	public void setParentNode(ActivityNode parentNode) {
-		this.parentNode = parentNode;
+	public void setParentNodeID(String parentNodeID) {
+		this.parentNodeID = parentNodeID;
 	}
 
 
@@ -108,9 +104,5 @@ public class NodePair {
 
 	public void setOriginalJoinedResultsSize(int originalJoinedResultsSize) {
 		this.originalJoinedResultsSize = originalJoinedResultsSize;
-	}
-	
-	
-	
-	
+	}	
 }

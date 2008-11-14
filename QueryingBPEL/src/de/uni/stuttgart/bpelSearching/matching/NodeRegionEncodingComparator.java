@@ -1,10 +1,11 @@
 package de.uni.stuttgart.bpelSearching.matching;
 
 import java.util.Comparator;
-import de.uni.stuttgart.bpelSearching.index.*;
+
+import de.uni.stuttgart.bpelSearching.datastructure.*;
 
 /**
- * The NodeRegionEncodingComparator compares two Nodes with the RegionEncoding.
+ * The NodeRegionEncodingComparator compares two Nodes with the region encoding format.
  * 
  * @author Wei Lu
  * 
@@ -15,8 +16,8 @@ public class NodeRegionEncodingComparator implements Comparator<NodeRegionEncodi
 	@Override
 	public int compare(NodeRegionEncoding nodeRegion1, NodeRegionEncoding nodeRegion2) {
 		
-		int node1PreOrder = nodeRegion1.getPreorderRank();
-		int node2PreOrder = nodeRegion2.getPreorderRank();		
+		int node1PreOrder = nodeRegion1.getStart();
+		int node2PreOrder = nodeRegion2.getStart();		
 				
 		return (node1PreOrder - node2PreOrder);
 	}
