@@ -4,7 +4,7 @@ import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
 /**
  * Implements the FlowLinkHelper interface. It is used in the
- * ProcessFlowGraphFactory classes to create all flow links. This class
+ * ProcessFlowGraphFactory2 classes to create all flow links. This class
  * references a structured activity.
  * <p>
  * The distinction of structured and normal activities is necessary because if a

@@ -8,12 +8,10 @@ import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
 import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import de.uni.stuttgart.bpelSearching.index.NodeRegionEncoding;
-import de.uni.stuttgart.bpelSearching.index.PathCount;
-import de.uni.stuttgart.bpelSearching.index.Predecessors2;
+import de.uni.stuttgart.bpelSearching.datastructure.NodeRegionEncoding;
+import de.uni.stuttgart.bpelSearching.datastructure.Predecessors2;
 import de.uni.stuttgart.bpelSearching.util.GraphType;
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
@@ -33,24 +31,30 @@ public class ProcessFlowGraph {
 	private String processName;
 	private String processNamespace;
 	private String processID;
-	private DirectedGraph<ActivityNode, DefaultEdge> processGraph = new DefaultDirectedGraph<ActivityNode, DefaultEdge>(
-			DefaultEdge.class);
-
+//	private DirectedGraph<ActivityNode, DefaultEdge> processGraph = new DefaultDirectedGraph<ActivityNode, DefaultEdge>(
+//			DefaultEdge.class);
+	private DirectedGraph<ActivityNode, DefaultEdge> processGraph;
+	
 	private ActivityNode startActivity;
 	
 	private GraphType processGraphType;
 	
-	private int maxPostOrder;
+	private int maxEnd;
 	
 	public Map<String, NodeRegionEncoding> nodesRegionEncoding = new HashMap<String, NodeRegionEncoding>();
 	
-	public HashMap<String, SortedSet<NodeRegionEncoding>> predecessors = new HashMap<String, SortedSet<NodeRegionEncoding>>();
+	public HashMap<String, SortedSet<NodeRegionEncoding>> predecessors = new HashMap
+		<String, SortedSet<NodeRegionEncoding>>();
 	
 	public HashMap<String, Predecessors2> predecessors2 = new HashMap<String, Predecessors2>();
 	
-	public Map<String, PathCount> pathCountMap = new HashMap<String, PathCount>();
+	private ActivityNode[] processNodesArray;
 	
-	//private IsomorphismTestStrategy isoTestStrategy;
+	private int processNodesSize = 0;
+	
+	//private TransitiveClosure2 transitiveClosurePGraph;
+	
+	private boolean[][] transClosure;
 
 	/**
 	 * Initializes a ProcessFlowGraph with the processName, processNamespace and
@@ -126,7 +130,6 @@ public class ProcessFlowGraph {
      * @return the vertex name or <code> "" </code> if vertex does not exist.
      * 
      */
-	
 	public String getActivityName(String id) {
 		
 		Set<ActivityNode> vSet = processGraph.vertexSet();
@@ -224,99 +227,80 @@ public class ProcessFlowGraph {
 
 		return result;
 	}
-
-	/**
-	 * Returns a list of all possible subgraphs, when you remove an edge from
-	 * the given graph. The returned subgraphs are connected. Returns an empty
-	 * list if the processGraph has less only 1 vertex.
-	 * 
-	 * @param graph
-	 *            which should be decomposed in subgraphs.
-	 * @return a list of all subgraphs which all have decrease their edgeSet by
-	 *         exactly one .
-	 */
-	/*
-	public List<ProcessFlowGraph> decomposeProcessGraph() {
-
-		List<ProcessFlowGraph> subgraphResultList = new ArrayList<ProcessFlowGraph>();
-
-		DirectedGraph<ActivityNode, DefaultEdge> graph = this.processGraph;
-
-		if (graph.vertexSet().size() < 2) {
-			return subgraphResultList;
-		}
-
-		Set<DefaultEdge> allEdges = graph.edgeSet();
-		for (DefaultEdge edge : allEdges) {
-
-			DirectedSubgraph<ActivityNode, DefaultEdge> decomposedGraph = new DirectedSubgraph<ActivityNode, DefaultEdge>(
-					graph, null, null);
-
-			ActivityNode sourceNode = decomposedGraph.getEdgeSource(edge);
-			ActivityNode targetNode = decomposedGraph.getEdgeTarget(edge);
-
-			// if there are only 2 vertices left and one edge between them, then
-			// two subgraphs emerge from removing one edge from a graph. These
-			// subgraphs are added to the subgraphResultList. These subgraphs
-			// actually consist only of one node.
-			if (decomposedGraph.vertexSet().size() == 2
-					&& decomposedGraph.edgeSet().size() == 1) {
-
-				// bring the decomposedGraph to completion. Now it has on one
-				// node, the targetNode. Add it to the subgraphResultList.
-				decomposedGraph.removeEdge(edge);
-				decomposedGraph.removeVertex(sourceNode);
-				ProcessFlowGraph processSubgraph = new ProcessFlowGraph(
-						this.processName, this.processNamespace,
-						this.processID, decomposedGraph, this.isoTestStrategy);
-				subgraphResultList.add(processSubgraph);
-
-				// add another subgraph with one a vertex, the sourceNode.
-				DirectedSubgraph<ActivityNode, DefaultEdge> decomposedGraph2 = new DirectedSubgraph<ActivityNode, DefaultEdge>(
-						graph, null, null);
-				decomposedGraph2.removeEdge(edge);
-				decomposedGraph2.removeVertex(targetNode);
-				ProcessFlowGraph processSubgraph2 = new ProcessFlowGraph(
-						this.processName, this.processNamespace,
-						this.processID, decomposedGraph2, this.isoTestStrategy);
-				subgraphResultList.add(processSubgraph2);
-
-			} else {
-				// the graph has more than one edge. By removing one specific
-				// edge from a graph, only one subgraph is builded.
-				decomposedGraph.removeEdge(edge);
-				Set<DefaultEdge> sourceNodeEdges = decomposedGraph
-						.edgesOf(sourceNode);
-				Set<DefaultEdge> targetNodeEdges = decomposedGraph
-						.edgesOf(targetNode);
-
-				// remove nodes if they havn't got any edges left.
-				if (sourceNodeEdges.size() == 0) {
-					decomposedGraph.removeVertex(sourceNode);
+	
+	public int getArrayIndexOfProcessNode(ActivityNode node) {
+		if (processNodesArray != null) {
+			for (int i = 0; i < processNodesSize; i++) {
+				if (processNodesArray[i].equals(node)) {
+					return i;
 				}
-
-				if (targetNodeEdges.size() == 0) {
-					decomposedGraph.removeVertex(targetNode);
-				}
-
-				// test if subgraph is connected. If true subgraph is added to
-				// subgraphResultList otherwise nothing happens.
-				ConnectivityInspector<ActivityNode, DefaultEdge> connectivityInspector = new ConnectivityInspector<ActivityNode, DefaultEdge>(
-						decomposedGraph);
-				if (connectivityInspector.isGraphConnected()) {
-					ProcessFlowGraph processSubgraph = new ProcessFlowGraph(
-							this.processName, this.processNamespace,
-							this.processID, decomposedGraph, this.isoTestStrategy);
-					subgraphResultList.add(processSubgraph);
-				}
-
 			}
-
 		}
-
-		return subgraphResultList;
+		return -1;
 	}
-	*/
+	
+	public void computeTransitiveClosure() {
+		int i, j, k;
+		this.processNodesSize = processGraph.vertexSet().size();	
+		// Not Sure
+		this.processNodesArray = (ActivityNode[])(processGraph.vertexSet().
+			toArray(new ActivityNode[processNodesSize]));
+		// this.transitiveClosurePGraph = new TransitiveClosure2(processGraph, processNodesArray);		
+		transClosure = new boolean[processNodesSize][processNodesSize];
+		for (i = 0; i < processNodesSize; i++ ) {
+			for (j = 0; j < processNodesSize; j++ ) {
+				if (processGraph.containsEdge(processNodesArray[i], processNodesArray[j])) {
+					this.transClosure[i][j]= true;
+				} else {
+					this.transClosure[i][j]= false;
+				}		
+			}
+		}
+		
+		for (k = 0; k < processNodesSize; k++ ) {
+			for (i = 0; i < processNodesSize; i++ ) {
+				for (j = 0; j < processNodesSize; j++ ) {
+					transClosure[i][j] = (transClosure[i][j] || 
+						(transClosure[i][k] && transClosure[k][j]));
+				}
+			}
+		}
+		
+	}
+	
+	public boolean isReachable(ActivityNode startNode, ActivityNode endNode) {
+		int i, m, n;
+		m = -1;
+		for (i = 0; i < processNodesSize; i++ ) {
+			if (processNodesArray[i].equals(startNode)) {
+				m = i;
+				break;
+			}
+		}
+		
+		n = -1;
+		for (i = 0; i < processNodesSize; i++ ) {
+			if (processNodesArray[i].equals(endNode)) {
+				n = i;
+				break;
+			}
+		}
+		
+		if ((m > -1) && (n > -1)) {
+			return transClosure[m][n];
+		} else {
+			return false;
+		}		
+	}
+	
+	public boolean isReachable(int x, int y) {		
+		if (((x >= 0) && (x < processNodesSize)) && 
+				((y >= 0) && (y < processNodesSize))) {
+			return transClosure[x][y];
+		} else {
+			return false;
+		}		
+	}
 
 	public String getProcessName() {
 		return processName;
@@ -372,12 +356,12 @@ public class ProcessFlowGraph {
 	}
 	
 
-	public int getMaxPostOrder() {
-		return maxPostOrder;
+	public int getMaxEnd() {
+		return maxEnd;
 	}
 
-	public void setMaxPostOrder(int maxPostOrder) {
-		this.maxPostOrder = maxPostOrder;
+	public void setMaxEnd(int maxEnd) {
+		this.maxEnd = maxEnd;
 	}
 	
 	public NodeRegionEncoding getNodeRegionEncoding(String nodeID) {
@@ -395,5 +379,4 @@ public class ProcessFlowGraph {
 	public void removePredecessors(String nodeID) {
 		predecessors.remove(nodeID);
 	}
-	
 }
