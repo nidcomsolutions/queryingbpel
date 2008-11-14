@@ -1,11 +1,19 @@
 package de.uni.stuttgart.bpelSearching.util;
 
-import org.jgrapht.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
-
-import java.util.*;
 
 /**
  * A breadth-first traverse class for a directed and an undirected graph. 
@@ -15,6 +23,8 @@ import java.util.*;
 
 public class BreadthFirstTraverse extends AbstractGraphTraverse {
     
+	static Logger logger = Logger.getLogger(BreadthFirstTraverse.class);
+	
     /**
      * Queue, which supports breadth first traverse
      */
@@ -23,8 +33,19 @@ public class BreadthFirstTraverse extends AbstractGraphTraverse {
     /**
      * Stores nodes with breadth first traverse order
      */
-    protected LinkedList<ActivityNode> nodesBreadthFirstTraverseOrder = new 
+    protected List<ActivityNode> nodesBreadthFirstTraverseOrder = new 
     	LinkedList<ActivityNode>();
+    
+    /**
+     * Stores nodes sorted by level order
+     */
+    protected List<ActivityNode> nodesSortedByLevelOrder = new 
+    	LinkedList<ActivityNode>();
+    
+    /**
+     * Stores level number for each vertices.
+     */
+    protected Map<ActivityNode, Integer> maxLevelMap = new HashMap<ActivityNode, Integer>();
         	
     /**
      * Creates a new breadth-first traverse for the specified graph. Traverse
@@ -48,12 +69,21 @@ public class BreadthFirstTraverse extends AbstractGraphTraverse {
      */   
     public void traverse()
     {   
+    	Iterator<DefaultEdge> queryEdgeIter;
+    	ActivityNode parent;
+    	Integer pLevel;
+    	int maxPLevel, tempMaxLevel, listLength;
+    	
     	// begin at start vertex
     	setWasVisited(startVertex, true);
     	//displayVertex(startVertex);
-    	nodesBreadthFirstTraverseOrder.add(startVertex);
-    	theQueue.add(startVertex);
     	
+    	nodesBreadthFirstTraverseOrder.add(startVertex);
+    	nodesSortedByLevelOrder.add(startVertex);
+    	maxLevelMap.put(startVertex, new Integer(0));
+    	tempMaxLevel = 0;
+    	theQueue.clear();
+    	theQueue.add(startVertex);  	
     	ActivityNode v1, v2;
     	
     	while( !theQueue.isEmpty() )
@@ -65,7 +95,35 @@ public class BreadthFirstTraverse extends AbstractGraphTraverse {
     		{    			            	           	           	
     			setWasVisited(v2, true);
     			//displayVertex(v2);
+    			
     			nodesBreadthFirstTraverseOrder.add(v2);
+    	    	queryEdgeIter = graph.incomingEdgesOf(v2).iterator();
+    	    	maxPLevel = 0;
+    	    	while (queryEdgeIter.hasNext()) {
+    	    		parent = graph.getEdgeSource(queryEdgeIter.next());
+    	    		if (((pLevel = maxLevelMap.get(parent)) != null) 
+    	    				&& (pLevel.intValue() > maxPLevel)) {
+    	    			maxPLevel = pLevel.intValue();
+    	    		}
+    	    	}
+    	    	maxPLevel = maxPLevel + 1;
+    	    	if (maxPLevel >= tempMaxLevel) {
+        	    	if (maxPLevel > tempMaxLevel) {
+        	    		tempMaxLevel = maxPLevel;
+        	    	}
+    	    		nodesSortedByLevelOrder.add(v2);
+    	    	} else {
+        	    	listLength = nodesSortedByLevelOrder.size();
+        	    	for (int i = 0; i < listLength; i++) {
+        	    		if (maxPLevel <= maxLevelMap.get(nodesSortedByLevelOrder.get(i)).intValue()) {
+        	    			nodesSortedByLevelOrder.add(i, v2);
+        	    			break;
+        	    		}
+        	    	}
+    	    	}
+    	    	maxLevelMap.put(v2, new Integer(maxPLevel));
+    	    	
+    	    	//logger.warn("NodeID: " + v2.toString() + "  Level: " + maxPLevel);
     			theQueue.add(v2);           	            	
     		}
     	}
@@ -81,14 +139,67 @@ public class BreadthFirstTraverse extends AbstractGraphTraverse {
     		setWasVisited(vertexGraph, false);
     	}	
     }
+    
+    
+    /**
+     * Return the subgraph nodes ids of the given node.
+     * 
+     * @param node start node
+     * 
+     * @return the subgraph nodes ids of the given node
+     * 
+     */   
+    public Set<String> getSubgraphNodesIDs(ActivityNode node)
+    {   
+    	Set<String> result = new HashSet<String>(); 	
+    	// begin at start vertex
+    	setWasVisited(node, true);
+    	//displayVertex(node);
+    	result.add(node.getActivityID());	
+    	theQueue.clear();
+    	theQueue.add(node);  	
+    	ActivityNode v1, v2;
+    	
+    	while( !theQueue.isEmpty() )
+    	{
+    		// remove vertex at head
+    		v1 = theQueue.remove();   		
+    		// until it has no unvisited neighbors
+    		while((v2 = getAdjUnvisitedVertex(v1)) != null)
+    		{    			            	           	           	
+    			setWasVisited(v2, true);
+    			//displayVertex(v2);
+    			result.add(v2.getActivityID());	    	
+    	    	//logger.warn("NodeID: " + v2.toString() + "  Level: " + maxPLevel);
+    			theQueue.add(v2);           	            	
+    		}
+    	}
 
-	public LinkedList<ActivityNode> getNodesBreadthFirstTraverseOrder() {
+    	// queue is empty, so we're done    
+    	Set<ActivityNode> vertexSetGraph = graph.vertexSet();
+    	for (ActivityNode vertexGraph : vertexSetGraph) {
+    		setWasVisited(vertexGraph, false);
+    	}
+    	
+    	return result;
+    }
+
+	public List<ActivityNode> getNodesBreadthFirstTraverseOrder() {
 		return nodesBreadthFirstTraverseOrder;
 	}
 
 	public void setNodesBreadthFirstTraverseOrder(
 			LinkedList<ActivityNode> nodesBreadthFirstTraverseOrder) {
 		this.nodesBreadthFirstTraverseOrder = nodesBreadthFirstTraverseOrder;
+	}
+
+	public List<ActivityNode> getNodesSortedByLevelOrder() {
+		return nodesSortedByLevelOrder;
+	}
+
+	public void setNodesSortedByLevelOrder(
+			List<ActivityNode> nodesSortedByLevelOrder) {
+		this.nodesSortedByLevelOrder = nodesSortedByLevelOrder;
 	}
     
 }

@@ -49,8 +49,7 @@ public class DepthFirstTraverse extends AbstractGraphTraverse {
     	while( !theStack.isEmpty() )
     	{
     		// *** minimum spanning tree
-    		//ActivityNode currentVertex = theStack.peek();
-    		
+    		//ActivityNode currentVertex = theStack.peek();  		
     		// get an unvisited vertex adjacent to stack top
     		ActivityNode v = getAdjUnvisitedVertex(theStack.peek());
     		if(v == null){
