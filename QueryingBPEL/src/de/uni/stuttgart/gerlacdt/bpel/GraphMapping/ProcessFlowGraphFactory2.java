@@ -39,7 +39,7 @@ import de.uni.stuttgart.gerlacdt.bpel.controller.DbGraphPropertiesFactory;
 
 
 /**
- * The abstract ProcessFlowGraphFactory class is a creator class for
+ * The abstract ProcessFlowGraphFactory2 class is a creator class for
  * ProcessFlowGraph objects from a loaded BPEL process from the database.
  * <p>
  * This class is responsible for the correct mapping of a BPEL process to a
@@ -50,7 +50,7 @@ import de.uni.stuttgart.gerlacdt.bpel.controller.DbGraphPropertiesFactory;
  * 
  */
 
-public abstract class ProcessFlowGraphFactory {
+public abstract class ProcessFlowGraphFactory2 {
 
 	/**
 	 * the generated BPEL process
@@ -89,7 +89,7 @@ public abstract class ProcessFlowGraphFactory {
 	 *            Input BPEL process from which a {@link ProcessFlowGraph} will
 	 *            be generated.
 	 */
-	public ProcessFlowGraphFactory(Process process) {
+	public ProcessFlowGraphFactory2(Process process) {
 		this.processId = IdentifierCacheHandler.getID(process).toString();
 		processFlowGraph = new ProcessFlowGraph(process.getName(), process
 				.getTargetNamespace(), processId);
@@ -552,7 +552,7 @@ public abstract class ProcessFlowGraphFactory {
 			// set lastAddedNode to the new node
 			lastAddedNode = startEndNodes[0];
 
-			// if activity is in Flow container, test if activity should
+			// if activity is in Flow container, de.uni.stuttgart.bpelSearching.matching.test if activity should
 			// have an edge between flowStart and flowEnd node. Create these
 			// edges if Sources or Targets or both == null
 		} else if (ContainerActivityStart != null
@@ -629,7 +629,7 @@ public abstract class ProcessFlowGraphFactory {
 			// set lastAddedNode to the new node
 			lastAddedNode = activityNode;
 
-			// if activity is in Flow container, test if activity should
+			// if activity is in Flow container, de.uni.stuttgart.bpelSearching.matching.test if activity should
 			// have an edge between flowStart and flowEnd node. Create these
 			// edges if Sources or Targets or both == null
 		} else if (containerActivityStart != null

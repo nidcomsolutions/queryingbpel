@@ -1,5 +1,7 @@
 package de.uni.stuttgart.gerlacdt.bpel.GraphMapping;
 
+import java.util.Set;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierCacheHandler;
@@ -8,7 +10,6 @@ import org.open.oasis.docs.wsbpel._2._0.process.executable.ActivityContainer;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.Elseif;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.ExtensibleElements;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.If;
-import org.open.oasis.docs.wsbpel._2._0.process.executable.Invoke;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.OnAlarmPick;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.OnMessage;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.Pick;
@@ -34,8 +35,10 @@ import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.StructuredActivityOnMes
  */
 
 public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactory {
+	
 	/**
-	 * Initialize the GraphBuilding class with the given BPEL process.
+	 * Initialize the NewStructuredProcessFlowGraphFactory with the given BPEL
+	 * process.
 	 * 
 	 * @param process
 	 *            Input BPEL process from which a {@link ProcessFlowGraph} will
@@ -44,21 +47,11 @@ public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactor
 	public NewStructuredProcessFlowGraphFactory(Process process) {
 		super(process);
 	}
-
-	/**
-	 * Processes an If activity and creates appropriate nodes (start and end
-	 * nodes) in the process graph. Contained activities will be created too.
-	 * 
-	 * @param ifActivity
-	 *            The If activity for which nodes will be generated and added in
-	 *            the process graph.
-	 * @param containerActivityStart
-	 *            the start-StructuredActivityNode from a structured bpel
-	 *            activity which contains the given activity
-	 * @param containerActivityEnd
-	 *            the end-StructuredActivityNode from a structured bpel activity
-	 *            which contains the given activity
+	
+	/* (non-Javadoc)
+	 * @see de.uni.stuttgart.gerlacdt.bpel.GraphMapping.GraphFactory#handleIfActivity(org.open.oasis.docs.wsbpel._2._0.process.executable.If, de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode, de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode)
 	 */
+	@Override
 	protected void handleIfActivity(If ifActivity,
 			ActivityNode containerActivityStart,
 			ActivityNode containerActivityEnd) {
@@ -92,14 +85,13 @@ public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactor
 					elseifObject, startEndNodes[0].getActivityName(), true);
 			ActivityNode elseIfNodeEnd = createStructureHelperNode(
 					elseifObject, startEndNodes[0].getActivityName(), false);
-			processFlowGraph.getProcessGraph().addVertex(elseIfNodeStart);
-			processFlowGraph.getProcessGraph().addVertex(elseIfNodeEnd);
-			processFlowGraph.getProcessGraph().addEdge(startEndNodes[0],
+			directedGraph.addVertex(elseIfNodeStart);
+			directedGraph.addVertex(elseIfNodeEnd);
+			directedGraph.addEdge(startEndNodes[0],
 					elseIfNodeStart);
 			
 			// *** New version ***
-//			processFlowGraph.getProcessGraph().addEdge(elseIfNodeEnd,
-//					startEndNodes[1]);
+//			directedGraph.addEdge(elseIfNodeEnd, startEndNodes[1]);
 			lastAddedNode = elseIfNodeStart;
 
 			for (EObject eobj : elseifObject.eContents()) {
@@ -109,7 +101,7 @@ public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactor
 							containedActivityInElseif, null, null);
 				}
 			}
-			processFlowGraph.getProcessGraph().addEdge(lastAddedNode,
+			directedGraph.addEdge(lastAddedNode,
 					elseIfNodeEnd);
 		}
 
@@ -119,14 +111,13 @@ public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactor
 				startEndNodes[0].getActivityName(), true);
 		ActivityNode elseNodeEnd = createStructureHelperNode(elseActivity,
 				startEndNodes[0].getActivityName(), false);
-		processFlowGraph.getProcessGraph().addVertex(elseNodeStart);
-		processFlowGraph.getProcessGraph().addVertex(elseNodeEnd);
-		processFlowGraph.getProcessGraph().addEdge(startEndNodes[0],
+		directedGraph.addVertex(elseNodeStart);
+		directedGraph.addVertex(elseNodeEnd);
+		directedGraph.addEdge(startEndNodes[0],
 				elseNodeStart);
 		
 		// *** New version ***
-//		processFlowGraph.getProcessGraph().addEdge(elseNodeEnd,
-//				startEndNodes[1]);
+//		directedGraph.addEdge(elseNodeEnd, startEndNodes[1]);
 		lastAddedNode = elseNodeStart;
 
 		for (EObject eobj : elseActivity.eContents()) {
@@ -136,14 +127,14 @@ public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactor
 						null, null);
 			}
 		}
-		processFlowGraph.getProcessGraph().addEdge(lastAddedNode, elseNodeEnd);
+		directedGraph.addEdge(lastAddedNode, elseNodeEnd);
 		
-		processFlowGraph.getProcessGraph().addEdge(lastAddedNode, elseNodeEnd);
+		directedGraph.addEdge(lastAddedNode, elseNodeEnd);
 
 		lastAddedNode = startEndNodes[1];
 		
 		// *** New version ***
-		processFlowGraph.getProcessGraph().addEdge(startEndNodes[0], startEndNodes[1]);
+		directedGraph.addEdge(startEndNodes[0], startEndNodes[1]);
 		
 		// handle flowLinks and add them to the graph
 		handleFlowLinksInStructuredActivities(ifActivity, startEndNodes[0],
@@ -151,20 +142,10 @@ public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactor
 
 	}
 
-	/**
-	 * Processes a pick activity and creates appropriate nodes (start and end
-	 * nodes) in the process graph. Contained activities will be created too.
-	 * 
-	 * @param pickActivity
-	 *            The pick activity for which nodes will be generated and added
-	 *            in the process graph.
-	 * @param containerActivityStart
-	 *            the start-StructuredActivityNode from a structured bpel
-	 *            activity which contains the given activity
-	 * @param containerActivityEnd
-	 *            the end-StructuredActivityNode from a structured bpel activity
-	 *            which contains the given activity
+	/* (non-Javadoc)
+	 * @see de.uni.stuttgart.gerlacdt.bpel.GraphMapping.GraphFactory#handlePickActivity(org.open.oasis.docs.wsbpel._2._0.process.executable.Pick, de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode, de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode)
 	 */
+	@Override
 	protected void handlePickActivity(Pick pickActivity,
 			ActivityNode containerActivityStart,
 			ActivityNode containerActivityEnd) {
@@ -188,13 +169,12 @@ public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactor
 					onMessage, startEndNodes[0].getActivityName(), true);
 			ActivityNode onMessageEndNode = createStructureHelperNode(
 					onMessage, startEndNodes[0].getActivityName(), false);
-			processFlowGraph.getProcessGraph().addVertex(onMessageStartNode);
-			processFlowGraph.getProcessGraph().addVertex(onMessageEndNode);
-			processFlowGraph.getProcessGraph().addEdge(startEndNodes[0],
+			directedGraph.addVertex(onMessageStartNode);
+			directedGraph.addVertex(onMessageEndNode);
+			directedGraph.addEdge(startEndNodes[0],
 					onMessageStartNode);
 			// *** New version ***
-//			processFlowGraph.getProcessGraph().addEdge(onMessageEndNode,
-//					startEndNodes[1]);
+//			directedGraph.addEdge(onMessageEndNode, startEndNodes[1]);
 			lastAddedNode = onMessageStartNode;
 
 			for (EObject eobj : onMessage.eContents()) {
@@ -204,8 +184,7 @@ public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactor
 							null, null);
 				}
 			}
-			processFlowGraph.getProcessGraph().addEdge(lastAddedNode,
-					onMessageEndNode);
+			directedGraph.addEdge(lastAddedNode, onMessageEndNode);
 
 		}
 
@@ -216,28 +195,26 @@ public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactor
 					onAlarmPick, startEndNodes[0].getActivityName(), true);
 			ActivityNode onAlarmPickEndNode = createStructureHelperNode(
 					onAlarmPick, startEndNodes[0].getActivityName(), false);
-			processFlowGraph.getProcessGraph().addVertex(onAlarmPickStartNode);
-			processFlowGraph.getProcessGraph().addVertex(onAlarmPickEndNode);
-			processFlowGraph.getProcessGraph().addEdge(startEndNodes[0],
+			directedGraph.addVertex(onAlarmPickStartNode);
+			directedGraph.addVertex(onAlarmPickEndNode);
+			directedGraph.addEdge(startEndNodes[0],
 					onAlarmPickStartNode);
 			
 			// *** New version ***
-//			processFlowGraph.getProcessGraph().addEdge(onAlarmPickEndNode,
-//					startEndNodes[1]);
+//			directedGraph.addEdge(onAlarmPickEndNode, startEndNodes[1]);
 			lastAddedNode = onAlarmPickStartNode;
 			for (EObject eobj : onAlarmPick.eContents()) {
 				Activity activityInOnAlarmPick = (Activity) eobj;
 				decideActivityTypeAndFurtherProcessing(activityInOnAlarmPick,
 						null, null);
 			}
-			processFlowGraph.getProcessGraph().addEdge(lastAddedNode,
-					onAlarmPickEndNode);
+			directedGraph.addEdge(lastAddedNode, onAlarmPickEndNode);
 		}
 
 		lastAddedNode = startEndNodes[1];
 
 		// *** New version ***
-		processFlowGraph.getProcessGraph().addEdge(startEndNodes[0], startEndNodes[1]);
+		directedGraph.addEdge(startEndNodes[0], startEndNodes[1]);
 		
 		// handle flowLinks and add them to the graph
 		handleFlowLinksInStructuredActivities(pickActivity, startEndNodes[0],
@@ -325,11 +302,7 @@ public class NewStructuredProcessFlowGraphFactory extends ProcessFlowGraphFactor
 					structureHelperType, containerID, isStart);
 		}
 		
-		
-		
-
 		return node;
-
 	}
 }
 

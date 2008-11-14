@@ -27,7 +27,7 @@ import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.StructuredActivityNode;
  */
 
 public class StandardProcessFlowGraphFactory extends ProcessFlowGraphFactory {
-
+	
 	/**
 	 * Initialize the StandardProcessFlowGraphFactory with the given BPEL
 	 * process.
@@ -39,21 +39,12 @@ public class StandardProcessFlowGraphFactory extends ProcessFlowGraphFactory {
 	public StandardProcessFlowGraphFactory(Process process) {
 		super(process);
 	}
-
-	/**
-	 * Processes an If activity and creates appropriate nodes (start and end
-	 * nodes) in the process graph. Contained activities will be created too.
-	 * 
-	 * @param ifActivity
-	 *            The If activity for which nodes will be generated and added in
-	 *            the process graph.
-	 * @param containerActivityStart
-	 *            the start-StructuredActivityNode from a structured bpel
-	 *            activity which contains the given activity
-	 * @param containerActivityEnd
-	 *            the end-StructuredActivityNode from a structured bpel activity
-	 *            which contains the given activity
+	
+	
+	/* (non-Javadoc)
+	 * @see de.uni.stuttgart.gerlacdt.bpel.GraphMapping.GraphFactory#handleIfActivity(org.open.oasis.docs.wsbpel._2._0.process.executable.If, de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode, de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode)
 	 */
+	@Override
 	protected void handleIfActivity(If ifActivity,
 			ActivityNode containerActivityStart,
 			ActivityNode containerActivityEnd) {
@@ -110,20 +101,10 @@ public class StandardProcessFlowGraphFactory extends ProcessFlowGraphFactory {
 
 	}
 
-	/**
-	 * Processes a pick activity and creates appropriate nodes (start and end
-	 * nodes) in the process graph. Contained activities will be created too.
-	 * 
-	 * @param pickActivity
-	 *            The pick activity for which nodes will be generated and added
-	 *            in the process graph.
-	 * @param containerActivityStart
-	 *            the start-StructuredActivityNode from a structured bpel
-	 *            activity which contains the given activity
-	 * @param containerActivityEnd
-	 *            the end-StructuredActivityNode from a structured bpel activity
-	 *            which contains the given activity
+	/* (non-Javadoc)
+	 * @see de.uni.stuttgart.gerlacdt.bpel.GraphMapping.GraphFactory#handlePickActivity(org.open.oasis.docs.wsbpel._2._0.process.executable.Pick, de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode, de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode)
 	 */
+	@Override
 	protected void handlePickActivity(Pick pickActivity,
 			ActivityNode containerActivityStart,
 			ActivityNode containerActivityEnd) {
