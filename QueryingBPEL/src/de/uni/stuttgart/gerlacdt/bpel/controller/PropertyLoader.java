@@ -17,11 +17,11 @@ public class PropertyLoader {
 			dbProperties.load(new FileReader(
 					new File("./src/dbConf.properties")));
 //			dbProperties.load(new FileReader(
-//			new File("./dbConf.properties")));
+//					new File("./dbConf.properties")));
 			userProperties.load(new FileReader(new File(
 					"./src/userConf.properties")));
 //			userProperties.load(new FileReader(new File(
-//			"./userConf.properties")));
+//					"./userConf.properties")));
 		} catch (FileNotFoundException e) {
 			System.out
 					.println("File not found, could not load property files.");

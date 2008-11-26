@@ -9,7 +9,7 @@ import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 
 
 /**
@@ -24,13 +24,15 @@ public class GraphAnalyse {
 	private final DirectedGraph<ActivityNode, DefaultEdge> digraph;
     private ActivityNode startVertex;
     private boolean hasRoot;
-     
+    private DepthFirstTraverse dft;
+    
+    
     /**
-     * Creates a analyze class for the given graph and start vertex. If the specified start vertex is <code>
-     * null</code>, we choose an arbitrary graph vertex as start vertex.
+     * Creates a graph analyze class for the given graph and start vertex. If the specified start vertex 
+     * is <code>null</code>, we choose an arbitrary graph vertex as start vertex.
      *
-     * @param g the graph to be iterated.
-     * @param startVertex the vertex iteration to be started.
+     * @param g the graph to be analyzed.
+     * @param startVertex the start vertex.
      *
      * @throws IllegalArgumentException if <code>g==null</code> or does not
      * contain <code>startVertex</code>
@@ -42,7 +44,7 @@ public class GraphAnalyse {
     		throw new IllegalArgumentException("graph must not be null");
     	}      
         digraph = g;
-           
+        dft = new DepthFirstTraverse(digraph, startVertex);
         if ((startVertex != null) && g.containsVertex(startVertex)
         		&& isConnected(startVertex)) {
             hasRoot = true;
@@ -84,7 +86,7 @@ public class GraphAnalyse {
     * @return <tt>true</tt> if graph is connected.
     */  
    public boolean isConnected(ActivityNode start){
-	   DepthFirstTraverse dft = new DepthFirstTraverse(digraph, start);
+	   dft.setStartVertex(start);
 	   dft.traverse();
 	   return dft.isConnected();
    }
@@ -121,8 +123,7 @@ public class GraphAnalyse {
     *
     * @return the graph type.
     */    
-  public GraphType checkGraphType(){
-	  
+  public GraphType checkGraphType(){  
 	   if(hasRoot){
 			Set<ActivityNode> vertexSetG = digraph.vertexSet();			
 			for (ActivityNode vertexG : vertexSetG) {
@@ -131,8 +132,7 @@ public class GraphAnalyse {
 				}
 			}			
 			return GraphType.TREE;		   
-	   }
-	   
+	   }	   
 	  if(checkAcyclic()){
 		  return GraphType.UNROOTED_DAG;
 	  } else {

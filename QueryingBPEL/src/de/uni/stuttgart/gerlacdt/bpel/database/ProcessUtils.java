@@ -36,8 +36,8 @@ import org.open.oasis.docs.wsbpel._2._0.process.executable.Sequence;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.While;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.util.ExecutableResourceFactoryImpl;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraphFactory;
+import de.uni.stuttgart.bpelSearching.GraphMapping.ProcessGraphFactory1;
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
 import de.uni.stuttgart.gerlacdt.bpel.controller.DbGraphPropertiesFactory;
 
 public abstract class ProcessUtils {
@@ -262,7 +262,7 @@ public abstract class ProcessUtils {
 
 		Query query = session.createQuery("FROM Process");
 		List<Process> processes = (List<Process>) query.list();
-		// de.uni.stuttgart.bpelSearching.matching.test if process is correct loaded
+		// de.uni.stuttgart.bpelSearching.test if process is correct loaded
 		for (Process process : processes) {
 
 			session.delete(process);
@@ -547,9 +547,9 @@ public abstract class ProcessUtils {
 	 * @return a list of
 	 *         <code>ProcessFlowGraphs<code> which are retrieved from the database.
 	 */
-	public List<ProcessFlowGraph> getAllProcessFlowGraphsFromDB() {
+	public List<ProcessGraph> getAllProcessFlowGraphsFromDB() {
 
-		List<ProcessFlowGraph> resultList = new ArrayList<ProcessFlowGraph>();
+		List<ProcessGraph> resultList = new ArrayList<ProcessGraph>();
 
 		final Session session = sessionFactory.openSession();
 		// start Transaction
@@ -562,9 +562,48 @@ public abstract class ProcessUtils {
 		// add all loaded processes to the member-variable processGraphs
 		for (Process process : processes) {
 
-			ProcessFlowGraphFactory processFlowGraphFactory = DbGraphPropertiesFactory
-					.getInstance().getProcessFlowGraphFactory(process);
-			ProcessFlowGraph processFlowGraph = processFlowGraphFactory
+			ProcessGraphFactory1 processFlowGraphFactory = DbGraphPropertiesFactory
+					.getInstance().getProcessGraphFactory(process);
+			ProcessGraph processFlowGraph = processFlowGraphFactory
+					.createProcessFlowGraph(process);
+			resultList.add(processFlowGraph);
+		}
+
+		session.getTransaction().commit();
+		session.close();
+
+		return resultList;
+
+	}
+	
+	/**
+	 * Returns a list of
+	 * <code>ProcessFlowGraphs<code> which are generated from the database.
+	 * The returned list contains all ProcessFlowGraphs which corresponds 
+	 * to the given query.
+	 * 
+	 * @return a list of
+	 *         <code>ProcessFlowGraphs<code> which are retrieved from the database.
+	 */
+	public List<ProcessGraph> getAllProcessFlowGraphsFromDBWithQuery(
+			String queryString) {
+
+		List<ProcessGraph> resultList = new ArrayList<ProcessGraph>();
+
+		final Session session = sessionFactory.openSession();
+		// start Transaction
+		session.beginTransaction();
+
+		// load all BPEL-processes from repository
+		Query query = session.createQuery(queryString);
+		List<Process> processes = (List<Process>) query.list();
+
+		// add all loaded processes to the member-variable processGraphs
+		for (Process process : processes) {
+
+			ProcessGraphFactory1 processFlowGraphFactory = DbGraphPropertiesFactory
+					.getInstance().getProcessGraphFactory(process);
+			ProcessGraph processFlowGraph = processFlowGraphFactory
 					.createProcessFlowGraph(process);
 			resultList.add(processFlowGraph);
 		}

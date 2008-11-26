@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 
 /**
  * The abstract AbstractGraphTraverse class traverse the given graph and 
@@ -165,6 +165,14 @@ public abstract class AbstractGraphTraverse {
 
 	public void setConnected(boolean isConnected) {
 		this.isConnected = isConnected;
+	}
+
+	public ActivityNode getStartVertex() {
+		return startVertex;
+	}
+
+	public void setStartVertex(ActivityNode startVertex) {
+		this.startVertex = startVertex;
 	}
     
 
