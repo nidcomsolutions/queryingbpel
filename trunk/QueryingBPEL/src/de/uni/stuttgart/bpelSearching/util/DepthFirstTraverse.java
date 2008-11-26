@@ -3,7 +3,7 @@ package de.uni.stuttgart.bpelSearching.util;
 import org.jgrapht.*;
 import org.jgrapht.graph.DefaultEdge;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 
 import java.util.*;
 
@@ -44,6 +44,9 @@ public class DepthFirstTraverse extends AbstractGraphTraverse {
     	// begin at start vertex
     	setWasVisited(startVertex, true);
     	//displayVertex(startVertex);
+    	if (!theStack.isEmpty()) {
+    		theStack.clear();
+    	}   	
     	theStack.push(startVertex);
 
     	while( !theStack.isEmpty() )
