@@ -13,14 +13,14 @@ import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.QueryGraph;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeInStack;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeRegionEncoding;
 import de.uni.stuttgart.bpelSearching.matching.NodeRegionEncodingComparator;
 import de.uni.stuttgart.bpelSearching.matching.NodesComparator;
 import de.uni.stuttgart.bpelSearching.matching.ProcessNodePair;
-import de.uni.stuttgart.bpelSearching.query.QueryGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
 /**
  * A superclass for classes, which implement twig join algorithms. It implements 
@@ -33,8 +33,8 @@ public abstract class TwigStackAlgorithm {
 	
 	static Logger logger = Logger.getLogger(TwigStackAlgorithm.class);
 	
-	protected QueryGraph querygraph;
-	protected ProcessFlowGraph processgraph;
+	protected static QueryGraph querygraph;
+	protected ProcessGraph processgraph;
 	
     /**
      * A chain of stacks for each query node to encode the partial result.
@@ -80,16 +80,19 @@ public abstract class TwigStackAlgorithm {
 	
 	protected boolean hasExactMatch;
 	
+	protected static NodesComparator nodesCompare;
+	
+	protected static NodeRegionEncodingComparator nodeRegionCompare;
+	
 	/**
 	 * Creates a TwigStackAlgorithm object for the specified query graph and 
 	 * process graph, initialize stream and solution stack for each query node.
 	 * 
-     * @param qg the query graph.
      * @param pg the process graph.
 	 */
-	public TwigStackAlgorithm(QueryGraph qg, ProcessFlowGraph pg) 
+	public TwigStackAlgorithm(ProcessGraph pg) 
 	{
-		this.querygraph = qg;
+//		this.querygraph = qg;
 		this.processgraph = pg;	
 		hasExactMatch = false;
 		init();
@@ -108,12 +111,12 @@ public abstract class TwigStackAlgorithm {
 	 */
 	protected void init()
 	{	
-		Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
-		Set<ActivityNode> vertexSetProcess = processgraph.getProcessGraph().vertexSet();
+		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
+		Set<ActivityNode> vertexSetProcess = processgraph.getGraph().vertexSet();
 		LinkedList <NodeRegionEncoding> streamList;
 		
-		NodesComparator nodesCompare = new NodesComparator();
-		NodeRegionEncodingComparator nodeRegionCompare = new NodeRegionEncodingComparator();
+//		NodesComparator nodesCompare = new NodesComparator();
+//		NodeRegionEncodingComparator nodeRegionCompare = new NodeRegionEncodingComparator();
 				
 		for (ActivityNode queryNode : vertexSetQuery) {				
 			streamList = new LinkedList<NodeRegionEncoding>();
@@ -495,15 +498,15 @@ public abstract class TwigStackAlgorithm {
 		
 		Stack<ProcessNodePair> qStack = solutionStackMap.get(q);
 		
-		resultProcessInfo = "process ID: " + processgraph.getProcessID() + 
+		resultProcessInfo = "Exact matching process >> process ID: " + processgraph.getProcessID() + 
 		"  process namespace: " + processgraph.getProcessNamespace() + 
 		"  process name: " + processgraph.getProcessName();
-		logger.warn(resultProcessInfo);
-		logger.warn("Contains following exact matchings for the given query: ");
+//		logger.warn(resultProcessInfo);
+//		logger.warn("Contains following exact matchings for the given query: ");
 		if(qHasNoChild) {
 			while (!qStack.isEmpty()) {
 				nPair = qStack.pop();
-				logger.warn(nPair.getNodeID());
+//				logger.warn(nPair.getNodeID());
 				tempMatch = new ArrayList<String>();
 				tempMatch.add(nPair.getNodeID());
 				this.exactMatchingResults.getExactMatchings().add(tempMatch);
@@ -514,7 +517,7 @@ public abstract class TwigStackAlgorithm {
 				iterator = nPair.getJoinedResults().listIterator(); 
 				while (iterator.hasNext()) {
 					iterNext = iterator.next();
-					logger.warn(iterNext);
+//					logger.warn(iterNext);
 					st = new StringTokenizer(iterNext.toString());
 					tempMatch = new ArrayList<String>();
 					while (st.hasMoreTokens()) {
@@ -590,19 +593,19 @@ public abstract class TwigStackAlgorithm {
 	}
 
 	
-	public QueryGraph getQuerygraph() {
+	public static QueryGraph getQuerygraph() {
 		return querygraph;
 	}
 
-	public void setQuerygraph(QueryGraph querygraph) {
-		this.querygraph = querygraph;
+	public static void setQuerygraph(QueryGraph querygraph) {
+		TwigStackAlgorithm.querygraph = querygraph;
 	}
 
-	public ProcessFlowGraph getProcessgraph() {
+	public ProcessGraph getProcessgraph() {
 		return processgraph;
 	}
 
-	public void setProcessgraph(ProcessFlowGraph processgraph) {
+	public void setProcessgraph(ProcessGraph processgraph) {
 		this.processgraph = processgraph;
 	}
 
@@ -633,6 +636,27 @@ public abstract class TwigStackAlgorithm {
 
 	public void setHasExactMatch(boolean hasExactMatch) {
 		this.hasExactMatch = hasExactMatch;
+	}
+
+
+	public static NodesComparator getNodesCompare() {
+		return nodesCompare;
+	}
+
+
+	public static void setNodesCompare(NodesComparator nodesCompare) {
+		TwigStackAlgorithm.nodesCompare = nodesCompare;
+	}
+
+
+	public static NodeRegionEncodingComparator getNodeRegionCompare() {
+		return nodeRegionCompare;
+	}
+
+
+	public static void setNodeRegionCompare(
+			NodeRegionEncodingComparator nodeRegionCompare) {
+		TwigStackAlgorithm.nodeRegionCompare = nodeRegionCompare;
 	}
 	
 

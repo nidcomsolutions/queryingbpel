@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 
 /**
  * @author luwei
@@ -54,7 +54,7 @@ public class StreamItem {
 			} else {
 				tempStr += "  children: ";
 				for (StreamItem child : children) {
-					tempStr += (" Descendant processNode id: " + child.getProcessnode().
+					tempStr += (" Descendant pid: " + child.getProcessnode().
 							getActivityID() + " || ");
 				}		
 			}
@@ -144,10 +144,10 @@ public class StreamItem {
 			List<StreamItem> maxRefStreamItems) {
 		StreamItemChildReferences cSIRef;
 		int maxMatchSize;
-		if (!maxRefStreamItems.isEmpty()) {
-			maxRefStreamItems.clear();
-		} else if (maxRefStreamItems == null) {
+		if (maxRefStreamItems == null) {
 			maxRefStreamItems = new ArrayList<StreamItem>();
+		} else if (!maxRefStreamItems.isEmpty()) {
+			maxRefStreamItems.clear();
 		}
 		if ((cSIRef = childrenReferencesMap.get(childNode)) != null) {
 			maxMatchSize = 0;

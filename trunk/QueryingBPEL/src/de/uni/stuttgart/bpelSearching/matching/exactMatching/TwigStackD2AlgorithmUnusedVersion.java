@@ -11,14 +11,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeInStack;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeRegionEncoding;
 import de.uni.stuttgart.bpelSearching.datastructure.PoolItem;
 import de.uni.stuttgart.bpelSearching.datastructure.Predecessors2;
 import de.uni.stuttgart.bpelSearching.matching.ProcessNodePair;
-import de.uni.stuttgart.bpelSearching.query.QueryGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
 /**
  * Implements the TwigStackD algorithm (Modified Version) for matching query tree against 
@@ -27,7 +26,7 @@ import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
  * @author luwei
  *
  */
-public class TwigStackDAlgorithmForDAGProcess1 extends TwigStackAlgorithm {
+public class TwigStackD2AlgorithmUnusedVersion extends TwigStackAlgorithm {
 	
     /**
      * A data structure to temporarily hold the stack popped nodes to be grown from 
@@ -39,16 +38,14 @@ public class TwigStackDAlgorithmForDAGProcess1 extends TwigStackAlgorithm {
 	
 
 	/**
-	 * Creates a new TwigStackDAlgorithmForDAGProcess1 object for the specified query tree 
-	 * and process graph, initialize stream, solution stack, partial solution pool for 
-	 * each query node.
+	 * Creates a new TwigStackD2AlgorithmUnusedVersion object for the specified process graph, 
+	 * initialize stream, solution stack, partial solution pool for each query node.
 	 * 
-	 * @param qg the query graph.
 	 * @param pg the process graph.
 	 */
-	public TwigStackDAlgorithmForDAGProcess1(QueryGraph qg, ProcessFlowGraph pg) {
-		super(qg, pg);
-		Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
+	public TwigStackD2AlgorithmUnusedVersion(ProcessGraph pg) {
+		super(pg);
+		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
 		for (ActivityNode queryNode : vertexSetQuery) {	
 			partialSolutionPoolMap.put(queryNode, new HashSet<PoolItem>());
 		}
@@ -65,7 +62,7 @@ public class TwigStackDAlgorithmForDAGProcess1 extends TwigStackAlgorithm {
 		
 		NodeRegionEncoding tqactFirst;
 		
-		root = querygraph.getStartVertex();
+		root = querygraph.getStartActivity();
 		
 		while (!end(q)) {
 			// **** Change ****

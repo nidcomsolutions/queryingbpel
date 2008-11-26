@@ -14,7 +14,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 
 /**
  * PoolItem3Ext class represents an element in the partial solution pool associated 

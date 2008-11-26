@@ -3,7 +3,7 @@
  */
 package de.uni.stuttgart.bpelSearching.datastructure;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 
 /**
  * @author luwei

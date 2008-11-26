@@ -9,7 +9,7 @@ package de.uni.stuttgart.bpelSearching.matching;
  *
  */
 public class MatchingResult {
-	//private ProcessFlowGraph processGraph;
+	//private ProcessGraph processGraph;
 	protected String processID;
 	protected String processNamespace;
 	protected String processName;

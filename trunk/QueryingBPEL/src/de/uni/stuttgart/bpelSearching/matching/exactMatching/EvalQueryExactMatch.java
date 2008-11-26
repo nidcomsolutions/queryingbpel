@@ -9,23 +9,20 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.open.oasis.docs.wsbpel._2._0.process.executable.Process;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.QueryGraph;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeRegionEncoding;
 import de.uni.stuttgart.bpelSearching.datastructure.Predecessors2;
-import de.uni.stuttgart.bpelSearching.query.QueryGraph;
+import de.uni.stuttgart.bpelSearching.matching.NodeRegionEncodingComparator;
+import de.uni.stuttgart.bpelSearching.matching.NodesComparator;
+import de.uni.stuttgart.bpelSearching.matching.inexactmatching.InexactMatchingResult;
+import de.uni.stuttgart.bpelSearching.matching.inexactmatching.Matching;
 import de.uni.stuttgart.bpelSearching.util.DepthFirstTraverseExtension;
 import de.uni.stuttgart.bpelSearching.util.DepthFirstTraverseExtensionSSPI;
 import de.uni.stuttgart.bpelSearching.util.GraphAnalyse;
 import de.uni.stuttgart.bpelSearching.util.GraphType;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraphFactory;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
-import de.uni.stuttgart.gerlacdt.bpel.controller.DbGraphPropertiesFactory;
-import de.uni.stuttgart.gerlacdt.bpel.database.DatabaseConfiguration;
 
 /**
  * The EvalQueryExactMatch class matches a given query graph against a set of process graphs 
@@ -37,8 +34,7 @@ import de.uni.stuttgart.gerlacdt.bpel.database.DatabaseConfiguration;
 public class EvalQueryExactMatch {
 	static Logger logger = Logger.getLogger(EvalQueryExactMatch.class);
 	private QueryGraph querygraph;
-	private String filterProcesses;
-	private List<ProcessFlowGraph> processgraphs;
+	private List<ProcessGraph> processgraphs;
 	private List<ExactMatchingResult> exactMatchingResults;
 
 	/**
@@ -46,20 +42,23 @@ public class EvalQueryExactMatch {
 	 * of BPEL-processes to be searched.
 	 * 
 	 * @param querygraph the query graph
-	 * @param filterProcesses filter criteria of BPEL-processes to be searched
+	 * @param processgraphs processgraphs to be compared
 	 * 
-	 * @throws IllegalArgumentException if <code>querygraph==null</code>
+	 * @throws IllegalArgumentException if <code>querygraph==null</code> or <code>querygraph.
+	 * getQueryGraph()==null</code> or <code>processgraphs==null</code>
 	 * 
 	 */
-	public EvalQueryExactMatch(QueryGraph querygraph, String filterProcesses) {
+	public EvalQueryExactMatch(QueryGraph querygraph, List<ProcessGraph> processgraphs) {
 		super();
     	if ((querygraph == null) || ((querygraph != null) && 
-    			(querygraph.getQueryGraph() == null))) {
+    			(querygraph.getGraph() == null))) {
             throw new IllegalArgumentException("query graph must not be null");
         }
+    	if (processgraphs == null) {
+            throw new IllegalArgumentException("process graphs must not be null");
+        }
 		this.querygraph = querygraph;
-		this.filterProcesses = filterProcesses;
-		this.processgraphs = new ArrayList<ProcessFlowGraph>();
+		this.processgraphs = processgraphs;
 		this.exactMatchingResults = new ArrayList<ExactMatchingResult>();
 	}
 
@@ -74,73 +73,64 @@ public class EvalQueryExactMatch {
 	public void doExactMatch(){
 		GraphAnalyse ga;
     	TwigStackAlgorithmBasic twigStB; 
-    	TwigStackDAlgorithmForDAGProcess2 twigStDAGquery;
+    	TwigStackD2Algorithm twigStDAGquery;
     	DagStackDAlgorithm dagStackD;
-   
-		DatabaseConfiguration dbConfig = DbGraphPropertiesFactory.getInstance()
-		.getDBConfiguration();
-		final SessionFactory sessionFactory = dbConfig.getSessionFactory();
-		final Session session = sessionFactory.openSession();
-		// start Transaction
-		session.beginTransaction();	
-		Query query;
-		if (filterProcesses == "") {
-			query = session.createQuery("FROM Process");
-		} else {
-			// To Do: parse SQL query, exception handling
-			query = session.createQuery(filterProcesses);
+    	String processInfo;
+    	
+    	initStaticVariablesForInexactMatchAlgorithms();
+		for (ProcessGraph procGraph : processgraphs) {
+			processInfo = "The process to be compared >> process ID: " + procGraph.getProcessID() + 
+			"  process namespace: " + procGraph.getProcessNamespace()+ 
+			"  process name: " + procGraph.getProcessName();
+			logger.warn(processInfo);
+//			if (procGraph.getProcessName().equals("Switch")) {
+				ga = new GraphAnalyse(procGraph.getGraph(), 
+						procGraph.getStartActivity());
+		    	if(procGraph.getStartActivity() == null){
+		    		procGraph.setStartActivity(ga.getStartVertex());   		  		
+		    	}	    	    	
+		    	procGraph.setGraphType(ga.checkGraphType());	    	
+				if ((procGraph.getGraphType() == GraphType.TREE)
+						&& (querygraph.getGraphType() == GraphType.TREE)) {
+					calculateNodeRegionEncoding(procGraph);
+		    		twigStB = new TwigStackAlgorithmBasic(procGraph);
+		    		twigStB.twigStackExactMatch(querygraph.getStartActivity());
+		    		if ((twigStB.hasExactMatch()) && (twigStB.getExactMatchingResults() != null)) {
+		    			this.exactMatchingResults.add(twigStB.getExactMatchingResults());
+		    		}
+				} else if ((procGraph.getGraphType() == GraphType.ROOTED_DAG)
+						&& (querygraph.getGraphType() == GraphType.TREE)) {
+					calculateNodeRegionEncodingAndSSPI(procGraph);
+		    		twigStDAGquery = new TwigStackD2Algorithm(procGraph);
+		    		twigStDAGquery.twigStackExactMatch(querygraph.getStartActivity());
+		    		if ((twigStDAGquery.hasExactMatch()) && (twigStDAGquery.getExactMatchingResults() != null)) {
+		    			this.exactMatchingResults.add(twigStDAGquery.getExactMatchingResults());
+		    		}
+				} else if ((procGraph.getGraphType() == GraphType.ROOTED_DAG)
+						&& (querygraph.getGraphType() == GraphType.ROOTED_DAG)) {
+					calculateNodeRegionEncodingAndSSPI(procGraph);
+					dagStackD = new DagStackDAlgorithm(procGraph);
+					dagStackD.twigStackExactMatch(querygraph.getStartActivity());
+		    		if ((dagStackD.hasExactMatch()) && (dagStackD.getExactMatchingResults() != null)) {
+		    			this.exactMatchingResults.add(dagStackD.getExactMatchingResults());
+		    		}
+				}
+//			}
 		}
-		List<Process> processes = query.list();
 		
-		// de.uni.stuttgart.bpelSearching.matching.test if processes are loaded correctly
-		for (int i = 0; i < processes.size(); i++) {
-			Process process = processes.get(i);
-			logger.debug("Load Process name: " + process.getName());
-			ProcessFlowGraphFactory graphFactory = DbGraphPropertiesFactory
-					.getInstance().getProcessFlowGraphFactory(process);
-			ProcessFlowGraph graph = graphFactory
-					.createProcessFlowGraph(process);
-			processgraphs.add(graph);
+		if (!this.exactMatchingResults.isEmpty()) {
+			printSolutions();
 		}
-		
-		session.getTransaction().commit();
-		session.close();
-		
-		for (ProcessFlowGraph procGraph : processgraphs) {
-			ga = new GraphAnalyse(procGraph.getProcessGraph(), 
-					procGraph.getStartActivity());
-	    	if(procGraph.getStartActivity() == null){
-	    		procGraph.setStartActivity(ga.getStartVertex());   		  		
-	    	}
-	    	    	
-	    	procGraph.setProcessGraphType(ga.checkGraphType());
-	    	
-			if ((procGraph.getProcessGraphType() == GraphType.TREE)
-					&& (querygraph.getQueryGraphType() == GraphType.TREE)) {
-				calculateNodeRegionEncoding(procGraph);
-	    		twigStB = new TwigStackAlgorithmBasic(querygraph, procGraph);
-	    		twigStB.twigStackExactMatch(querygraph.getStartVertex());
-	    		if ((twigStB.hasExactMatch()) && (twigStB.getExactMatchingResults() != null)) {
-	    			this.exactMatchingResults.add(twigStB.getExactMatchingResults());
-	    		}
-			} else if ((procGraph.getProcessGraphType() == GraphType.ROOTED_DAG)
-					&& (querygraph.getQueryGraphType() == GraphType.TREE)) {
-				calculateNodeRegionEncodingAndSSPI(procGraph);
-	    		twigStDAGquery = new TwigStackDAlgorithmForDAGProcess2(querygraph, procGraph);
-	    		twigStDAGquery.twigStackExactMatch(querygraph.getStartVertex());
-	    		if ((twigStDAGquery.hasExactMatch()) && (twigStDAGquery.getExactMatchingResults() != null)) {
-	    			this.exactMatchingResults.add(twigStDAGquery.getExactMatchingResults());
-	    		}
-			} else if ((procGraph.getProcessGraphType() == GraphType.ROOTED_DAG)
-					&& (querygraph.getQueryGraphType() == GraphType.ROOTED_DAG)) {
-				calculateNodeRegionEncodingAndSSPI(procGraph);
-				dagStackD = new DagStackDAlgorithm(querygraph, procGraph);
-				dagStackD.twigStackExactMatch(querygraph.getStartVertex());
-	    		if ((dagStackD.hasExactMatch()) && (dagStackD.getExactMatchingResults() != null)) {
-	    			this.exactMatchingResults.add(dagStackD.getExactMatchingResults());
-	    		}
-			} 
-		}
+	}
+	
+	/**
+	 * Initializes static variables for the InexactMatchAlgorithms.
+	 * 
+	 */
+	private void initStaticVariablesForInexactMatchAlgorithms() {
+		TwigStackAlgorithm.setQuerygraph(querygraph);
+		TwigStackAlgorithm.setNodesCompare(new NodesComparator());
+		TwigStackAlgorithm.setNodeRegionCompare(new NodeRegionEncodingComparator());
 	}
 	
 	
@@ -151,12 +141,12 @@ public class EvalQueryExactMatch {
      * @param querygraph pg the process graph
      *  
      */
-    public void calculateNodeRegionEncoding(ProcessFlowGraph pg){
+    public void calculateNodeRegionEncoding(ProcessGraph pg){
     	Map<ActivityNode, Integer> preMap, postMap, lMap;
     	NodeRegionEncoding nre;
     	
     	DepthFirstTraverseExtension dft = 
-    		new DepthFirstTraverseExtension(pg.getProcessGraph(), pg.getStartActivity());
+    		new DepthFirstTraverseExtension(pg.getGraph(), pg.getStartActivity());
     	
     	dft.traverse();
     	
@@ -164,7 +154,7 @@ public class EvalQueryExactMatch {
     	postMap = dft.getPostorderMap();
     	preMap = dft.getPreorderMap();
     	
-    	Set<ActivityNode> vertexSetPg = pg.getProcessGraph().vertexSet();
+    	Set<ActivityNode> vertexSetPg = pg.getGraph().vertexSet();
 
     	for (ActivityNode vertexPg : vertexSetPg) {
     		nre = new NodeRegionEncoding(vertexPg.getActivityID(), preMap.get(vertexPg).intValue(), 
@@ -183,14 +173,14 @@ public class EvalQueryExactMatch {
      * @param querygraph pg the process graph
      * 
      */
-     public void calculateNodeRegionEncodingAndSSPI(ProcessFlowGraph pg){
+     public void calculateNodeRegionEncodingAndSSPI(ProcessGraph pg){
      	Map<ActivityNode, Integer> preMap, postMap, lMap;
      	Map<ActivityNode, Set<String>> predecessorsMap;
      	NodeRegionEncoding nre;
      	Set<String> predecessorsQ;
      	
      	DepthFirstTraverseExtensionSSPI dft = 
-     		new DepthFirstTraverseExtensionSSPI(pg.getProcessGraph(), 
+     		new DepthFirstTraverseExtensionSSPI(pg.getGraph(), 
      				pg.getStartActivity());   	
      	dft.traverse();
      	
@@ -199,7 +189,7 @@ public class EvalQueryExactMatch {
      	preMap = dft.getPreorderMap();
      	predecessorsMap = dft.getPredecessorsMap();
      	 
-     	Set<ActivityNode> vertexSetPg = pg.getProcessGraph().vertexSet();
+     	Set<ActivityNode> vertexSetPg = pg.getGraph().vertexSet();
 
      	for (ActivityNode vertexPg : vertexSetPg) {
      		nre = new NodeRegionEncoding(vertexPg.getActivityID(), preMap.get(vertexPg).intValue(), 
@@ -219,6 +209,28 @@ public class EvalQueryExactMatch {
      	}	   	
      	pg.setMaxEnd(dft.getMaxCount());	
      }
+     
+     
+     /**
+      * Prints the matching results.
+      * 
+      */
+ 	public void printSolutions(){
+ 		logger.warn("************** Print exact matching results for the given query *****************");
+ 		String resultForOutput;
+ 		List<ArrayList<String>> matchList;
+ 		for (ExactMatchingResult result : exactMatchingResults) {
+ 			matchList = result.getExactMatchings();
+ 			resultForOutput = "process ID: " + result.getProcessID() + 
+ 			"  process namespace: " + result.getProcessNamespace() + 
+ 			"  process name: " + result.getProcessName() + 
+ 			" has " + matchList.size() + " matchs: ";		
+ 			for (ArrayList<String> match : matchList) {
+ 				resultForOutput += "  Matching Result: " + match.toString();
+ 			}
+ 			logger.warn(resultForOutput);
+ 		}
+ 	}
     
 	
 	public QueryGraph getQuerygraph() {
@@ -227,19 +239,11 @@ public class EvalQueryExactMatch {
 	public void setQuerygraph(QueryGraph querygraph) {
 		this.querygraph = querygraph;
 	}
-	
-	public String getFilterProcesses() {
-		return filterProcesses;
-	}
 
-	public void setFilterProcesses(String filterProcesses) {
-		this.filterProcesses = filterProcesses;
-	}
-
-	public List<ProcessFlowGraph> getProcessgraph() {
+	public List<ProcessGraph> getProcessgraph() {
 		return processgraphs;
 	}
-	public void setProcessgraph(List<ProcessFlowGraph> processgraphs) {
+	public void setProcessgraph(List<ProcessGraph> processgraphs) {
 		this.processgraphs = processgraphs;
 	}
 
