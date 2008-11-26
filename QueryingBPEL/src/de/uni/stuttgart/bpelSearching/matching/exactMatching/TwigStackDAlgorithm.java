@@ -7,14 +7,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.Stack;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeInStack;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeRegionEncoding;
-import de.uni.stuttgart.bpelSearching.query.QueryGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
 /**
  * Implements the TwigStackD algorithm for directed acyclic process graph  
@@ -23,7 +21,7 @@ import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
  * @author luwei
  *
  */
-public class TwigStackDAlgorithmForDAGProcess extends TwigStackAlgorithm {
+public class TwigStackDAlgorithm extends TwigStackAlgorithm {
 	
     /**
      * A data structure to temporarily hold the stack popped nodes to be grown from 
@@ -43,18 +41,14 @@ public class TwigStackDAlgorithmForDAGProcess extends TwigStackAlgorithm {
 			new HashMap<ActivityNode, Set<NodeInStack>>();
 
 	/**
-	 * Creates a new TwigStackDAlgorithmForDAGProcess object for the specified query tree 
-	 * and process graph, initialize stream and solution stack for each query
-	 * node.
+	 * Creates a new TwigStackDAlgorithm object for the specified query tree 
+	 * and process graph, initialize stream and solution stack for each query node.
 	 * 
-	 * @param qg the query graph.
 	 * @param pg the process graph.
 	 */
-	public TwigStackDAlgorithmForDAGProcess(QueryGraph qg, ProcessFlowGraph pg) {
-		super(qg, pg);
-		
-		Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
-		
+	public TwigStackDAlgorithm(ProcessGraph pg) {
+		super(pg);		
+		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
 		for (ActivityNode queryNode : vertexSetQuery) {	
 			partialSolutionPoolMap.put(queryNode, new HashSet<NodeInStack>());
 			candidateSetMap.put(queryNode, new HashSet<NodeInStack>());
@@ -80,7 +74,7 @@ public class TwigStackDAlgorithmForDAGProcess extends TwigStackAlgorithm {
 		NodeInStack tempNIS;
 		Set<ActivityNode> missingNodes, emptyMissings;
 		emptyMissings = new HashSet<ActivityNode>();
-		boolean queryhasOneNode = (querygraph.getQueryGraph().vertexSet().size() == 1);
+		boolean queryhasOneNode = (querygraph.getGraph().vertexSet().size() == 1);
 		
 		while (!end(q)) {			
 			qmin = getMinSource(q);			
@@ -192,32 +186,32 @@ public class TwigStackDAlgorithmForDAGProcess extends TwigStackAlgorithm {
      */
    protected boolean checkContainment(NodeRegionEncoding tq, NodeRegionEncoding h) {
 	   boolean found = false;
-	   SortedSet<NodeRegionEncoding> predecessorsH, predecessorsfirstPLh;
-	   NodeRegionEncoding firstPLh;
-	   int tqNREstart, tqNREend;
-	   
-	   tqNREstart = tq.getStart();
-	   tqNREend = tq.getEnd();
-	   predecessorsH = processgraph.getPredecessors(h.getActivityID());
-	   if (predecessorsH != null) {
-		   while (!predecessorsH.isEmpty() && !found) {
-			   firstPLh = predecessorsH.first();
-			   if ((firstPLh.getStart() >= tqNREstart) && (firstPLh.getEnd() <= tqNREend)) {
-				   return true;
-			   } else if (firstPLh.getStart() > tqNREend) {
-				   return false;
-			   } else if (((predecessorsfirstPLh = processgraph.getPredecessors(firstPLh.getActivityID())) == null)
-					   || predecessorsfirstPLh.isEmpty()) {
-				   predecessorsH.remove(firstPLh);
-			   } else if ((found = checkContainment(tq, firstPLh)) == false) {
-				   predecessorsH.addAll(predecessorsfirstPLh);
-				   predecessorsH.remove(firstPLh);
-			   } 		   
-		   }		   
-		   if (predecessorsH.isEmpty()) {
-			   processgraph.removePredecessors(h.getActivityID());				   
-		   }
-	   }
+//	   SortedSet<NodeRegionEncoding> predecessorsH, predecessorsfirstPLh;
+//	   NodeRegionEncoding firstPLh;
+//	   int tqNREstart, tqNREend;
+//	   
+//	   tqNREstart = tq.getStart();
+//	   tqNREend = tq.getEnd();
+//	   predecessorsH = processgraph.getPredecessors(h.getActivityID());
+//	   if (predecessorsH != null) {
+//		   while (!predecessorsH.isEmpty() && !found) {
+//			   firstPLh = predecessorsH.first();
+//			   if ((firstPLh.getStart() >= tqNREstart) && (firstPLh.getEnd() <= tqNREend)) {
+//				   return true;
+//			   } else if (firstPLh.getStart() > tqNREend) {
+//				   return false;
+//			   } else if (((predecessorsfirstPLh = processgraph.getPredecessors(firstPLh.getActivityID())) == null)
+//					   || predecessorsfirstPLh.isEmpty()) {
+//				   predecessorsH.remove(firstPLh);
+//			   } else if ((found = checkContainment(tq, firstPLh)) == false) {
+//				   predecessorsH.addAll(predecessorsfirstPLh);
+//				   predecessorsH.remove(firstPLh);
+//			   } 		   
+//		   }		   
+//		   if (predecessorsH.isEmpty()) {
+//			   processgraph.removePredecessors(h.getActivityID());				   
+//		   }
+//	   }
 	   return found;
    }
    	

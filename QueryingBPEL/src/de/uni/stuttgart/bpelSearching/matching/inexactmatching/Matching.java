@@ -79,15 +79,25 @@ public class Matching {
 	 * assigned by the matching and the input ids
 	 * 
 	 * @param existPIDs the ids of the process nodes to be compared
+	 * @param pidsOfMatch the ids of the process nodes assigned by the match
 	 * 
 	 * @return the number of different ids between the ids of the process nodes 
 	 * assigned by the matching and the input ids 
 	 */
-	public int getNumberOfDiffProcessNode (Set<String> existPIDs) {
+	public int getNumberOfDiffProcessNode (Set<String> existPIDs, Set<String> pidsOfMatch) {
 		int numberOfDiffAssignedProcNode = 0;
-		for (Assignment assm : assignments) {
-			numberOfDiffAssignedProcNode += assm.getNumberOfDiffProcessNode(existPIDs);
+		if (!pidsOfMatch.isEmpty()) {
+			pidsOfMatch.clear();
 		}
+		addAllProcessNodeIDs(pidsOfMatch);
+		for (String pidOfMatch : pidsOfMatch) {
+			if (!existPIDs.contains(pidOfMatch)) {
+				numberOfDiffAssignedProcNode++;
+			}
+		}
+//		for (Assignment assm : assignments) {
+//			numberOfDiffAssignedProcNode += assm.getNumberOfDiffProcessNode(existPIDs);
+//		}
 		return numberOfDiffAssignedProcNode;
 	}
 	

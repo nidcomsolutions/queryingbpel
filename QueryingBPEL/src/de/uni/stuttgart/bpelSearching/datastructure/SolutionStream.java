@@ -41,7 +41,7 @@ public class SolutionStream {
 		String tempStr = "Solution Stream: with maxMatchSize " + maxMatchSize + "  maxNumberOfAssignments: "
 			 + maxNumberOfAssignments + "  Stream Items: ";
 		for (StreamItem se : streamList) {
-			tempStr += se.toString();
+			tempStr += " <" + se.toString()+ "> " ;
 		}
 		return tempStr;
 	}

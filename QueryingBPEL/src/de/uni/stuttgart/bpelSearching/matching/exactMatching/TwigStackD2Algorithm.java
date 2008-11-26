@@ -13,13 +13,12 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeInStack;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeRegionEncoding;
 import de.uni.stuttgart.bpelSearching.datastructure.PoolItem3Ext;
 import de.uni.stuttgart.bpelSearching.datastructure.Predecessors2;
-import de.uni.stuttgart.bpelSearching.query.QueryGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
 /**
  * Implements the TwigStackD algorithm (Modified Version) for matching a query 
@@ -32,7 +31,7 @@ import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
  * @author luwei
  *
  */
-public class TwigStackDAlgorithmForDAGProcess2 extends TwigStackAlgorithm {
+public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 	
     /**
      * A data structure to temporarily hold the processed nodes to be grown from 
@@ -49,15 +48,14 @@ public class TwigStackDAlgorithmForDAGProcess2 extends TwigStackAlgorithm {
 		new HashMap<ActivityNode, Integer>();
 	
 	/**
-	 * Creates a new TwigStackDAlgorithmForDAGProcess2 object for the specified query tree 
-	 * and process graph, initialize streams, solution stacks, solution pools.
+	 * Creates a new TwigStackD2Algorithm object for the specified  
+	 * process graph, initialize streams, solution stacks, solution pools.
 	 * 
-	 * @param qg the query graph.
 	 * @param pg the process graph.
 	 */
-	public TwigStackDAlgorithmForDAGProcess2(QueryGraph qg, ProcessFlowGraph pg) {
-		super(qg, pg);
-		Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
+	public TwigStackD2Algorithm(ProcessGraph pg) {
+		super(pg);
+		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
 		for (ActivityNode queryNode : vertexSetQuery) {	
 			solutionPoolMap.put(queryNode, new HashSet<PoolItem3Ext>());
 			queryNodeStreamPositionMap.put(queryNode, new Integer(0));
@@ -76,9 +74,9 @@ public class TwigStackDAlgorithmForDAGProcess2 extends TwigStackAlgorithm {
 		NodeRegionEncoding tqactFirst, tqactCurrent;
 		int tqactPos;
 
-		logger.warn("***run modified twigStackD2***");
+		logger.warn("***run TwigStackD2Algorithm ***");
 		if (allQuerySubtreeNodesStreamsNotEmpty(q)) {
-			root = querygraph.getStartVertex();		
+			root = querygraph.getStartActivity();		
 			while (!end(q)) {
 				// **** Change ****
 				//qact = getMinSource(q);
@@ -150,7 +148,7 @@ public class TwigStackDAlgorithmForDAGProcess2 extends TwigStackAlgorithm {
 		PoolItem3Ext tqactFirstPI;
 		boolean isQactStreamEmpty;
 		
-		root = querygraph.getStartVertex();
+		root = querygraph.getStartActivity();
 		
 		while (!end(q)) {
 			// **** Change ****
@@ -571,7 +569,7 @@ public class TwigStackDAlgorithmForDAGProcess2 extends TwigStackAlgorithm {
     *
     */
    protected void resetStreamPositionMap() {
-		Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
+		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
 		queryNodeStreamPositionMap.clear();
 		for (ActivityNode queryNode : vertexSetQuery) {	
 			queryNodeStreamPositionMap.put(queryNode, new Integer(0));
@@ -907,7 +905,7 @@ public class TwigStackDAlgorithmForDAGProcess2 extends TwigStackAlgorithm {
  		String tempID, processNodeID;
  		boolean hasExactMatch, firstVisit, existProcNode;
  		
- 		queryroot = querygraph.getStartVertex();
+ 		queryroot = querygraph.getStartActivity();
  		rootPIs = solutionPoolMap.get(queryroot);	
  		if (!rootPIs.isEmpty()) {
  			visitedQueryNodeIDs = new ArrayList<String>();
@@ -1006,7 +1004,7 @@ public class TwigStackDAlgorithmForDAGProcess2 extends TwigStackAlgorithm {
  					for (String em : exactMatch) {
  						solution += (em + " ");
  					}
- 					logger.warn(solution);
+// 					logger.warn(solution);
  		 		}
  				this.exactMatchingResults = new ExactMatchingResult(
  						processgraph.getProcessID(), processgraph.getProcessNamespace(), 
@@ -1027,7 +1025,7 @@ public class TwigStackDAlgorithmForDAGProcess2 extends TwigStackAlgorithm {
 		"  process name: " + processgraph.getProcessName();	
 		logger.warn(resultProcessInfo);	
 		logger.warn("It has following exact matching results: ");	
- 		Set<PoolItem3Ext> queryRootPool = solutionPoolMap.get(querygraph.getStartVertex());	
+ 		Set<PoolItem3Ext> queryRootPool = solutionPoolMap.get(querygraph.getStartActivity());	
  		for (PoolItem3Ext queryRootPoolItem : queryRootPool) {
  			outputSolutionsForSpecificElementInRootPool(queryRootPoolItem);
  		}		
@@ -1049,7 +1047,7 @@ public class TwigStackDAlgorithmForDAGProcess2 extends TwigStackAlgorithm {
 		
 		logger.warn("Has matching Similarity: " + similarity + " with following matching results: ");
 		
- 		Set<PoolItem3Ext> queryRootPool = solutionPoolMap.get(querygraph.getStartVertex());		
+ 		Set<PoolItem3Ext> queryRootPool = solutionPoolMap.get(querygraph.getStartActivity());		
  		for (PoolItem3Ext queryRootPoolItem : queryRootPool) {
  			outputSolutionsForSpecificElementInRootPool(queryRootPoolItem);
  		}		

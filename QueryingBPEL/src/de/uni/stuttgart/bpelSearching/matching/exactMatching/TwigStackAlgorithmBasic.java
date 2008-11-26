@@ -8,12 +8,11 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.Stack;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeInStack;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeRegionEncoding;
 import de.uni.stuttgart.bpelSearching.matching.ProcessNodePair;
-import de.uni.stuttgart.bpelSearching.query.QueryGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
 /**
  * An implementation of the Twigstack algorithm.
@@ -26,11 +25,10 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 	 * Creates a new TwigStackAlgorithmBasic object for the specified query tree 
 	 * and process tree, initialize stream and solution stack for each query node.
 	 * 
-	 * @param qg the query graph.
 	 * @param pg the process graph.
 	 */
-	public TwigStackAlgorithmBasic(QueryGraph qg, ProcessFlowGraph pg) {
-		super(qg, pg);
+	public TwigStackAlgorithmBasic(ProcessGraph pg) {
+		super(pg);
 	}
 	
     /**
@@ -40,6 +38,8 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 	public void twigStackExactMatch(ActivityNode q){
 		
 		ActivityNode qact, parentQact;
+		LinkedList<NodeRegionEncoding> streamqact, streamParentQact;
+		Stack<NodeInStack> sqact, sParentQact;
 		
 		if (allQuerySubtreeNodesStreamsNotEmpty(q)) {		
 			// Phase 1: Some (but not all) solutions to individual
@@ -47,7 +47,13 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 			while (!end(q)) {			
 				qact = getNextForExactMatch(q);			
 				parentQact = querygraph.getParent(qact);
-						
+				
+				streamqact = queryNodeStreamMap.get(qact);
+				sqact = queryNodeStackMap.get(qact);
+		
+				streamParentQact = queryNodeStreamMap.get(parentQact);
+				sParentQact = queryNodeStackMap.get(parentQact);
+				
 				if (!querygraph.isRoot(qact) && !queryNodeStreamMap.get(qact).isEmpty()) {
 					cleanStack(querygraph.getParent(qact), 
 							queryNodeStreamMap.get(qact).getFirst().getStart());
@@ -195,17 +201,16 @@ public class TwigStackAlgorithmBasic extends TwigStackAlgorithm {
 		for (ActivityNode childQi : childrenQ) {
 			ni = getNextForExactMatch(childQi);
 			//if (ni.getActivityID().compareTo(childQi.getActivityID()) != 0) {
-			if ((ni.getActivityID().compareTo(childQi.getActivityID()) != 0) 
-				|| existGetNextChildStreamEmpty) {
-				return ni;
-			}
-			
 			if (!queryNodeStreamMap.get(ni).isEmpty()) {
+				if ((ni.getActivityID().compareTo(childQi.getActivityID()) != 0) 
+						|| existGetNextChildStreamEmpty) {
+						return ni;
+					}
 				niL = queryNodeStreamMap.get(ni).getFirst().getStart();			
 				if (niL < minL) {
 					minL = niL;
 					nmin = ni;
-				}			
+				}		
 				if (niL > maxL) {
 					maxL = niL;
 				}

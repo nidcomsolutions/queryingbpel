@@ -6,7 +6,7 @@ package de.uni.stuttgart.bpelSearching.datastructure;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 
 /**
  * PoolItem3 class represents an element in the partial solution pool associated 

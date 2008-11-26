@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 
 /**
  * @author luwei
@@ -197,7 +197,9 @@ public class Assignment {
 	public Set<String> getProcessNodesIDs() {
 		Set<String> pIDs = new HashSet<String>();
 		for (Assign ass : assigns) {
-			pIDs.add(ass.getProcessNodeID());
+			if(ass.getProcessNodeID() != null) {
+				pIDs.add(ass.getProcessNodeID());
+			}
 		}
 		return pIDs;
 	}
@@ -209,7 +211,9 @@ public class Assignment {
 	 */
 	public void addAllProcessNodeIDs(Set<String> existPIDs) {
 		for (Assign ass : assigns) {
-			existPIDs.add(ass.getProcessNodeID());
+			if(ass.getProcessNodeID() != null) {
+				existPIDs.add(ass.getProcessNodeID());
+			}	
 		}
 	}
 	
@@ -220,7 +224,9 @@ public class Assignment {
 	 */
 	public void removeAllProcessNodeIDs(Set<String> existPIDs) {
 		for (Assign ass : assigns) {
-			existPIDs.remove(ass.getProcessNodeID());
+			if (ass.getProcessNodeID() != null) {
+				existPIDs.remove(ass.getProcessNodeID());
+			}	
 		}
 	}
 	
@@ -236,8 +242,10 @@ public class Assignment {
 	public int getNumberOfDiffProcessNode(Set<String> existPIDs) {
 		int numberOfDiffProcIDs = 0;
 		for (Assign ass : assigns) {
-			if (existPIDs.contains(ass.getProcessNodeID())) {
-				numberOfDiffProcIDs++;
+			if (ass.getProcessNodeID() != null) { 
+				if (existPIDs.contains(ass.getProcessNodeID())) {
+					numberOfDiffProcIDs++;
+				}
 			}
 		}
 		return numberOfDiffProcIDs;
@@ -324,8 +332,13 @@ public class Assignment {
 			for (Assign iass : inputAssigns) {
 				if (ass.getQuerynodeID().compareTo(iass.getQuerynodeID())
 						== 0) {
-					if (ass.processNodeID.compareTo(iass.processNodeID)
-							!= 0) {
+					if ((ass.processNodeID != null) && (iass.processNodeID != null)) {
+						if (ass.processNodeID.compareTo(iass.processNodeID)!= 0) {
+							numberOfDiffAssignedProcNode++;
+						}
+					} else if ((ass.processNodeID == null) && (iass.processNodeID != null)) {
+						numberOfDiffAssignedProcNode++;
+					} else if ((ass.processNodeID != null) && (iass.processNodeID == null)) {
 						numberOfDiffAssignedProcNode++;
 					}
 					break;
@@ -355,8 +368,13 @@ public class Assignment {
 				for (Assign iass : inputAssignList) {
 					if (ass.getQuerynodeID().compareTo(iass.getQuerynodeID())
 							== 0) {
-						if (ass.processNodeID.compareTo(iass.processNodeID)
-								!= 0) {
+						if ((ass.processNodeID != null) && (iass.processNodeID != null)) {
+							if (ass.processNodeID.compareTo(iass.processNodeID)!= 0) {
+								numberOfDiffAssignedProcNode++;
+							}
+						} else if ((ass.processNodeID == null) && (iass.processNodeID != null)) {
+							numberOfDiffAssignedProcNode++;
+						} else if ((ass.processNodeID != null) && (iass.processNodeID == null)) {
 							numberOfDiffAssignedProcNode++;
 						}
 						found = true;

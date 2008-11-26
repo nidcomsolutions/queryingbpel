@@ -1,6 +1,5 @@
 package de.uni.stuttgart.bpelSearching.datastructure;
 
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 

@@ -4,80 +4,87 @@
 package de.uni.stuttgart.bpelSearching.matching.inexactmatching;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.QueryGraph;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.datastructure.SolutionStream;
 import de.uni.stuttgart.bpelSearching.datastructure.StreamItem;
 import de.uni.stuttgart.bpelSearching.matching.NodesComparator;
-import de.uni.stuttgart.bpelSearching.query.QueryGraph;
 import de.uni.stuttgart.bpelSearching.util.GraphAnalyse;
 import de.uni.stuttgart.bpelSearching.util.GraphType;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.ProcessFlowGraph;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
 
 /**
  * @author luwei
  *
  */
-public class EvalQueryInexactMatch {
-	static Logger logger = Logger.getLogger(EvalQueryInexactMatch.class);
-	private QueryGraph querygraph;
-	private ProcessFlowGraph processgraph;
+public class InexactMatchAlgorithms {
+	static Logger logger = Logger.getLogger(InexactMatchAlgorithms.class);
+	private static QueryGraph querygraph;
+	private ProcessGraph processgraph;
 	private float minMatchingSimilarity = 0.2f;
 	private static final float connectivityFactor = 0.5f;
 	private int numberOfDiscreteMatchQEdge = 0;
 	private int thresholdOfNumberOfMaxMatch = 0;
-	private Map<String, SolutionStream> solutionStreamMap = 
-		new HashMap<String, SolutionStream>();
 	private InexactMatchingResult inexactMatchings;
-	private Map<String, List<Assignment>> tempMaxAssignSetMap = 
-		new HashMap<String, List<Assignment>>();
-	private Map<String, List<Assignment>> maxAssignListMap = 
-		new HashMap<String, List<Assignment>>();
+	
+	private static Map<String, SolutionStream> solutionStreamMap;
+	private static Map<String, List<Assignment>> tempMaxAssignSetMap;
+	private static Map<String, List<Assignment>> maxAssignListMap;
+	
+	private static Set<String> allProcNodesIds;
+	private static Set<String> allProcessedProcNodesIds;
+	private static Set<String> pIDsInMatch;
+	private static Set<String> subTreeNodesIDsQiComplement;
+	private static Set<String> processedChildrenSubgraphNodesIDs;
+	private static Set<String> commonNodesIDs;
+	private static Set<String> qcSubgraphNodesMinusCommonNodesIDs;
+	private static List<String> queryIDPairsForNonCommonNodes;
+	private static List<ActivityNode> qChildrenSorted;
+	private static int[] qChildrenMaxRefSize;
+	private static Set<String> qiSubgraphNIDsComplement;
+	private static Set<String> umQIDs;
+	
+	private static List<StreamItem> seQcMaxList;
+	private static Set<ActivityNode> qchildren;
+	private static NodesComparator nodesCompare;
 	
 	/**
-	 * @param querygraph
-	 * @param processgraph
+	 * Creates a new instance of inexact match algorithms with a given query graph and 
+	 * a process graph.
 	 * 
-	 * @throws IllegalArgumentException if <code>querygraph==null</code>
+	 * @param processgraph the process graph
+	 * 
+	 * @throws IllegalArgumentException if <code>processgraph==null</code> or 
+	 * <code>processgraph.getProcessGraph()==null</code>
 	 */
-	public EvalQueryInexactMatch(QueryGraph querygraph,
-			ProcessFlowGraph processgraph) {
+	public InexactMatchAlgorithms(ProcessGraph processgraph) {
 		GraphAnalyse ga;
 		int numberOfQueryEdges;
-		
-    	if ((querygraph == null) || ((querygraph != null) && 
-    			(querygraph.getQueryGraph() == null))) {
-            throw new IllegalArgumentException("query graph must not be null");
-        }
-    	
+
     	if ((processgraph == null) || ((processgraph != null) && 
-    			(processgraph.getProcessGraph() == null))) {
+    			(processgraph.getGraph() == null))) {
             throw new IllegalArgumentException("query graph must not be null");
         }
     	
-		this.querygraph = querygraph;
 		this.processgraph = processgraph;
 		
-		ga = new GraphAnalyse(processgraph.getProcessGraph(), 
+		ga = new GraphAnalyse(processgraph.getGraph(), 
 				processgraph.getStartActivity());
     	if(processgraph.getStartActivity() == null){
     		processgraph.setStartActivity(ga.getStartVertex());   		  		
     	}   	    	
-    	processgraph.setProcessGraphType(ga.checkGraphType());
+    	processgraph.setGraphType(ga.checkGraphType());
 		
 		if ((numberOfQueryEdges = querygraph.getNumberOfEdges()) > 0) {
 			minMatchingSimilarity = (1.00f / ((float)numberOfQueryEdges));
 		}
-		
-		querygraph.setQueryNodesSortedByLevelOrder();
 		
 //		BreadthFirstTraverse bfs = new BreadthFirstTraverse(querygraph.getQueryGraph(), 
 //				querygraph.getStartVertex());
@@ -96,17 +103,19 @@ public class EvalQueryInexactMatch {
 	 * 
 	 */
 	public void initSolutionStreams() {
-		Set<ActivityNode> vertexSetQuery = querygraph.getQueryGraph().vertexSet();
-		Set<ActivityNode> vertexSetProcess = processgraph.getProcessGraph().vertexSet();
+		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
+		Set<ActivityNode> vertexSetProcess = processgraph.getGraph().vertexSet();
 		String qNodeID;
-		NodesComparator nodesCompare = new NodesComparator();
+//		NodesComparator nodesCompare = new NodesComparator();
 		int initMaxSize, tempArrayPos, pPos, cPos, tempMaxNumberOfAssigns;
 		StreamItem streamElement;
-		Set<ActivityNode> queryChildren;
+//		Set<ActivityNode> qchildren;
 		List<StreamItem> seList, seCList;
 		boolean hasMatchQEdge;
 		Set<String> qSubGraphIDs;
-
+		
+		clearStaticVariables();
+		
 		processgraph.computeTransitiveClosure();
 		for (ActivityNode queryNode : vertexSetQuery) {
 			if (querygraph.isLeaf(queryNode)) {
@@ -132,16 +141,18 @@ public class EvalQueryInexactMatch {
 		
 		if (thresholdOfNumberOfMaxMatch > vertexSetProcess.size()) {
 			thresholdOfNumberOfMaxMatch = vertexSetProcess.size();
-		}
-		
-		thresholdOfNumberOfMaxMatch = thresholdOfNumberOfMaxMatch - vertexSetQuery.size() + 1;
+		}		
+//		thresholdOfNumberOfMaxMatch = thresholdOfNumberOfMaxMatch - vertexSetQuery.size() + 1;
+//		if (thresholdOfNumberOfMaxMatch < 1) {
+//			thresholdOfNumberOfMaxMatch = 1;
+//		}
 		
 		for (ActivityNode qNode : vertexSetQuery) {
 			qNodeID = qNode.getActivityID();
-			queryChildren = querygraph.getChildren(qNode);			
-			if (!queryChildren.isEmpty()) {			
+			querygraph.getChildren(qNode, qchildren);			
+			if (!qchildren.isEmpty()) {			
 				seList = solutionStreamMap.get(qNodeID).getStreamList();
-				for (ActivityNode cNode : queryChildren) {
+				for (ActivityNode cNode : qchildren) {
 					hasMatchQEdge = false;
 					seCList  = solutionStreamMap.get(cNode.getActivityID()).getStreamList();
 					for (StreamItem se : seList) {
@@ -160,13 +171,7 @@ public class EvalQueryInexactMatch {
 				}
 			}
 		}
-			
-		if (querygraph.getQueryGraphType() == GraphType.TREE) {
-			querygraph.setSubgraphNodesMapForQueryTree();
-		} else if (querygraph.getQueryGraphType() == GraphType.ROOTED_DAG) {
-			querygraph.setSubgraphNodesMapForQueryDAG();
-		}
-		
+					
 		// compute value for the attribute maxNumberOfAssignments of solution stream
 		for (ActivityNode qNode : vertexSetQuery) {
 			qNodeID = qNode.getActivityID();
@@ -181,10 +186,14 @@ public class EvalQueryInexactMatch {
 				for (String qSubNodeID : qSubGraphIDs) {
 						tempMaxNumberOfAssigns += solutionStreamMap.get(qSubNodeID).getStreamList().size();
 				}
-				tempMaxNumberOfAssigns = tempMaxNumberOfAssigns - qSubGraphIDs.size() + 1;
-				if (tempMaxNumberOfAssigns > 0) {
-					solutionStreamMap.get(qNodeID).setMaxNumberOfAssignments(tempMaxNumberOfAssigns);
-				}	
+//				tempMaxNumberOfAssigns = tempMaxNumberOfAssigns - qSubGraphIDs.size() + 1;		
+//				if (tempMaxNumberOfAssigns < 1) {
+//					tempMaxNumberOfAssigns = 1;
+//				}
+				solutionStreamMap.get(qNodeID).setMaxNumberOfAssignments(tempMaxNumberOfAssigns);
+//				if (tempMaxNumberOfAssigns > 0) {
+//					solutionStreamMap.get(qNodeID).setMaxNumberOfAssignments(tempMaxNumberOfAssigns);
+//				}	
 			}		
 		}
 		
@@ -196,11 +205,29 @@ public class EvalQueryInexactMatch {
 //		logger.warn("numberOfDiscreteMatchQEdge: " + numberOfDiscreteMatchQEdge);
 	}
 	
+	/**
+	 * Lets the static containers be empty. 
+	 * 
+	 */
+	public void clearStaticVariables() {
+		if (!solutionStreamMap.isEmpty()) {
+			solutionStreamMap.clear();
+		}
+		if (!maxAssignListMap.isEmpty()) {
+			maxAssignListMap.clear();
+		}
+		if (!tempMaxAssignSetMap.isEmpty()) {
+			tempMaxAssignSetMap.clear();
+		}
+		
+		
+		
+	} 
+	
 	
 	/**
-	 * Performs inexact matching. It goes through all BPEL processes to be matched, 
-	 * transforms each BPEL-process to a directed graph, and performs graph matching 
-	 * between the query graph to each process graph under inexact matching semantic.
+	 * Performs inexact graph matching between the query graph to each process graph under 
+	 * inexact matching semantic.
 	 * 
 	 */
 	public void doInexactMatch(){
@@ -210,38 +237,35 @@ public class EvalQueryInexactMatch {
 		ActivityNode q0;
 		List<StreamItem> streamListQ0;
 		Assignment tempAssQ0;
-		if ((processgraph.getProcessGraphType() == GraphType.TREE)
-				|| (processgraph.getProcessGraphType() == GraphType.ROOTED_DAG)) {				
-			if ((querygraph.getQueryGraphType() == GraphType.TREE) || 
-					(querygraph.getQueryGraphType() == GraphType.ROOTED_DAG)) {
-				initSolutionStreams();
-				if ((numberOfQueryEdges = querygraph.getNumberOfEdges()) == 0) {
-					q0 = querygraph.getStartVertex();
-					if (!(streamListQ0 = solutionStreamMap.get(q0.getActivityID()).getStreamList()).isEmpty()) {
-						maxMatchingList = new ArrayList<Matching>();
-						for (StreamItem seq0 : streamListQ0) {
-							tempAssQ0 = new Assignment();
-							tempAssQ0.addAssign(q0, seq0.getProcessnode());
-							maxMatchingList.add(new Matching(1.0f, tempAssQ0));
-						}
-						inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
-								processgraph.getProcessNamespace(), processgraph.getProcessName(), 
-								maxMatchingList, 1.0f);
-						printSolutions();
-					}	
-				} else {
-					discreteMatchRatio = (((float)numberOfDiscreteMatchQEdge)/((float)numberOfQueryEdges));
-					if (discreteMatchRatio >= minMatchingSimilarity) {
-						if (querygraph.getQueryGraphType() == GraphType.TREE) {
-							computeMaxAssignForTreeNodes();
-							maxMatchsOfQueryTree();
-						} else if (querygraph.getQueryGraphType() == GraphType.ROOTED_DAG) {
-							computeMaxAssignForDAGNodes();
-							maxMatchsOfQueryDAG();
-						}
+		if ((processgraph.getGraphType() == GraphType.TREE)
+				|| (processgraph.getGraphType() == GraphType.ROOTED_DAG)) {				
+			initSolutionStreams();
+			if ((numberOfQueryEdges = querygraph.getNumberOfEdges()) == 0) {
+				q0 = querygraph.getStartActivity();
+				if (!(streamListQ0 = solutionStreamMap.get(q0.getActivityID()).getStreamList()).isEmpty()) {
+					maxMatchingList = new ArrayList<Matching>();
+					for (StreamItem seq0 : streamListQ0) {
+						tempAssQ0 = new Assignment();
+						tempAssQ0.addAssign(q0, seq0.getProcessnode());
+						maxMatchingList.add(new Matching(1.0f, tempAssQ0));
 					}
-				}			
-			}
+					inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
+							processgraph.getProcessNamespace(), processgraph.getProcessName(), 
+							maxMatchingList, 1.0f);
+//					printSolutions();
+				}	
+			} else {
+				discreteMatchRatio = (((float)numberOfDiscreteMatchQEdge)/((float)numberOfQueryEdges));
+				if (discreteMatchRatio >= minMatchingSimilarity) {
+					if (querygraph.getGraphType() == GraphType.TREE) {
+						computeMaxAssignForTreeNodes();
+						maxMatchsOfQueryTree();
+					} else if (querygraph.getGraphType() == GraphType.ROOTED_DAG) {
+						computeMaxAssignForDAGNodes();
+						maxMatchsOfQueryDAG();
+					}
+				}
+			}	
 		}
 	}
 	
@@ -255,15 +279,15 @@ public class EvalQueryInexactMatch {
 		int i, j, maxSizePx, oldListLength, qNodesSize;
 		ActivityNode qi, px, pcm;
 		SolutionStream solutionStreamQi;
-		List<StreamItem> streamListQi, seQcMaxList;
-		seQcMaxList = new ArrayList<StreamItem>();
+		List<StreamItem> streamListQi;
+//		seQcMaxList = new ArrayList<StreamItem>();
 		Assignment upx, upxupcm;
 		String qiID, qipxID, qcpcmID, debuggerString;
 		List<Assignment> tempMaxAssList, tempMaxAssignListQcPcm, maxAssignListQi;
-		Set<ActivityNode> qchildren;
+//		Set<ActivityNode> qchildren;
 		Set<String> qcSubtreeNodesIDs;
-		Set<String> allProcNodesIds = new HashSet<String>();
-		Set<String> allProcessedProcNodesIds = new HashSet<String>();
+//		Set<String> allProcNodesIds = new HashSet<String>();
+//		Set<String> allProcessedProcNodesIds = new HashSet<String>();
 		qNodesSize = querygraph.getQueryNodesSortedByLevelOrder().size();
 	
 		// query nodes are processed in bottom-up order (from leaf to root)
@@ -288,7 +312,7 @@ public class EvalQueryInexactMatch {
 						seqi.setMaxMatchSize(0);
 					}
 				} else {
-					qchildren = querygraph.getChildren(qi);
+					querygraph.getChildren(qi, qchildren);
 					for (StreamItem seqi : streamListQi) {
 						px = seqi.getProcessnode();
 						upx = new Assignment();
@@ -304,12 +328,12 @@ public class EvalQueryInexactMatch {
 						// children assignments
 						for (ActivityNode qc : qchildren) {
 							// No references to any stream elements stored in solution stream of qc
-							seQcMaxList.clear();
+//							seQcMaxList.clear();
 							seqi.getMaxReferencedStreamItems(qc, seQcMaxList);
 							if (seQcMaxList.isEmpty()) {
 								// Expand each assignment with undefined for each query node in qc’s substree, replace
 								// the old assignment with the expanded one.
-								qcSubtreeNodesIDs = querygraph.getSubtreeNodesIDs(qc);														
+								qcSubtreeNodesIDs = querygraph.getSubgraphNodesIDsFromMap(qc);														
 								// for (Assignment ass : tempMaxAssignSetMap.get(qipxID)) {
 								for (Assignment ass : tempMaxAssList) {
 									ass.addAssignsByQueryNodesIDs(qcSubtreeNodesIDs);
@@ -340,6 +364,7 @@ public class EvalQueryInexactMatch {
 								}
 								
 								if (tempMaxAssList.size() > solutionStreamQi.getMaxNumberOfAssignments()) {
+//									logger.warn("call reduce assignments");
 									reduceAssignments(tempMaxAssList, allProcNodesIds, allProcessedProcNodesIds);
 								}
 							}
@@ -366,14 +391,15 @@ public class EvalQueryInexactMatch {
 					}
 					
 					if (maxAssignListQi.size() > solutionStreamQi.getMaxNumberOfAssignments()) {
+//						logger.warn("call reduce assignments");
 						reduceAssignments(maxAssignListQi, allProcNodesIds, allProcessedProcNodesIds);
 					}
+					
+					for (Assignment uqi : maxAssignListQi) {
+						uqi.setAssignSize(solutionStreamQi.getMaxMatchSize());
+					}
 				}
-				
-				for (Assignment uqi : maxAssignListQi) {
-					uqi.setAssignSize(solutionStreamQi.getMaxMatchSize());
-				}
-				
+							
 				// ******** For Debug ********
 //				debuggerString = "maxAssignListQi[" + qi.toString() + "] with size " + maxAssignListQi.size() + " = ";
 //				for (Assignment uqi : maxAssignListQi) {
@@ -395,8 +421,7 @@ public class EvalQueryInexactMatch {
 		ActivityNode qi;
 		String qiID, qiParentID, qjID, umqiPID;
 		List<Assignment> assMmaxList, maxAssListQi, newmaxAssList;
-		Set<String> subTreeNodesIDsQiComplement, subTreeNodesIDsQi, 
-					allProcNodesIds, allProcessedProcNodesIds;
+		Set<String> subTreeNodesIDsQi;
 		Assignment um2, tempUm;
 		int qNodesSize, sizeUm1, sizeUm2, maxMatchSizeQi, maxAssignSize, numberOfQueryEdges;
 		float maxSimilarity, newMatchSimilarity, tempNewMatchSize;
@@ -410,6 +435,7 @@ public class EvalQueryInexactMatch {
 //		List<Assignment> maxAssignListQ0;
 		maxSimilarity = 0.0f;
 		numberOfQueryEdges = querygraph.getNumberOfEdges();
+//		logger.warn("call max matchs of query tree");
 		
 //		if ((numberOfQueryEdges = querygraph.getNumberOfEdges()) == 0) {
 //			maxAssignListQ0 = maxAssignListMap.get(querygraph.getQueryNodesSortedByLevelOrder().
@@ -422,8 +448,9 @@ public class EvalQueryInexactMatch {
 //			}
 //		} else {
 		tempMaxMatchingList = new ArrayList<Matching>();
-		allProcNodesIds = new HashSet<String>();
-		allProcessedProcNodesIds = new HashSet<String>();
+//		allProcNodesIds = new HashSet<String>();
+//		allProcessedProcNodesIds = new HashSet<String>();
+//		pIDsInMatch = new HashSet<String>();
 		qNodesSize = querygraph.getQueryNodesSortedByLevelOrder().size();
 		isEmptyMaxMatchingList = true;
 		// iterate through query tree nodes
@@ -442,8 +469,11 @@ public class EvalQueryInexactMatch {
 						maxMatchingList.add(new Matching(maxSimilarity, ass));
 					}
 				} else {
-					subTreeNodesIDsQiComplement = new HashSet<String>();			
-					subTreeNodesIDsQi = querygraph.getSubtreeNodesIDs(qi);
+//					subTreeNodesIDsQiComplement = new HashSet<String>();
+					if (!subTreeNodesIDsQiComplement.isEmpty()) {
+						subTreeNodesIDsQiComplement.clear();
+					}
+					subTreeNodesIDsQi = querygraph.getSubgraphNodesIDsFromMap(qi);
 					for (int j = 0; j < qNodesSize; j++) {
 						qjID = querygraph.getQueryNodesSortedByLevelOrder().get(j).getActivityID();
 						isSubComplement = true;
@@ -462,9 +492,9 @@ public class EvalQueryInexactMatch {
 						maxMatchingList.add(new Matching(maxSimilarity, ass));
 					}
 				}	
-			} else if ((maxAssListQi != null) && (!maxAssListQi.isEmpty())) {			
+			} else if ((maxAssListQi != null) && (!maxAssListQi.isEmpty())) {
 				qiParentID = querygraph.getParent(qi).getActivityID();
-				subTreeNodesIDsQi = querygraph.getSubtreeNodesIDs(qi);
+				subTreeNodesIDsQi = querygraph.getSubgraphNodesIDsFromMap(qi);
 				tempMaxMatchingList.clear();
 				tempMaxMatchingList.addAll(maxMatchingList);
 				maxMatchSizeQi = solutionStreamQi.getMaxMatchSize();	
@@ -561,7 +591,8 @@ public class EvalQueryInexactMatch {
 				
 				if (maxMatchingListChanged) {
 					if (tempMaxMatchingList.size() > thresholdOfNumberOfMaxMatch) {
-						reduceMatchings(tempMaxMatchingList, allProcNodesIds, allProcessedProcNodesIds);		
+//						logger.warn("call reduce matchings");
+						reduceMatchings(tempMaxMatchingList, allProcNodesIds, allProcessedProcNodesIds, pIDsInMatch);		
 					}
 					maxMatchingList.clear();
 					maxMatchingList.addAll(tempMaxMatchingList);
@@ -571,10 +602,15 @@ public class EvalQueryInexactMatch {
 //		}
 		
 		if (maxSimilarity >= minMatchingSimilarity) {
+			// optional step
+			if (maxMatchingList.size() > 1) {
+//				logger.warn("call reduce matchings at final step");
+				reduceMatchings(maxMatchingList, allProcNodesIds, allProcessedProcNodesIds, pIDsInMatch);
+			}
 			inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
 					processgraph.getProcessNamespace(), processgraph.getProcessName(), 
 					maxMatchingList, maxSimilarity);
-			printSolutions();
+//			printSolutions();
 		}
 	}
 	
@@ -587,26 +623,26 @@ public class EvalQueryInexactMatch {
 	 */
 	public void computeMaxAssignForDAGNodes() {
 		int qNodesSize, i, j, k, l, tempPos, maxSizePx, oldListLength, tempListLength, 
-			maxChildrenSize,seqiQcMaxRefSize, maxPartialAssignSize, qIDpairsHalfLength,upcm1Size;
+			seqiQcMaxRefSize, maxPartialAssignSize, qIDpairsHalfLength,upcm1Size;
 		ActivityNode qi, px, pcm;
 		SolutionStream solutionStreamQi;
-		List<StreamItem> streamListQi, seQcMaxList;
-		seQcMaxList = new ArrayList<StreamItem>();
+		List<StreamItem> streamListQi;
+//		seQcMaxList = new ArrayList<StreamItem>();
 		Assignment upx, upxupcm, upcm1;
 		String qiID, qipxID, qcpcmID, sourceQID, targetQID, sourcePID, targetPID, debuggerString;
 		List<Assignment> tempMaxAssignsQiPx, tempMaxAssignListQcPcm, maxAssignListQi;
-		Set<ActivityNode> qChildren;
-		Set<String> qcSubgraphNodesIDs, processedChildrenSubtreeNodesIDs, commonNodesIDs, 
-					qcSubgraphNodesMinusCommonNodesIDs;
+//		Set<ActivityNode> qchildren;
+		Set<String> qcSubgraphNodesIDs;
+//		Set<String> allProcNodesIds = new HashSet<String>();
+//		Set<String> allProcessedProcNodesIds = new HashSet<String>();
 		qNodesSize = querygraph.getQueryNodesSortedByLevelOrder().size();
-		qcSubgraphNodesIDs = new HashSet<String>();
-		processedChildrenSubtreeNodesIDs = new HashSet<String>();
-		commonNodesIDs = new HashSet<String>();
-		List<String> queryIDPairsForNonCommonNodes = new ArrayList<String>();
-		qcSubgraphNodesMinusCommonNodesIDs = new HashSet<String>();
-		List<ActivityNode> qChildrenSorted = new LinkedList<ActivityNode>();
-		maxChildrenSize = querygraph.getMaxChildrenSize();
-		int[] qChildrenMaxRefSize = new int[maxChildrenSize];
+//		processedChildrenSubgraphNodesIDs = new HashSet<String>();
+//		commonNodesIDs = new HashSet<String>();
+//		List<String> queryIDPairsForNonCommonNodes = new ArrayList<String>();
+//		qcSubgraphNodesMinusCommonNodesIDs = new HashSet<String>();
+//		List<ActivityNode> qChildrenSorted = new LinkedList<ActivityNode>();
+//		maxChildrenSize = querygraph.getMaxChildrenSize();
+//		int[] qChildrenMaxRefSize = new int[maxChildrenSize];
 		StreamItem sourceSE, targetSE;
 	
 		for (i = (qNodesSize - 1); i >= 0; i--) {
@@ -630,7 +666,7 @@ public class EvalQueryInexactMatch {
 						seqi.setMaxMatchSize(0);
 					}
 				} else {				
-					qChildren = querygraph.getChildren(qi);					
+					querygraph.getChildren(qi, qchildren);					
 					for (StreamItem seqi : streamListQi) {
 						px = seqi.getProcessnode();
 						upx = new Assignment();
@@ -642,16 +678,20 @@ public class EvalQueryInexactMatch {
 						tempMaxAssignsQiPx = new ArrayList<Assignment>();
 						tempMaxAssignsQiPx.add(upx);
 						tempMaxAssignSetMap.put(qipxID, tempMaxAssignsQiPx);
-						processedChildrenSubtreeNodesIDs.clear();			
+						if (!processedChildrenSubgraphNodesIDs.isEmpty()) {
+							processedChildrenSubgraphNodesIDs.clear();	
+						}				
 						// *********** Sort query children ********** 
-						qChildrenSorted.clear();
-						for (k = 0; k < maxChildrenSize; k++) {
+						if (!qChildrenSorted.isEmpty()) {
+							qChildrenSorted.clear();
+						}	
+						for (k = 0; k < qChildrenMaxRefSize.length; k++) {
 							qChildrenMaxRefSize[k] = -2;
 						}				
 						tempPos = -1;
-						for (ActivityNode qc : qChildren) {
+						for (ActivityNode qc : qchildren) {
 							seqiQcMaxRefSize = seqi.getMaxRefSize(qc);
-							for (k = 0; k < maxChildrenSize; k++) {
+							for (k = 0; k < qChildrenMaxRefSize.length; k++) {
 								if (qChildrenMaxRefSize[k] < seqiQcMaxRefSize) {
 									qChildrenSorted.add(k, qc);
 									break;
@@ -671,8 +711,8 @@ public class EvalQueryInexactMatch {
 						for (ActivityNode qc : qChildrenSorted) {	
 							qcSubgraphNodesIDs = querygraph.getSubgraphNodesIDsFromMap(qc);
 							// commonNodes are intersection of processed subtree nodes and nodes of subtree rooted at qc
-							intersectionOfSets(processedChildrenSubtreeNodesIDs, qcSubgraphNodesIDs, commonNodesIDs);
-							processedChildrenSubtreeNodesIDs.addAll(qcSubgraphNodesIDs);
+							intersectionOfSets(processedChildrenSubgraphNodesIDs, qcSubgraphNodesIDs, commonNodesIDs);
+							processedChildrenSubgraphNodesIDs.addAll(qcSubgraphNodesIDs);
 							// No references to any stream elements stored in solution stream of qc
 							seqi.getMaxReferencedStreamItems(qc, seQcMaxList);
 							if (seQcMaxList.isEmpty()) {
@@ -767,6 +807,11 @@ public class EvalQueryInexactMatch {
 								for (j = 0; j < oldListLength; j++) {
 									tempMaxAssignsQiPx.remove(0);
 								}
+								
+								if (tempMaxAssignsQiPx.size() > solutionStreamQi.getMaxNumberOfAssignments()) {
+//									logger.warn("call reduce assignments");
+									reduceAssignments(tempMaxAssignsQiPx, allProcNodesIds, allProcessedProcNodesIds);
+								}
 							}
 						}
 						
@@ -784,17 +829,21 @@ public class EvalQueryInexactMatch {
 						}
 					}
 					
+					if (maxAssignListQi.size() > solutionStreamQi.getMaxNumberOfAssignments()) {
+						logger.warn("call reduce assignments");
+						reduceAssignments(maxAssignListQi, allProcNodesIds, allProcessedProcNodesIds);
+					}
 					for (Assignment uqi : maxAssignListQi) {
 						uqi.setAssignSize(solutionStreamQi.getMaxMatchSize());
 					}
 				}
 				
 				// ******** For Debug ********
-//				debuggerString = "maxAssignListQi[" + qi.toString() + "] with size " + maxAssignListQi.size() + " = ";
-//				for (Assignment uqi : maxAssignListQi) {
-//					debuggerString += uqi.toString();
-//				}
-//				logger.warn(debuggerString);
+				debuggerString = "maxAssignListQi[" + qi.toString() + "] with size " + maxAssignListQi.size() + " = ";
+				for (Assignment uqi : maxAssignListQi) {
+					debuggerString += uqi.toString();
+				}
+				logger.warn(debuggerString);
 			}
 		}
 		
@@ -820,10 +869,10 @@ public class EvalQueryInexactMatch {
 		List<Matching> tempMaxMatchingList;
 		List<Assignment> maxAssListQr, maxAssListQ0, maxAssListQi, assMmaxList, newmaxAssList;
 		SolutionStream solutionStreamQ0, solutionStreamQi;
-		Set<String> qiSubgraphNIDsComplement, qiSubgraphNIDs, umQIDs, allProcNodesIds, allProcessedProcNodesIds;
+		Set<String> qiSubgraphNIDs;
 		Matching newMatch;
 		Assignment newAssm, tempUm, um1;
-		List<String> queryIDPairsForNonCommonNodes;
+//		List<String> queryIDPairsForNonCommonNodes;
 		StreamItem sourceSE, targetSE;
 		boolean isMaxUmQi, added, maxMatchingListChanged;
 		
@@ -853,9 +902,9 @@ public class EvalQueryInexactMatch {
 			}
 		}
 		
-		rootID = querygraph.getStartVertex().getActivityID();
+		rootID = querygraph.getStartActivity().getActivityID();
 		maxMatchSizeQr = solutionStreamMap.get(rootID).getMaxMatchSize();
-		numberOfQueryEdges = querygraph.getQueryGraph().edgeSet().size();
+		numberOfQueryEdges = querygraph.getGraph().edgeSet().size();
 		maxAssListQr = maxAssignListMap.get(rootID);
 		
 		if (maxMatchSizeQr <= 0) {
@@ -877,7 +926,10 @@ public class EvalQueryInexactMatch {
 			solutionStreamQ0 = solutionStreamMap.get(q0ID);
 			maxMatchSizeQi = solutionStreamQ0.getMaxMatchSize();
 			maxAssListQ0 = maxAssignListMap.get(q0ID);
-			qiSubgraphNIDsComplement = new HashSet<String>();
+//			qiSubgraphNIDsComplement = new HashSet<String>();
+			if (!qiSubgraphNIDsComplement.isEmpty()) {
+				qiSubgraphNIDsComplement.clear();
+			}
 			qiSubgraphNIDs = querygraph.getSubgraphNodesIDsFromMap(qNodesSortedByMatchSize.get(0));
 			
 			for (ActivityNode qNode : qNodesSortedByLevel) {
@@ -886,9 +938,10 @@ public class EvalQueryInexactMatch {
 				}
 			}
 			
-			allProcNodesIds = new HashSet<String>();
-			allProcessedProcNodesIds = new HashSet<String>();
-			queryIDPairsForNonCommonNodes = new ArrayList<String>();
+//			allProcNodesIds = new HashSet<String>();
+//			allProcessedProcNodesIds = new HashSet<String>();
+//			pIDsInMatch = new HashSet<String>();
+//			queryIDPairsForNonCommonNodes = new ArrayList<String>();
 			
 			if ((maxAssListQr == null) || maxAssListQr.isEmpty()) {
 				maxSimilarity = ((float)maxMatchSizeQi) / ((float)numberOfQueryEdges);
@@ -955,13 +1008,13 @@ public class EvalQueryInexactMatch {
 				}
 				
 				if (maxMatchingList.size() > thresholdOfNumberOfMaxMatch) {
-					reduceMatchings(maxMatchingList, allProcNodesIds, allProcessedProcNodesIds);		
+					reduceMatchings(maxMatchingList, allProcNodesIds, allProcessedProcNodesIds, pIDsInMatch);		
 				}
 			}
 			
 			if (qNodesSortedSize > 1) {
 				tempMaxMatchingList = new ArrayList<Matching>();
-				umQIDs = new HashSet<String>();
+//				umQIDs = new HashSet<String>();
 				isMaxUmQi = false;
 				for (i = 1; i < qNodesSortedSize; i++) {
 					qiID = qNodesSortedByMatchSize.get(i).getActivityID();
@@ -1073,7 +1126,8 @@ public class EvalQueryInexactMatch {
 					}				
 					if (maxMatchingListChanged) {
 						if (tempMaxMatchingList.size() > thresholdOfNumberOfMaxMatch) {
-							reduceMatchings(tempMaxMatchingList, allProcNodesIds, allProcessedProcNodesIds);		
+//							logger.warn("call reduce matchings");
+							reduceMatchings(tempMaxMatchingList, allProcNodesIds, allProcessedProcNodesIds, pIDsInMatch);		
 						}
 						maxMatchingList.clear();
 						maxMatchingList.addAll(tempMaxMatchingList);
@@ -1083,10 +1137,15 @@ public class EvalQueryInexactMatch {
 		}
 		
 		if (maxSimilarity >= minMatchingSimilarity) {
+			// optional step
+			if (maxMatchingList.size() > 1) {
+//				logger.warn("call reduce matchings at final step");
+				reduceMatchings(maxMatchingList, allProcNodesIds, allProcessedProcNodesIds, pIDsInMatch);
+			}
 			inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
 					processgraph.getProcessNamespace(), processgraph.getProcessName(), 
 					maxMatchingList, maxSimilarity);
-			printSolutions();
+//			printSolutions();
 		}
 	}
 	
@@ -1103,8 +1162,13 @@ public class EvalQueryInexactMatch {
 	public void reduceAssignments(List<Assignment> inoutputAssList, Set<String> pall, Set<String> processedProcIDs) {
 		int oldListLength = inoutputAssList.size();
 		int i, j, indexCompared, indexU1,indexU2, indexUi, tempDiff, maxDiff;
-		pall.clear();
-		processedProcIDs.clear();
+		if (!pall.isEmpty()) {
+			pall.clear();
+		}
+		if (!processedProcIDs.isEmpty()) {
+			processedProcIDs.clear();
+		}
+		
 		for (Assignment ass : inoutputAssList) {
 			ass.addAllProcessNodeIDs(pall);
 		}
@@ -1181,15 +1245,22 @@ public class EvalQueryInexactMatch {
 	 * @param inoutputMatchList a list of matchings to be reduced
 	 * @param pall all process node ids included in the list of assignments (initialized as an empty set)
 	 * @param processedProcIDs all processed node ids (initialized as an empty set)
+	 * @param pidsOfMatch a variable used to hold all process ids appeared in Match
 	 * 
 	 */
-	public void reduceMatchings(List<Matching> inoutputMatchList, Set<String> pall, Set<String> processedProcIDs) {
+	public void reduceMatchings(List<Matching> inoutputMatchList, Set<String> pall, Set<String> processedProcIDs, 
+			Set<String> pidsOfMatch) {
 		int oldListLength = inoutputMatchList.size();
 		int i, j, indexCompared, indexU1,indexU2, indexUi, tempDiff, maxDiff;
 		List<Assignment> assList;
 		
-		pall.clear();
-		processedProcIDs.clear();
+		if (!pall.isEmpty()) {
+			pall.clear();
+		}
+		if (!processedProcIDs.isEmpty()) {
+			processedProcIDs.clear();
+		}
+			
 		for (Matching mac : inoutputMatchList) {
 			assList = mac.getAssignments();
 			for (Assignment ass : assList) {
@@ -1239,7 +1310,7 @@ public class EvalQueryInexactMatch {
 				maxDiff = -1;
 				indexUi = -1;
 				for (i = indexCompared; i < oldListLength; i++ ) {
-					tempDiff = inoutputMatchList.get(i).getNumberOfDiffProcessNode(processedProcIDs);
+					tempDiff = inoutputMatchList.get(i).getNumberOfDiffProcessNode(processedProcIDs, pidsOfMatch);
 					if (tempDiff > maxDiff) {
 						maxDiff = tempDiff;
 						indexUi = i;
@@ -1332,19 +1403,19 @@ public class EvalQueryInexactMatch {
 		}	
 	}
 	
-	public QueryGraph getQuerygraph() {
+	public static QueryGraph getQuerygraph() {
 		return querygraph;
 	}
 	
-	public void setQuerygraph(QueryGraph querygraph) {
-		this.querygraph = querygraph;
+	public static void setQuerygraph(QueryGraph querygraph) {
+		InexactMatchAlgorithms.querygraph = querygraph;
 	}
 	
-	public ProcessFlowGraph getProcessgraph() {
+	public ProcessGraph getProcessgraph() {
 		return processgraph;
 	}
 	
-	public void setProcessgraph(ProcessFlowGraph processgraph) {
+	public void setProcessgraph(ProcessGraph processgraph) {
 		this.processgraph = processgraph;
 	}
 	
@@ -1364,20 +1435,191 @@ public class EvalQueryInexactMatch {
 		this.inexactMatchings = inexactMatchings;
 	}
 
-	public Map<String, List<Assignment>> getTempMaxAssignSetMap() {
+	public static Map<String, List<Assignment>> getTempMaxAssignSetMap() {
 		return tempMaxAssignSetMap;
 	}
 
-	public void setTempMaxAssignSetMap(
+
+	public static void setTempMaxAssignSetMap(
 			Map<String, List<Assignment>> tempMaxAssignSetMap) {
-		this.tempMaxAssignSetMap = tempMaxAssignSetMap;
+		InexactMatchAlgorithms.tempMaxAssignSetMap = tempMaxAssignSetMap;
 	}
 
-	public Map<String, List<Assignment>> getMaxAssignSetMap() {
+
+	public static Map<String, SolutionStream> getSolutionStreamMap() {
+		return solutionStreamMap;
+	}
+
+	
+	public static void setSolutionStreamMap(
+			Map<String, SolutionStream> solutionStreamMap) {
+		InexactMatchAlgorithms.solutionStreamMap = solutionStreamMap;
+	}
+
+
+	public static Map<String, List<Assignment>> getMaxAssignListMap() {
 		return maxAssignListMap;
 	}
 
-	public void setMaxAssignSetMap(Map<String, List<Assignment>> maxAssignSetMap) {
-		this.maxAssignListMap = maxAssignSetMap;
+
+	public static void setMaxAssignListMap(
+			Map<String, List<Assignment>> maxAssignListMap) {
+		InexactMatchAlgorithms.maxAssignListMap = maxAssignListMap;
+	}
+
+
+	public static Set<String> getAllProcNodesIds() {
+		return allProcNodesIds;
+	}
+
+
+	public static void setAllProcNodesIds(Set<String> allProcNodesIds) {
+		InexactMatchAlgorithms.allProcNodesIds = allProcNodesIds;
+	}
+
+
+	public static Set<String> getAllProcessedProcNodesIds() {
+		return allProcessedProcNodesIds;
+	}
+
+
+	public static void setAllProcessedProcNodesIds(
+			Set<String> allProcessedProcNodesIds) {
+		InexactMatchAlgorithms.allProcessedProcNodesIds = allProcessedProcNodesIds;
+	}
+
+
+	public static Set<String> getPIDsInMatch() {
+		return pIDsInMatch;
+	}
+
+
+	public static void setPIDsInMatch(Set<String> dsInMatch) {
+		pIDsInMatch = dsInMatch;
+	}
+
+
+	public static Set<String> getSubTreeNodesIDsQiComplement() {
+		return subTreeNodesIDsQiComplement;
+	}
+
+
+	public static void setSubTreeNodesIDsQiComplement(
+			Set<String> subTreeNodesIDsQiComplement) {
+		InexactMatchAlgorithms.subTreeNodesIDsQiComplement = subTreeNodesIDsQiComplement;
+	}
+
+
+	public static Set<String> getProcessedChildrenSubgraphNodesIDs() {
+		return processedChildrenSubgraphNodesIDs;
+	}
+
+
+	public static void setProcessedChildrenSubgraphNodesIDs(
+			Set<String> processedChildrenSubgraphNodesIDs) {
+		InexactMatchAlgorithms.processedChildrenSubgraphNodesIDs = processedChildrenSubgraphNodesIDs;
+	}
+
+
+	public static Set<String> getCommonNodesIDs() {
+		return commonNodesIDs;
+	}
+
+
+	public static void setCommonNodesIDs(Set<String> commonNodesIDs) {
+		InexactMatchAlgorithms.commonNodesIDs = commonNodesIDs;
+	}
+
+
+	public static Set<String> getQcSubgraphNodesMinusCommonNodesIDs() {
+		return qcSubgraphNodesMinusCommonNodesIDs;
+	}
+
+
+	public static void setQcSubgraphNodesMinusCommonNodesIDs(
+			Set<String> qcSubgraphNodesMinusCommonNodesIDs) {
+		InexactMatchAlgorithms.qcSubgraphNodesMinusCommonNodesIDs = qcSubgraphNodesMinusCommonNodesIDs;
+	}
+
+
+	public static List<String> getQueryIDPairsForNonCommonNodes() {
+		return queryIDPairsForNonCommonNodes;
+	}
+
+
+	public static void setQueryIDPairsForNonCommonNodes(
+			List<String> queryIDPairsForNonCommonNodes) {
+		InexactMatchAlgorithms.queryIDPairsForNonCommonNodes = queryIDPairsForNonCommonNodes;
+	}
+
+
+	public static List<ActivityNode> getQChildrenSorted() {
+		return qChildrenSorted;
+	}
+
+
+	public static void setQChildrenSorted(List<ActivityNode> childrenSorted) {
+		qChildrenSorted = childrenSorted;
+	}
+
+
+	public static int[] getQChildrenMaxRefSize() {
+		return qChildrenMaxRefSize;
+	}
+
+
+	public static void setQChildrenMaxRefSize(int[] childrenMaxRefSize) {
+		qChildrenMaxRefSize = childrenMaxRefSize;
+	}
+
+
+	public static Set<String> getQiSubgraphNIDsComplement() {
+		return qiSubgraphNIDsComplement;
+	}
+
+
+	public static void setQiSubgraphNIDsComplement(
+			Set<String> qiSubgraphNIDsComplement) {
+		InexactMatchAlgorithms.qiSubgraphNIDsComplement = qiSubgraphNIDsComplement;
+	}
+
+
+	public static Set<String> getUmQIDs() {
+		return umQIDs;
+	}
+
+
+	public static void setUmQIDs(Set<String> umQIDs) {
+		InexactMatchAlgorithms.umQIDs = umQIDs;
+	}
+
+
+	public static List<StreamItem> getSeQcMaxList() {
+		return seQcMaxList;
+	}
+
+
+	public static void setSeQcMaxList(List<StreamItem> seQcMaxList) {
+		InexactMatchAlgorithms.seQcMaxList = seQcMaxList;
+	}
+
+
+	public static Set<ActivityNode> getQchildren() {
+		return qchildren;
+	}
+
+
+	public static void setQchildren(Set<ActivityNode> qchildren) {
+		InexactMatchAlgorithms.qchildren = qchildren;
+	}
+
+
+	public static NodesComparator getNodesCompare() {
+		return nodesCompare;
+	}
+
+
+	public static void setNodesCompare(NodesComparator nodesCompare) {
+		InexactMatchAlgorithms.nodesCompare = nodesCompare;
 	}
 }

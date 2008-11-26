@@ -7,11 +7,11 @@ import java.util.regex.PatternSyntaxException;
 
 import org.apache.log4j.Logger;
 
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityInvokeNode;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityNode;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityReceiveNode;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.ActivityReplyNode;
-import de.uni.stuttgart.gerlacdt.bpel.GraphMapping.nodes.StructuredActivityOnMessageNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityInvokeNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityReceiveNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityReplyNode;
+import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.StructuredActivityOnMessageNode;
 
 
 /**
@@ -28,7 +28,7 @@ public class NodesComparator implements Comparator<ActivityNode> {
 	
 	@Override
 	public int compare(ActivityNode queryNode, ActivityNode processNode) {
-		int queryNodeType, processNodeType;
+		int queryNodeType, processNodeType, lastIndexForPorttype;
 		String queryNodeName,  queryNodeInputVariableAttr, queryNodeOperationAttr, 
 				queryNodeOutputVariableAttr, queryNodeVariableAttr, queryNodePartnerlinkAttr, 
 				queryNodePorttypeAttr, processNodeName, processNodeInputVariableAttr, 
@@ -62,7 +62,7 @@ public class NodesComparator implements Comparator<ActivityNode> {
 				processNodeInputVariableAttr = ((ActivityInvokeNode)processNode).getInputVariable();
 	            if (!patternMatching(queryNodeInputVariableAttr, processNodeInputVariableAttr)) {
 	            	return 2;
-	            }			
+	            }		
 			}
 			
 			queryNodeOutputVariableAttr = ((ActivityInvokeNode)queryNode).getOutputVariable();			
@@ -86,10 +86,33 @@ public class NodesComparator implements Comparator<ActivityNode> {
 			queryNodePorttypeAttr = ((ActivityInvokeNode)queryNode).getPortType().toString();			
 			// If query node porttype has value, then compare porttypes of process/query nodes
 			if (queryNodePorttypeAttr.length() > 0) {
+				lastIndexForPorttype = queryNodePorttypeAttr.lastIndexOf("}");
+				//logger.warn("queryNodePorttypeAttr: " + queryNodePorttypeAttr + "   lastIndexForPorttype: " + lastIndexForPorttype);
+				if (lastIndexForPorttype != -1) {
+					if (lastIndexForPorttype < queryNodePorttypeAttr.length()) {
+						lastIndexForPorttype++;
+					}
+					queryNodePorttypeAttr = queryNodePorttypeAttr.substring(lastIndexForPorttype);
+					//logger.warn("queryNodePorttypeAttr: " + queryNodePorttypeAttr);
+				}
+				
 				processNodePorttypeAttr = ((ActivityInvokeNode)processNode).getPortType().toString();
-	            if (!patternMatching(queryNodePorttypeAttr, processNodePorttypeAttr)) {
-	            	return 2;
-	            }			
+				if (processNodePorttypeAttr.length() > 0) {
+					lastIndexForPorttype = processNodePorttypeAttr.lastIndexOf("}");
+					//logger.warn("processNodePorttypeAttr: " + processNodePorttypeAttr + "   lastIndexForPorttype: " + lastIndexForPorttype);
+					if (lastIndexForPorttype != -1) {
+						if (lastIndexForPorttype < processNodePorttypeAttr.length()) {
+							lastIndexForPorttype++;
+						}
+						processNodePorttypeAttr = processNodePorttypeAttr.substring(lastIndexForPorttype);
+						//logger.warn("processNodePorttypeAttr: " + processNodePorttypeAttr);
+					}
+		            if (!patternMatching(queryNodePorttypeAttr, processNodePorttypeAttr)) {
+		            	return 2;
+		            }
+				} else {
+					return 2;
+				}
 			}
 						
 			queryNodePartnerlinkAttr = ((ActivityInvokeNode)queryNode).getPartnerLink();			
@@ -124,10 +147,33 @@ public class NodesComparator implements Comparator<ActivityNode> {
 			queryNodePorttypeAttr = ((ActivityReceiveNode)queryNode).getPortType().toString();			
 			// If query node porttype has value, then compare porttypes of process/query nodes
 			if (queryNodePorttypeAttr.length() > 0) {
+				lastIndexForPorttype = queryNodePorttypeAttr.lastIndexOf("}");
+				//logger.warn("queryNodePorttypeAttr: " + queryNodePorttypeAttr + "   lastIndexForPorttype: " + lastIndexForPorttype);
+				if (lastIndexForPorttype != -1) {
+					if (lastIndexForPorttype < queryNodePorttypeAttr.length()) {
+						lastIndexForPorttype++;
+					}
+					queryNodePorttypeAttr = queryNodePorttypeAttr.substring(lastIndexForPorttype);
+					//logger.warn("queryNodePorttypeAttr: " + queryNodePorttypeAttr);
+				}
+				
 				processNodePorttypeAttr = ((ActivityReceiveNode)processNode).getPortType().toString();
-	            if (!patternMatching(queryNodePorttypeAttr, processNodePorttypeAttr)) {
-	            	return 2;
-	            }			
+				if (processNodePorttypeAttr.length() > 0) {
+					lastIndexForPorttype = processNodePorttypeAttr.lastIndexOf("}");
+					//logger.warn("processNodePorttypeAttr: " + processNodePorttypeAttr + "   lastIndexForPorttype: " + lastIndexForPorttype);
+					if (lastIndexForPorttype != -1) {
+						if (lastIndexForPorttype < processNodePorttypeAttr.length()) {
+							lastIndexForPorttype++;
+						}
+						processNodePorttypeAttr = processNodePorttypeAttr.substring(lastIndexForPorttype);
+						//logger.warn("processNodePorttypeAttr: " + processNodePorttypeAttr);
+					}
+		            if (!patternMatching(queryNodePorttypeAttr, processNodePorttypeAttr)) {
+		            	return 2;
+		            }
+				} else {
+					return 2;
+				}
 			}			
 			
 			queryNodePartnerlinkAttr = ((ActivityReceiveNode)queryNode).getPartnerLink();			
@@ -161,12 +207,42 @@ public class NodesComparator implements Comparator<ActivityNode> {
 			
 			queryNodePorttypeAttr = ((ActivityReplyNode)queryNode).getPortType().toString();			
 			// If query node porttype has value, then compare porttypes of process/query nodes
+//			if (queryNodePorttypeAttr.length() > 0) {
+//				processNodePorttypeAttr = ((ActivityReplyNode)processNode).getPortType().toString();
+//	            if (!patternMatching(queryNodePorttypeAttr, processNodePorttypeAttr)) {
+//	            	return 2;
+//	            }			
+//			}
 			if (queryNodePorttypeAttr.length() > 0) {
+				lastIndexForPorttype = queryNodePorttypeAttr.lastIndexOf("}");
+				//logger.warn("queryNodePorttypeAttr: " + queryNodePorttypeAttr + "   lastIndexForPorttype: " + lastIndexForPorttype);
+				if (lastIndexForPorttype != -1) {
+					if (lastIndexForPorttype < queryNodePorttypeAttr.length()) {
+						lastIndexForPorttype++;
+					}
+					queryNodePorttypeAttr = queryNodePorttypeAttr.substring(lastIndexForPorttype);
+					//logger.warn("queryNodePorttypeAttr: " + queryNodePorttypeAttr);
+				}
+				
 				processNodePorttypeAttr = ((ActivityReplyNode)processNode).getPortType().toString();
-	            if (!patternMatching(queryNodePorttypeAttr, processNodePorttypeAttr)) {
-	            	return 2;
-	            }			
-			}			
+				if (processNodePorttypeAttr.length() > 0) {
+					lastIndexForPorttype = processNodePorttypeAttr.lastIndexOf("}");
+					//logger.warn("processNodePorttypeAttr: " + processNodePorttypeAttr + "   lastIndexForPorttype: " + lastIndexForPorttype);
+					if (lastIndexForPorttype != -1) {
+						if (lastIndexForPorttype < processNodePorttypeAttr.length()) {
+							lastIndexForPorttype++;
+						}
+						processNodePorttypeAttr = processNodePorttypeAttr.substring(lastIndexForPorttype);
+						//logger.warn("processNodePorttypeAttr: " + processNodePorttypeAttr);
+					}
+		            if (!patternMatching(queryNodePorttypeAttr, processNodePorttypeAttr)) {
+		            	return 2;
+		            }
+				} else {
+					return 2;
+				}
+			}
+			
 			
 			queryNodePartnerlinkAttr = ((ActivityReplyNode)queryNode).getPartnerLink();			
 			// If query node partnerlink has value, then compare partnerlinks of process/query nodes
@@ -200,12 +276,41 @@ public class NodesComparator implements Comparator<ActivityNode> {
 			
 			queryNodePorttypeAttr = ((StructuredActivityOnMessageNode)queryNode).getPortType().toString();			
 			// If query node porttype has value, then compare porttypes of process/query nodes
+//			if (queryNodePorttypeAttr.length() > 0) {
+//				processNodePorttypeAttr = ((StructuredActivityOnMessageNode)processNode).getPortType().toString();
+//	            if (!patternMatching(queryNodePorttypeAttr, processNodePorttypeAttr)) {
+//	            	return 2;
+//	            }			
+//			}		
 			if (queryNodePorttypeAttr.length() > 0) {
+				lastIndexForPorttype = queryNodePorttypeAttr.lastIndexOf("}");
+				//logger.warn("queryNodePorttypeAttr: " + queryNodePorttypeAttr + "   lastIndexForPorttype: " + lastIndexForPorttype);
+				if (lastIndexForPorttype != -1) {
+					if (lastIndexForPorttype < queryNodePorttypeAttr.length()) {
+						lastIndexForPorttype++;
+					}
+					queryNodePorttypeAttr = queryNodePorttypeAttr.substring(lastIndexForPorttype);
+					//logger.warn("queryNodePorttypeAttr: " + queryNodePorttypeAttr);
+				}
+				
 				processNodePorttypeAttr = ((StructuredActivityOnMessageNode)processNode).getPortType().toString();
-	            if (!patternMatching(queryNodePorttypeAttr, processNodePorttypeAttr)) {
-	            	return 2;
-	            }			
-			}			
+				if (processNodePorttypeAttr.length() > 0) {
+					lastIndexForPorttype = processNodePorttypeAttr.lastIndexOf("}");
+					//logger.warn("processNodePorttypeAttr: " + processNodePorttypeAttr + "   lastIndexForPorttype: " + lastIndexForPorttype);
+					if (lastIndexForPorttype != -1) {
+						if (lastIndexForPorttype < processNodePorttypeAttr.length()) {
+							lastIndexForPorttype++;
+						}
+						processNodePorttypeAttr = processNodePorttypeAttr.substring(lastIndexForPorttype);
+						//logger.warn("processNodePorttypeAttr: " + processNodePorttypeAttr);
+					}
+		            if (!patternMatching(queryNodePorttypeAttr, processNodePorttypeAttr)) {
+		            	return 2;
+		            }
+				} else {
+					return 2;
+				}
+			}
 			
 			queryNodePartnerlinkAttr = ((StructuredActivityOnMessageNode)queryNode).getPartnerLink();			
 			// If query node partnerlink has value, then compare partnerlinks of process/query nodes
@@ -233,7 +338,8 @@ public class NodesComparator implements Comparator<ActivityNode> {
 	
 	private boolean patternMatching(String p, String m) {
         try{
-            pattern = Pattern.compile("^"+p, Pattern.CASE_INSENSITIVE);
+//            pattern = Pattern.compile("^"+p, Pattern.CASE_INSENSITIVE);
+        	pattern = Pattern.compile(p, Pattern.CASE_INSENSITIVE);
             matcher = pattern.matcher(m);
         }
         catch(PatternSyntaxException pse){
