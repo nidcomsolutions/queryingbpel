@@ -554,21 +554,17 @@ public abstract class ProcessUtils {
 		final Session session = sessionFactory.openSession();
 		// start Transaction
 		session.beginTransaction();
-
 		// load all BPEL-processes from repository
 		Query query = session.createQuery("FROM Process");
 		List<Process> processes = (List<Process>) query.list();
-
 		// add all loaded processes to the member-variable processGraphs
 		for (Process process : processes) {
-
 			ProcessGraphFactory1 processFlowGraphFactory = DbGraphPropertiesFactory
 					.getInstance().getProcessGraphFactory(process);
 			ProcessGraph processFlowGraph = processFlowGraphFactory
 					.createProcessFlowGraph(process);
 			resultList.add(processFlowGraph);
 		}
-
 		session.getTransaction().commit();
 		session.close();
 
