@@ -20,7 +20,7 @@ import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 public class StreamItem {
 	private ActivityNode processnode;
 	private int arrayIndexOfProcessnode;
-	private int maxMatchSize;
+	private float maxMatchSize;
 	private Map<ActivityNode, StreamItemChildReferences> childrenReferencesMap;
 
 	/**
@@ -30,7 +30,7 @@ public class StreamItem {
 	 * @param childrenReferencesMap
 	 */
 	public StreamItem(ActivityNode processnode, int arrayIndexOfProcessnode,
-			int maxMatchSize, Map<ActivityNode, StreamItemChildReferences> childrenReferencesMap) {
+			float maxMatchSize, Map<ActivityNode, StreamItemChildReferences> childrenReferencesMap) {
 		super();
 		this.processnode = processnode;
 		this.arrayIndexOfProcessnode = arrayIndexOfProcessnode;
@@ -143,14 +143,14 @@ public class StreamItem {
 	public void getMaxReferencedStreamItems(ActivityNode childNode, 
 			List<StreamItem> maxRefStreamItems) {
 		StreamItemChildReferences cSIRef;
-		int maxMatchSize;
+		float maxMatchSize;
 		if (maxRefStreamItems == null) {
 			maxRefStreamItems = new ArrayList<StreamItem>();
 		} else if (!maxRefStreamItems.isEmpty()) {
 			maxRefStreamItems.clear();
 		}
 		if ((cSIRef = childrenReferencesMap.get(childNode)) != null) {
-			maxMatchSize = 0;
+			maxMatchSize = 0.0f;
 			List<StreamItem> seList = cSIRef.getChildReferences();
 			for (StreamItem se : seList) {
 				if (se.getMaxMatchSize() > maxMatchSize) {
@@ -173,9 +173,11 @@ public class StreamItem {
      * 
      * @param childNode query child node
      * 
+     * @return the maximal matching size among referenced stream elements associated 
+     * with the input child node.
      */
-	public int getMaxRefSize(ActivityNode childNode) {
-		int maxRefSize = -1;
+	public float getMaxRefSize(ActivityNode childNode) {
+		float maxRefSize = -1.0f;
 		StreamItemChildReferences cSIRef;
 		if ((cSIRef = childrenReferencesMap.get(childNode)) != null) {
 			List<StreamItem> seList = cSIRef.getChildReferences();
@@ -197,12 +199,12 @@ public class StreamItem {
 	}
 
 
-	public int getMaxMatchSize() {
+	public float getMaxMatchSize() {
 		return maxMatchSize;
 	}
 
 
-	public void setMaxMatchSize(int maxMatchSize) {
+	public void setMaxMatchSize(float maxMatchSize) {
 		this.maxMatchSize = maxMatchSize;
 	}
 

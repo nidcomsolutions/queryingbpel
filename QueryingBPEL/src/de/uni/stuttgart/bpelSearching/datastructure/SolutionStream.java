@@ -12,13 +12,13 @@ import java.util.List;
  */
 public class SolutionStream {
 	private List<StreamItem> streamList;
-	private int maxMatchSize;
+	private float maxMatchSize;
 	private int maxNumberOfAssignments;
 	
 	/**
 	 * @param maxMatchSize
 	 */
-	public SolutionStream(int maxMatchSize) {
+	public SolutionStream(float maxMatchSize) {
 		super();
 		this.streamList = new LinkedList<StreamItem>();
 		this.maxMatchSize = maxMatchSize;
@@ -29,7 +29,7 @@ public class SolutionStream {
 	 * @param streamList
 	 * @param maxMatchSize
 	 */
-	public SolutionStream(List<StreamItem> streamList, int maxMatchSize) {
+	public SolutionStream(List<StreamItem> streamList, float maxMatchSize) {
 		super();
 		this.streamList = streamList;
 		this.maxMatchSize = maxMatchSize;
@@ -55,13 +55,13 @@ public class SolutionStream {
 	 * @return the maximal match size associated with the stream item 
 	 * with the given process node id
 	 */
-	public int getMaxMatchSizeOfStreamItem(String pID) {
+	public float getMaxMatchSizeOfStreamItem(String pID) {
 		for (StreamItem se : streamList) {
 			if (se.getProcessnode().getActivityID().compareTo(pID) == 0) {
 				return se.getMaxMatchSize();
 			}
 		}
-		return 0;
+		return 0.0f;
 	}
 	
 	/**
@@ -87,10 +87,10 @@ public class SolutionStream {
 	public void setStreamList(List<StreamItem> streamList) {
 		this.streamList = streamList;
 	}
-	public int getMaxMatchSize() {
+	public float getMaxMatchSize() {
 		return maxMatchSize;
 	}
-	public void setMaxMatchSize(int maxMatchSize) {
+	public void setMaxMatchSize(float maxMatchSize) {
 		this.maxMatchSize = maxMatchSize;
 	}
 
