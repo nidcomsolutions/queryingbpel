@@ -9,6 +9,7 @@ import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.GraphType;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 
 

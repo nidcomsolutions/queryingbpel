@@ -16,15 +16,16 @@ public class PropertyLoader {
 		try {
 			dbProperties.load(new FileReader(
 					new File("./src/dbConf.properties")));
+			// ******* For Java Applet ********
 //			dbProperties.load(new FileReader(
 //					new File("./dbConf.properties")));
 			userProperties.load(new FileReader(new File(
 					"./src/userConf.properties")));
+			// ******* For Java Applet ********
 //			userProperties.load(new FileReader(new File(
 //					"./userConf.properties")));
 		} catch (FileNotFoundException e) {
-			System.out
-					.println("File not found, could not load property files.");
+			System.out.println("File not found, could not load property files.");
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
