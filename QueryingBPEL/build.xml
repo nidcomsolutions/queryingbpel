@@ -1,0 +1,27 @@
+<project name="QueryingBPEL" default="run">
+
+	<property name="sourcedir" value="${basedir}/src" />
+	<property name="targetdir" value="${basedir}/bin" />
+	<property name="librarydir" value="${basedir}/lib" />
+	<property name="libraryEclipsedir" value="${basedir}/libEclipse" />
+
+	<path id="libraries">
+		<fileset dir="${librarydir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${libraryEclipsedir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+
+	<target name="run">
+		<java fork="true"
+			classname="de.uni.stuttgart.gerlacdt.bpel.controller.Bfm"
+			classpathref="libraries">
+			<classpath path="${targetdir}" />
+			<arg value="${arg1}" />
+			<arg value="${arg2}" />
+		</java>
+	</target>
+</project>
