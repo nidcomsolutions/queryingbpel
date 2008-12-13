@@ -35,7 +35,7 @@ Edited using ActiveBPEL(r) Designer Version 4.1.0 (http://www.active-endpoints.c
          <bpel:elseif>
             <bpel:condition>$creditInformationMessage.name != none</bpel:condition>
             <bpel:sequence name="SeqB">
-               <bpel:receive name="ReceiveC" operation="request" partnerLink="loanPartnerLT" portType="ns1:loanServicePT" variable="creditInformationMessage"/>
+               <bpel:receive name="Rec*" operation="request" partnerLink="loanPartnerLT" portType="ns1:loanServicePT" variable="creditInformationMessage"/>
                <bpel:reply name="ReplyB" operation="request" partnerLink="loanPartnerLT" portType="ns1:loanServicePT" variable="approvalMessage"/>
             </bpel:sequence>
          </bpel:elseif>
@@ -48,7 +48,7 @@ Edited using ActiveBPEL(r) Designer Version 4.1.0 (http://www.active-endpoints.c
             <bpel:source linkName="L1"/>
          </bpel:sources>
       </bpel:receive>
-      <bpel:reply name="ReplyC" operation="approve" partnerLink="loanApprovalLT" portType="ns1:loanApprovalPT" variable="approvalMessage">
+      <bpel:reply name="ReplyC" operation="app*" partnerLink="loanApprovalLT" portType="ns1:loanApprovalPT" variable="approvalMessage">
          <bpel:targets>
             <bpel:target linkName="L2"/>
          </bpel:targets>
