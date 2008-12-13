@@ -89,7 +89,7 @@ public class TwigStackDAlgorithmTest2 {
 		
 		// processDAG1
 		// This graph is taken from article "Stack-based Algorithms for Pattern 
-		// Matching on DAGs"
+		// Match on DAGs"
 		processDAG1 = new DefaultDirectedGraph<ActivityNode, DefaultEdge>(
 				DefaultEdge.class);
 
@@ -267,10 +267,10 @@ public class TwigStackDAlgorithmTest2 {
 //		MatchBPELForTestOfTwigStackAlgorithm matchBPEL = new MatchBPELForTestOfTwigStackAlgorithm(queryGraph1, processFlowGraph1, true);
 //		matchBPEL.match();
 		List<ProcessGraph> pGraphs = new ArrayList<ProcessGraph>();
-		pGraphs.add(processFlowGraph2);
-//		EvalQueryExactMatch evalQueryExact = new EvalQueryExactMatch(queryGraph2, pGraphs);
+		pGraphs.add(processFlowGraph1);
+//		EvalQueryExactMatch evalQueryExact = new EvalQueryExactMatch(queryGraph1, pGraphs);
 //		evalQueryExact.doExactMatch();
-		EvalQueryInexactMatch evalQueryInexact = new EvalQueryInexactMatch(queryGraph2, pGraphs);
+		EvalQueryInexactMatch evalQueryInexact = new EvalQueryInexactMatch(queryGraph1, pGraphs);
 		evalQueryInexact.doInexactMatch();	
 		System.exit(0);		
 	}

@@ -4,25 +4,30 @@
 package de.uni.stuttgart.bpelSearching.matching.exactMatching;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import org.apache.log4j.Logger;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.GraphType;
 import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
 import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.QueryGraph;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
+import de.uni.stuttgart.bpelSearching.datastructure.NodeInStack;
 import de.uni.stuttgart.bpelSearching.datastructure.NodeRegionEncoding;
+import de.uni.stuttgart.bpelSearching.datastructure.PoolItem3Ext;
 import de.uni.stuttgart.bpelSearching.datastructure.Predecessors2;
+import de.uni.stuttgart.bpelSearching.datastructure.ProcessNodePair;
 import de.uni.stuttgart.bpelSearching.matching.NodeRegionEncodingComparator;
 import de.uni.stuttgart.bpelSearching.matching.NodesComparator;
-import de.uni.stuttgart.bpelSearching.matching.inexactmatching.InexactMatchingResult;
-import de.uni.stuttgart.bpelSearching.matching.inexactmatching.Matching;
 import de.uni.stuttgart.bpelSearching.util.DepthFirstTraverseExtension;
 import de.uni.stuttgart.bpelSearching.util.DepthFirstTraverseExtensionSSPI;
 import de.uni.stuttgart.bpelSearching.util.GraphAnalyse;
-import de.uni.stuttgart.bpelSearching.util.GraphType;
 
 /**
  * The EvalQueryExactMatch class matches a given query graph against a set of process graphs 
@@ -77,7 +82,7 @@ public class EvalQueryExactMatch {
     	DagStackDAlgorithm dagStackD;
     	String processInfo;
     	
-    	initStaticVariablesForInexactMatchAlgorithms();
+    	initStaticVariablesForExactMatchAlgorithms();
 		for (ProcessGraph procGraph : processgraphs) {
 			processInfo = "The process to be compared >> process ID: " + procGraph.getProcessID() + 
 			"  process namespace: " + procGraph.getProcessNamespace()+ 
@@ -127,10 +132,34 @@ public class EvalQueryExactMatch {
 	 * Initializes static variables for the InexactMatchAlgorithms.
 	 * 
 	 */
-	private void initStaticVariablesForInexactMatchAlgorithms() {
-		TwigStackAlgorithm.setQuerygraph(querygraph);
+	private void initStaticVariablesForExactMatchAlgorithms() {
+		if (querygraph.getGraphType() == GraphType.ROOTED_DAG) {		
+			querygraph.setQueryNodesSortedByLevelOrder();
+			querygraph.setParentsIndexesList();
+			querygraph.setMinimalSpanningTreeOfQueryGraph();
+			querygraph.setChildrenNodesInMSTMap();
+			querygraph.setParentsNodesMap();
+		}
+		TwigStackAlgorithm.setQuerygraph(querygraph);	
 		TwigStackAlgorithm.setNodesCompare(new NodesComparator());
 		TwigStackAlgorithm.setNodeRegionCompare(new NodeRegionEncodingComparator());
+		TwigStackAlgorithm.setQueryNodeStackMap(new HashMap<String, Stack<NodeInStack>>());
+		TwigStackAlgorithm.setQueryNodeStreamMap(new HashMap<String, LinkedList<NodeRegionEncoding>>());
+		TwigStackAlgorithm.setQueryLeafNodesSolution(new HashSet<ActivityNode>());
+		
+		TwigStackAlgorithmBasic.setSolutionStackMap(new HashMap<String, Stack<ProcessNodePair>>());
+		TwigStackAlgorithmBasic.setQueryNodeStackPositionMap(new HashMap<String, Integer>());
+		TwigStackAlgorithmBasic.setJoinedResultsChildrenNodesMap(new HashMap<StringBuffer, LinkedList<NodeRegionEncoding>>());
+
+		TwigStackD2Algorithm.setSolutionPoolMap(new HashMap<String, Set<PoolItem3Ext>>());
+		TwigStackD2Algorithm.setQueryNodeStreamPositionMap(new HashMap<String, Integer>());
+		
+		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
+		for (ActivityNode queryNode : vertexSetQuery) {	
+			TwigStackAlgorithm.getQueryNodeStackMap().put(queryNode.getActivityID(), new Stack<NodeInStack>());
+			TwigStackAlgorithmBasic.getSolutionStackMap().put(queryNode.getActivityID(), new Stack<ProcessNodePair>());
+			TwigStackD2Algorithm.getSolutionPoolMap().put(queryNode.getActivityID(), new HashSet<PoolItem3Ext>());
+		}
 	}
 	
 	
@@ -145,9 +174,9 @@ public class EvalQueryExactMatch {
     	Map<ActivityNode, Integer> preMap, postMap, lMap;
     	NodeRegionEncoding nre;
     	
+    	pg.nodesRegionEncoding = new HashMap<String, NodeRegionEncoding>();
     	DepthFirstTraverseExtension dft = 
-    		new DepthFirstTraverseExtension(pg.getGraph(), pg.getStartActivity());
-    	
+    		new DepthFirstTraverseExtension(pg.getGraph(), pg.getStartActivity());   	
     	dft.traverse();
     	
     	lMap = dft.getLevelMap();
@@ -155,7 +184,6 @@ public class EvalQueryExactMatch {
     	preMap = dft.getPreorderMap();
     	
     	Set<ActivityNode> vertexSetPg = pg.getGraph().vertexSet();
-
     	for (ActivityNode vertexPg : vertexSetPg) {
     		nre = new NodeRegionEncoding(vertexPg.getActivityID(), preMap.get(vertexPg).intValue(), 
     				postMap.get(vertexPg).intValue(), lMap.get(vertexPg).intValue());
@@ -178,7 +206,8 @@ public class EvalQueryExactMatch {
      	Map<ActivityNode, Set<String>> predecessorsMap;
      	NodeRegionEncoding nre;
      	Set<String> predecessorsQ;
-     	
+     	pg.nodesRegionEncoding = new HashMap<String, NodeRegionEncoding>();
+     	pg.predecessors2 = new HashMap<String, Predecessors2>();
      	DepthFirstTraverseExtensionSSPI dft = 
      		new DepthFirstTraverseExtensionSSPI(pg.getGraph(), 
      				pg.getStartActivity());   	
@@ -190,7 +219,6 @@ public class EvalQueryExactMatch {
      	predecessorsMap = dft.getPredecessorsMap();
      	 
      	Set<ActivityNode> vertexSetPg = pg.getGraph().vertexSet();
-
      	for (ActivityNode vertexPg : vertexSetPg) {
      		nre = new NodeRegionEncoding(vertexPg.getActivityID(), preMap.get(vertexPg).intValue(), 
      				postMap.get(vertexPg).intValue(), lMap.get(vertexPg).intValue());
@@ -219,14 +247,28 @@ public class EvalQueryExactMatch {
  		logger.warn("************** Print exact matching results for the given query *****************");
  		String resultForOutput;
  		List<ArrayList<String>> matchList;
+ 		int qNodesSize;
  		for (ExactMatchingResult result : exactMatchingResults) {
  			matchList = result.getExactMatchings();
  			resultForOutput = "process ID: " + result.getProcessID() + 
  			"  process namespace: " + result.getProcessNamespace() + 
  			"  process name: " + result.getProcessName() + 
- 			" has " + matchList.size() + " matchs: ";		
+ 			" has " + matchList.size();
+ 			if (matchList.size() > 1) {
+ 				resultForOutput += " matchs: ";
+ 			} else {
+ 				resultForOutput += " match: ";
+ 			}
+ 			qNodesSize = result.getQueryIDsTobeAssigned().size();
  			for (ArrayList<String> match : matchList) {
- 				resultForOutput += "  Matching Result: " + match.toString();
+// 				resultForOutput += "  Match Result: " + match.toString();
+ 				if (match.size() == qNodesSize) {
+ 	 				resultForOutput += "  Match Result: ";
+ 	 				for (int i = 0; i < qNodesSize; i++) {
+ 	 					resultForOutput += " [" +  result.getQueryIDsTobeAssigned().get(i) + "-" + 
+ 	 										match.get(i)+ "]";
+ 	 				}
+ 				}		
  			}
  			logger.warn(resultForOutput);
  		}

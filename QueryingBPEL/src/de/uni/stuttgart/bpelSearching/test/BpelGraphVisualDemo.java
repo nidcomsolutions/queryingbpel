@@ -106,7 +106,7 @@ public class BpelGraphVisualDemo extends JApplet{
 //
 //	  // start Transaction
 //	  session.beginTransaction();
-//	  Query query = session.createQuery("FROM Process p WHERE p.name like 'Nested%' ");
+//	  Query query = session.createQuery("FROM Process p WHERE p.name like 'Swi%' ");
 //	  List<Process> processes = query.list();
 //	  logger.warn("list length:" + processes.size());
 //
@@ -160,60 +160,60 @@ public class BpelGraphVisualDemo extends JApplet{
 //		 }
 				
       // ************** Query Graph Demo *************************
-      Process process;
-      String startID;
-      ActivityNode startNode = new ActivityNode("", "", 0);
-      ProcessUtilsNormal processUtils = new ProcessUtilsNormal();
-      File BPELdir = new File("BPELFiles/QueryFile");
-      File[] fileArray = BPELdir.listFiles();
-      for (int i1 = 0; i1 < fileArray.length; i1++) {
-		File fileTemp = fileArray[i1];
-		if (!fileTemp.isDirectory() && fileTemp.getName().equals("Switch.bpel")) {
-			logger.warn("Query TestCase: " + fileTemp.getPath());
-			process = processUtils.loadProcessFromFile(fileTemp);
-			QueryGraphFactory1 graphFactory = DbGraphPropertiesFactory
-					.getInstance().getQueryGraphFactory();
-			DirectedGraph<ActivityNode, DefaultEdge> qGraph = 
-						graphFactory.createGraphFromProcess(process);
-			startID = graphFactory.getStartActivityID();
-			
-			// create demo graph	
-			Set<ActivityNode> vertexSet = qGraph.vertexSet();
-			startNode = vertexSet.iterator().next();	
-			for (ActivityNode vertex : vertexSet) {		
-				getProcessGraphDemo().addVertex(vertex);
-				if (vertex.getActivityID().compareTo(startID) == 0) {
-					startNode = vertex;		
-				}
-				logger.warn("query node: " + vertex.toString());
-			}
-			
-			Set<DefaultEdge> edgeSet = qGraph.edgeSet();
-			for (DefaultEdge edge : edgeSet) {
-				ActivityNode source = qGraph.getEdgeSource(edge);
-				ActivityNode target = qGraph.getEdgeTarget(edge);
-				getProcessGraphDemo().addEdge(source, target);
-			}
-			
-			// get the start node
-			logger.warn("startNode: " + startNode.toString());
-			logger.warn("startNode ID: " + startID);
-			DepthFirstTraverseExtension dft = new DepthFirstTraverseExtension(qGraph, startNode);		
-			dft.traverse();
-					
-			averageB = 600/(dft.getMaxBreadth() + 1);
-			averageL = 700/(dft.getMaxLevel() + 1);
-			Set<ActivityNode> vertexSetGraphDemo = getProcessGraphDemo().vertexSet();
-			for (ActivityNode vertexGraphDemo: vertexSetGraphDemo){		
-				i = dft.getVertexBreadth(vertexGraphDemo);
-				j = dft.getVertexLevel(vertexGraphDemo);	
-				i = i*averageB + 30;
-				j = j*averageL + 20;				
-				positionVertexAt(vertexGraphDemo, i, j); 		
-			 }
-			break;
-		}
-      }
+//      Process process;
+//      String startID;
+//      ActivityNode startNode = new ActivityNode("", "", 0);
+//      ProcessUtilsNormal processUtils = new ProcessUtilsNormal();
+//      File BPELdir = new File("BPELFiles/QueryFile");
+//      File[] fileArray = BPELdir.listFiles();
+//      for (int i1 = 0; i1 < fileArray.length; i1++) {
+//		File fileTemp = fileArray[i1];
+//		if (!fileTemp.isDirectory() && fileTemp.getName().equals("Switch.bpel")) {
+//			logger.warn("Query TestCase: " + fileTemp.getPath());
+//			process = processUtils.loadProcessFromFile(fileTemp);
+//			QueryGraphFactory1 graphFactory = DbGraphPropertiesFactory
+//					.getInstance().getQueryGraphFactory();
+//			DirectedGraph<ActivityNode, DefaultEdge> qGraph = 
+//						graphFactory.createGraphFromProcess(process);
+//			startID = graphFactory.getStartActivityID();
+//			
+//			// create demo graph	
+//			Set<ActivityNode> vertexSet = qGraph.vertexSet();
+//			startNode = vertexSet.iterator().next();	
+//			for (ActivityNode vertex : vertexSet) {		
+//				getProcessGraphDemo().addVertex(vertex);
+//				if (vertex.getActivityID().compareTo(startID) == 0) {
+//					startNode = vertex;		
+//				}
+//				logger.warn("query node: " + vertex.toString());
+//			}
+//			
+//			Set<DefaultEdge> edgeSet = qGraph.edgeSet();
+//			for (DefaultEdge edge : edgeSet) {
+//				ActivityNode source = qGraph.getEdgeSource(edge);
+//				ActivityNode target = qGraph.getEdgeTarget(edge);
+//				getProcessGraphDemo().addEdge(source, target);
+//			}
+//			
+//			// get the start node
+//			logger.warn("startNode: " + startNode.toString());
+//			logger.warn("startNode ID: " + startID);
+//			DepthFirstTraverseExtension dft = new DepthFirstTraverseExtension(qGraph, startNode);		
+//			dft.traverse();
+//					
+//			averageB = 600/(dft.getMaxBreadth() + 1);
+//			averageL = 700/(dft.getMaxLevel() + 1);
+//			Set<ActivityNode> vertexSetGraphDemo = getProcessGraphDemo().vertexSet();
+//			for (ActivityNode vertexGraphDemo: vertexSetGraphDemo){		
+//				i = dft.getVertexBreadth(vertexGraphDemo);
+//				j = dft.getVertexLevel(vertexGraphDemo);	
+//				i = i*averageB + 30;
+//				j = j*averageL + 20;				
+//				positionVertexAt(vertexGraphDemo, i, j); 		
+//			 }
+//			break;
+//		}
+//      }
     }
     
     private void adjustDisplaySettings(JGraph jg)

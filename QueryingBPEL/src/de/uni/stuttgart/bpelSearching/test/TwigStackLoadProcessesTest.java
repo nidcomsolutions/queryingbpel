@@ -21,6 +21,7 @@ import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityInvokeNode;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityReceiveNode;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityType;
+import de.uni.stuttgart.bpelSearching.matching.exactMatching.EvalQueryExactMatch;
 import de.uni.stuttgart.gerlacdt.bpel.controller.DbGraphPropertiesFactory;
 import de.uni.stuttgart.gerlacdt.bpel.database.ProcessUtilsNormal;
 
@@ -93,7 +94,7 @@ public class TwigStackLoadProcessesTest {
 	
 	@Test
 	public void treeMatchingTest() {
-		MatchBPELForTestOfTwigStackAlgorithm matchBPEL;
+		List<ProcessGraph> pGraphs = new ArrayList<ProcessGraph>();
 		for (Process process : processList) {
 			ProcessGraphFactory1 processFlowGraphFactory = DbGraphPropertiesFactory
 					.getInstance().getProcessGraphFactory(process);
@@ -104,10 +105,10 @@ public class TwigStackLoadProcessesTest {
 			ProcessGraph processFlowGraph = processFlowGraphFactory
 					.createProcessFlowGraph(process);
 			
-			matchBPEL = new MatchBPELForTestOfTwigStackAlgorithm(queryGraph1, processFlowGraph, false);
-			matchBPEL.match();			
+			pGraphs.add(processFlowGraph);
 		}
-				
+		EvalQueryExactMatch evalQueryExact = new EvalQueryExactMatch(queryGraph1, pGraphs);
+		evalQueryExact.doExactMatch();				
 	}
 
 }

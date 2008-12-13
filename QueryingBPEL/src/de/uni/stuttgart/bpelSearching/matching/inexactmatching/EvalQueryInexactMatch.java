@@ -8,16 +8,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.GraphType;
 import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
 import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.QueryGraph;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.datastructure.SolutionStream;
 import de.uni.stuttgart.bpelSearching.datastructure.StreamItem;
 import de.uni.stuttgart.bpelSearching.matching.NodesComparator;
-import de.uni.stuttgart.bpelSearching.util.GraphType;
+import de.uni.stuttgart.gerlacdt.bpel.controller.PropertyLoader;
 
 /**
  * The EvalQueryExactMatch class matches a given query graph against a set of process graphs 
@@ -103,6 +105,48 @@ public class EvalQueryInexactMatch {
 	 * 
 	 */
 	private void initStaticVariablesForInexactMatchAlgorithms() {
+		int numberOfQueryEdges;
+		String qNodeID;
+		String minSimProp = PropertyLoader.getInstance().getUserProperties().getProperty("minMatchingSimilarity");
+		if (minSimProp.equals("querygraphDependent")) {
+			if ((numberOfQueryEdges = this.querygraph.getNumberOfEdges()) == 0) {
+				InexactMatchAlgorithms.setMinMatchingSimilarity(1.0f);
+			} else {
+				InexactMatchAlgorithms.setMinMatchingSimilarity((1.00f / ((float)numberOfQueryEdges)));
+			}		
+		} else {
+			InexactMatchAlgorithms.setMinMatchingSimilarity(Float.valueOf(minSimProp.trim()).floatValue());
+		}
+		
+		String conFactorProp = PropertyLoader.getInstance().getUserProperties().getProperty("connectivityFactor");
+		InexactMatchAlgorithms.setConnectivityFactor(Float.valueOf(conFactorProp.trim()).floatValue());
+
+		String typeOfSimMeasureProp = PropertyLoader.getInstance().getUserProperties().getProperty("typeOfSimilarityMeasure");
+		if (typeOfSimMeasureProp.compareTo("structuredOnly") == 0) {
+			InexactMatchAlgorithms.setTypeOfSimilarityMeasure(SimilarityMeasureType.STRUCTRUREDONLY);
+			InexactMatchAlgorithms.setStructuredOnly(true);
+		} else if (typeOfSimMeasureProp.compareTo("matchingNodesOnly") == 0) {
+			InexactMatchAlgorithms.setTypeOfSimilarityMeasure(SimilarityMeasureType.MATCHINGNODESONLY);
+			InexactMatchAlgorithms.setStructuredOnly(false);
+		} else if (typeOfSimMeasureProp.compareTo("mixed") == 0) {
+			InexactMatchAlgorithms.setTypeOfSimilarityMeasure(SimilarityMeasureType.MIXED);
+			InexactMatchAlgorithms.setStructuredOnly(false);
+		} else {
+			// Default value
+			InexactMatchAlgorithms.setTypeOfSimilarityMeasure(SimilarityMeasureType.STRUCTRUREDONLY);
+			InexactMatchAlgorithms.setStructuredOnly(true);
+		}
+		
+		String structuredFactorProp = PropertyLoader.getInstance().getUserProperties().getProperty("structuredFactor");
+		InexactMatchAlgorithms.setStructuredFactor(Float.valueOf(structuredFactorProp.trim()).floatValue());
+		
+		String discreteFactorProp = PropertyLoader.getInstance().getUserProperties().getProperty("discreteFactor");
+		InexactMatchAlgorithms.setDiscreteFactor(Float.valueOf(discreteFactorProp.trim()).floatValue());
+
+		logger.warn(" minMatchingSimilarity: " + InexactMatchAlgorithms.getMinMatchingSimilarity() + 
+				"  minMatchingSimilarity: " + InexactMatchAlgorithms.getConnectivityFactor()+ "  structuredFactor: " + 
+				structuredFactorProp + "  discreteFactor: " + discreteFactorProp);
+		
 		InexactMatchAlgorithms.setQuerygraph(querygraph);
 		InexactMatchAlgorithms.getQuerygraph().setQueryNodesSortedByLevelOrder();
 		if (querygraph.getGraphType() == GraphType.TREE) {
@@ -111,6 +155,11 @@ public class EvalQueryInexactMatch {
 			querygraph.setSubgraphNodesMapForQueryDAG();
 		}
 		InexactMatchAlgorithms.setSolutionStreamMap(new HashMap<String, SolutionStream>());
+		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
+		for (ActivityNode queryNode : vertexSetQuery) {
+			qNodeID = queryNode.getActivityID();
+			InexactMatchAlgorithms.getSolutionStreamMap().put(qNodeID, new SolutionStream(0.0f));
+		}
 		InexactMatchAlgorithms.setMaxAssignListMap(new HashMap<String, List<Assignment>>());
 		InexactMatchAlgorithms.setTempMaxAssignSetMap(new HashMap<String, List<Assignment>>());
 		
@@ -128,11 +177,15 @@ public class EvalQueryInexactMatch {
 			InexactMatchAlgorithms.setCommonNodesIDs(new HashSet<String>());
 			InexactMatchAlgorithms.setQcSubgraphNodesMinusCommonNodesIDs(new HashSet<String>());
 			InexactMatchAlgorithms.setQueryIDPairsForNonCommonNodes(new ArrayList<String>());
+			InexactMatchAlgorithms.setQueryIDPairsForCrossEdges(new ArrayList<String>());
 			InexactMatchAlgorithms.setQChildrenSorted(new LinkedList<ActivityNode>());
 			int maxChildrenSize = querygraph.getMaxChildrenSize();
-			InexactMatchAlgorithms.setQChildrenMaxRefSize(new int[maxChildrenSize]);
+			InexactMatchAlgorithms.setQChildrenMaxRefSize(new float[maxChildrenSize]);
 			InexactMatchAlgorithms.setQiSubgraphNIDsComplement(new HashSet<String>());
 			InexactMatchAlgorithms.setUmQIDs(new HashSet<String>());
+			InexactMatchAlgorithms.setUmjQIDs(new HashSet<String>());
+			InexactMatchAlgorithms.setIsCombined(new boolean[querygraph.getNumberOfVertexes()]);
+			InexactMatchAlgorithms.setQNodesSortedByMatchSize(new ArrayList<ActivityNode>());
 		}
 	}
 		
@@ -143,15 +196,20 @@ public class EvalQueryInexactMatch {
 	public void printSolutions(){
 		logger.warn("************** Print sorted inexact matching results for the given query *****************");
 		String resultForOutput;
-		List<Matching> matchList;
+		List<Match> matchList;
 		for (InexactMatchingResult result : inexactMatchingResults) {
 			matchList = result.getMatchings();
 			resultForOutput = "process ID: " + result.getProcessID() + 
 			"  process namespace: " + result.getProcessNamespace() + 
 			"  process name: " + result.getProcessName() + 
 			" matches query with matchingsimilarity " + result.getMatchingSimilarity()
-			+ " has " + matchList.size() + " matchs: ";		
-			for (Matching match : matchList) {
+			+ " has " + matchList.size();
+ 			if (matchList.size() > 1) {
+ 				resultForOutput += " matchs: ";
+ 			} else {
+ 				resultForOutput += " match: ";
+ 			}
+			for (Match match : matchList) {
 				resultForOutput += match.toString();
 			}
 			logger.warn(resultForOutput);

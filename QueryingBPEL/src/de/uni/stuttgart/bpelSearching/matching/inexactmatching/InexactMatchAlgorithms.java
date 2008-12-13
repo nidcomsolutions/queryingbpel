@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.GraphType;
 import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
 import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.QueryGraph;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
@@ -18,7 +19,6 @@ import de.uni.stuttgart.bpelSearching.datastructure.SolutionStream;
 import de.uni.stuttgart.bpelSearching.datastructure.StreamItem;
 import de.uni.stuttgart.bpelSearching.matching.NodesComparator;
 import de.uni.stuttgart.bpelSearching.util.GraphAnalyse;
-import de.uni.stuttgart.bpelSearching.util.GraphType;
 
 /**
  * @author luwei
@@ -28,14 +28,19 @@ public class InexactMatchAlgorithms {
 	static Logger logger = Logger.getLogger(InexactMatchAlgorithms.class);
 	private static QueryGraph querygraph;
 	private ProcessGraph processgraph;
-	private float minMatchingSimilarity = 0.2f;
-	private static final float connectivityFactor = 0.5f;
-	private int numberOfDiscreteMatchQEdge = 0;
+	private static float minMatchingSimilarity;
+	private static float connectivityFactor;
+	private static SimilarityMeasureType typeOfSimilarityMeasure;
+	private static boolean isStructuredOnly;
+	private static float structuredFactor;
+	private static float discreteFactor;
+	private int numberOfDiscreteMatchQEdges = 0;
+	private int numberOfMatchQNodes = 0;
 	private int thresholdOfNumberOfMaxMatch = 0;
 	private InexactMatchingResult inexactMatchings;
 	
 	private static Map<String, SolutionStream> solutionStreamMap;
-	private static Map<String, List<Assignment>> tempMaxAssignSetMap;
+	private static Map<String, List<Assignment>> tempMaxAssignListMap;
 	private static Map<String, List<Assignment>> maxAssignListMap;
 	
 	private static Set<String> allProcNodesIds;
@@ -46,11 +51,14 @@ public class InexactMatchAlgorithms {
 	private static Set<String> commonNodesIDs;
 	private static Set<String> qcSubgraphNodesMinusCommonNodesIDs;
 	private static List<String> queryIDPairsForNonCommonNodes;
+	private static List<String> queryIDPairsForCrossEdges;
 	private static List<ActivityNode> qChildrenSorted;
-	private static int[] qChildrenMaxRefSize;
+	private static float[] qChildrenMaxRefSize;
 	private static Set<String> qiSubgraphNIDsComplement;
 	private static Set<String> umQIDs;
-	
+	private static Set<String> umjQIDs;
+	private static boolean[] isCombined;
+	private static List<ActivityNode> qNodesSortedByMatchSize;
 	private static List<StreamItem> seQcMaxList;
 	private static Set<ActivityNode> qchildren;
 	private static NodesComparator nodesCompare;
@@ -66,33 +74,151 @@ public class InexactMatchAlgorithms {
 	 */
 	public InexactMatchAlgorithms(ProcessGraph processgraph) {
 		GraphAnalyse ga;
-		int numberOfQueryEdges;
-
     	if ((processgraph == null) || ((processgraph != null) && 
     			(processgraph.getGraph() == null))) {
             throw new IllegalArgumentException("query graph must not be null");
-        }
-    	
-		this.processgraph = processgraph;
-		
+        } 	
+		this.processgraph = processgraph;	
 		ga = new GraphAnalyse(processgraph.getGraph(), 
 				processgraph.getStartActivity());
     	if(processgraph.getStartActivity() == null){
     		processgraph.setStartActivity(ga.getStartVertex());   		  		
     	}   	    	
     	processgraph.setGraphType(ga.checkGraphType());
-		
-		if ((numberOfQueryEdges = querygraph.getNumberOfEdges()) > 0) {
-			minMatchingSimilarity = (1.00f / ((float)numberOfQueryEdges));
-		}
-		
-//		BreadthFirstTraverse bfs = new BreadthFirstTraverse(querygraph.getQueryGraph(), 
-//				querygraph.getStartVertex());
-//		bfs.traverse();
-//		sortedQueryNodesByLevelOrder = bfs.getNodesSortedByLevelOrder();
-//		querygraph.setQueryNodesSortedByLevelOrder(sortedQueryNodesByLevelOrder);
 	}
 	
+	
+	/**
+	 * Performs inexact graph matching between the query graph to each process graph under 
+	 * inexact matching semantic.
+	 * 
+	 */
+	public void doInexactMatch(){
+		float discreteMatchRatio;
+		int numberOfQueryEdges, numberOfQueryNodes;	
+		List<Match> maxMatchingList;
+		ActivityNode q0;
+		List<StreamItem> streamListQ0;
+		Assignment tempAssQ0;
+		if ((processgraph.getGraphType() == GraphType.TREE)
+				|| (processgraph.getGraphType() == GraphType.ROOTED_DAG)) {
+			if (typeOfSimilarityMeasure == SimilarityMeasureType.MATCHINGNODESONLY) {
+				computeMatchsForMatchNodesOnlyBasedMetric();
+			} else {
+				initSolutionStreams();
+				if ((numberOfQueryEdges = querygraph.getNumberOfEdges()) == 0) {
+					q0 = querygraph.getStartActivity();
+					if (!(streamListQ0 = solutionStreamMap.get(q0.getActivityID()).getStreamList()).isEmpty()) {
+						maxMatchingList = new ArrayList<Match>();
+						for (StreamItem seq0 : streamListQ0) {
+							tempAssQ0 = new Assignment();
+							tempAssQ0.addAssign(q0, seq0.getProcessnode());
+							maxMatchingList.add(new Match(1.0f, tempAssQ0));
+						}
+						inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
+								processgraph.getProcessNamespace(), processgraph.getProcessName(), 
+								maxMatchingList, 1.0f);
+//						printSolutions();
+					}	
+				} else {
+					numberOfQueryNodes = querygraph.getGraph().vertexSet().size();
+					if (isStructuredOnly) {
+						discreteMatchRatio = (((float)numberOfDiscreteMatchQEdges)/((float)numberOfQueryEdges));
+					} else { // "mixed" similarity measure	
+						discreteMatchRatio = ((structuredFactor*((float)numberOfDiscreteMatchQEdges) + discreteFactor*
+								((float)numberOfMatchQNodes)) / (structuredFactor*((float)numberOfQueryEdges) + 
+								discreteFactor*((float)numberOfQueryNodes)));
+					}		
+					if (discreteMatchRatio >= minMatchingSimilarity) {
+						if (querygraph.getGraphType() == GraphType.TREE) {
+							computeMaxAssignForTreeNodes();
+							maxMatchsOfQueryTree();
+						} else if (querygraph.getGraphType() == GraphType.ROOTED_DAG) {
+							computeMaxAssignForDAGNodes();
+							maxMatchsOfQueryDAG();
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Computes inexact matching results. “matching nodes only” connected components based similarity metric is used. 
+	 * Simply, for a given query graph and a given process graph, find matching process nodes for each query node, then 
+	 * compute a set of maximal matchings that covers all matching process nodes.
+	 * 
+	 */
+	public void computeMatchsForMatchNodesOnlyBasedMetric() {
+		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
+		Set<ActivityNode> vertexSetProcess = processgraph.getGraph().vertexSet();
+		String qNodeID;
+		StreamItem streamElement, seqi;
+		int numberOfQueryEdges, maxStreamListLength, tempStreamListLength;
+		float similarity;
+		List<Match> maxMatchingList;
+		ActivityNode q0;
+		List<StreamItem> streamListQ0, streamListQi;
+		Assignment tempAssmQ0, tempAssmI;
+		
+		clearStaticVariables();
+		maxStreamListLength = 0;
+		numberOfMatchQNodes = 0;
+		for (ActivityNode queryNode : vertexSetQuery) {
+			qNodeID = queryNode.getActivityID();
+			solutionStreamMap.put(qNodeID, new SolutionStream(0));
+			for (ActivityNode procNode : vertexSetProcess) {
+				if(nodesCompare.compare(queryNode, procNode) == 0){
+					streamElement = new StreamItem(procNode, 0, 1, null);
+					solutionStreamMap.get(qNodeID).getStreamList().add(streamElement);
+				}
+			}
+			if ((tempStreamListLength = solutionStreamMap.get(qNodeID).getStreamList().size()) > 0) {
+				numberOfMatchQNodes++;
+				if (tempStreamListLength > maxStreamListLength) {
+					maxStreamListLength = tempStreamListLength;
+				}
+			}
+		}
+		
+		if ((numberOfQueryEdges = querygraph.getNumberOfEdges()) == 0) {
+			if (((float)numberOfMatchQNodes) >= minMatchingSimilarity) {
+				q0 = querygraph.getStartActivity();
+				if (!(streamListQ0 = solutionStreamMap.get(q0.getActivityID()).getStreamList()).isEmpty()) {
+					maxMatchingList = new ArrayList<Match>();
+					for (StreamItem seq0 : streamListQ0) {
+						tempAssmQ0 = new Assignment();
+						tempAssmQ0.addAssign(q0, seq0.getProcessnode());
+						maxMatchingList.add(new Match(1.0f, tempAssmQ0));
+					}
+					inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
+							processgraph.getProcessNamespace(), processgraph.getProcessName(), 
+							maxMatchingList, 1.0f);
+				}
+			}
+		} else {
+			similarity = ((float)numberOfMatchQNodes) / ((float)numberOfQueryEdges);
+			if (similarity >= minMatchingSimilarity) {
+				maxMatchingList = new ArrayList<Match>();
+				for (int i = 0; i < maxStreamListLength; i++) {
+					tempAssmI = new Assignment();
+					for (ActivityNode qi : vertexSetQuery) {
+						streamListQi = solutionStreamMap.get(qi.getActivityID()).getStreamList();
+						if (streamListQi.size() <= i){
+							tempAssmI.addAssign(qi);
+						} else {
+							seqi = streamListQi.get(i);
+							tempAssmI.addAssign(qi, seqi.getProcessnode());
+						}					
+					}
+					maxMatchingList.add(new Match(similarity, tempAssmI));
+				}
+				inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
+						processgraph.getProcessNamespace(), processgraph.getProcessName(), 
+						maxMatchingList, similarity);
+			}
+		}
+	}
 	
 	/**
 	 * Do the pre-processing step for the inexact matching, associate a solution 
@@ -106,10 +232,10 @@ public class InexactMatchAlgorithms {
 		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
 		Set<ActivityNode> vertexSetProcess = processgraph.getGraph().vertexSet();
 		String qNodeID;
-//		NodesComparator nodesCompare = new NodesComparator();
-		int initMaxSize, tempArrayPos, pPos, cPos, tempMaxNumberOfAssigns;
+		int tempArrayPos, pPos, cPos, tempMaxNumberOfAssigns;
+		float initMaxSize;
 		StreamItem streamElement;
-//		Set<ActivityNode> qchildren;
+		SolutionStream streamQ;
 		List<StreamItem> seList, seCList;
 		boolean hasMatchQEdge;
 		Set<String> qSubGraphIDs;
@@ -117,14 +243,21 @@ public class InexactMatchAlgorithms {
 		clearStaticVariables();
 		
 		processgraph.computeTransitiveClosure();
+		numberOfMatchQNodes = 0;
 		for (ActivityNode queryNode : vertexSetQuery) {
 			if (querygraph.isLeaf(queryNode)) {
-				initMaxSize = 0;
+				if (isStructuredOnly) {
+					initMaxSize = 0.0f;
+				} else {
+					initMaxSize = discreteFactor;
+				}				
 			} else {
-				initMaxSize = -1;
+				initMaxSize = -1.0f;
 			}
 			qNodeID = queryNode.getActivityID();
-			solutionStreamMap.put(qNodeID, new SolutionStream(initMaxSize));
+//			solutionStreamMap.put(qNodeID, new SolutionStream(initMaxSize));
+			streamQ = solutionStreamMap.get(qNodeID);
+			streamQ.setMaxMatchSize(initMaxSize);
 			for (ActivityNode procNode : vertexSetProcess) {
 				if(nodesCompare.compare(queryNode, procNode) == 0){
 					tempArrayPos = processgraph.getArrayIndexOfProcessNode(procNode);
@@ -133,19 +266,22 @@ public class InexactMatchAlgorithms {
 								procNode.toString() + " in the nodes array of the process graph.");
 					}
 					streamElement = new StreamItem(procNode, tempArrayPos, initMaxSize, null);
-					solutionStreamMap.get(qNodeID).getStreamList().add(streamElement);
+					streamQ.getStreamList().add(streamElement);
 					thresholdOfNumberOfMaxMatch++;
 				}
+			}
+			if (streamQ.getStreamList().isEmpty()) {
+				if (!isStructuredOnly) {
+					streamQ.setMaxMatchSize(0.0f);
+				}
+			} else {
+				numberOfMatchQNodes++;
 			}
 		}
 		
 		if (thresholdOfNumberOfMaxMatch > vertexSetProcess.size()) {
 			thresholdOfNumberOfMaxMatch = vertexSetProcess.size();
 		}		
-//		thresholdOfNumberOfMaxMatch = thresholdOfNumberOfMaxMatch - vertexSetQuery.size() + 1;
-//		if (thresholdOfNumberOfMaxMatch < 1) {
-//			thresholdOfNumberOfMaxMatch = 1;
-//		}
 		
 		for (ActivityNode qNode : vertexSetQuery) {
 			qNodeID = qNode.getActivityID();
@@ -166,7 +302,7 @@ public class InexactMatchAlgorithms {
 						}
 					}
 					if (hasMatchQEdge) {
-						numberOfDiscreteMatchQEdge++;
+						numberOfDiscreteMatchQEdges++;
 					}
 				}
 			}
@@ -186,23 +322,15 @@ public class InexactMatchAlgorithms {
 				for (String qSubNodeID : qSubGraphIDs) {
 						tempMaxNumberOfAssigns += solutionStreamMap.get(qSubNodeID).getStreamList().size();
 				}
-//				tempMaxNumberOfAssigns = tempMaxNumberOfAssigns - qSubGraphIDs.size() + 1;		
-//				if (tempMaxNumberOfAssigns < 1) {
-//					tempMaxNumberOfAssigns = 1;
-//				}
-				solutionStreamMap.get(qNodeID).setMaxNumberOfAssignments(tempMaxNumberOfAssigns);
-//				if (tempMaxNumberOfAssigns > 0) {
-//					solutionStreamMap.get(qNodeID).setMaxNumberOfAssignments(tempMaxNumberOfAssigns);
-//				}	
+				solutionStreamMap.get(qNodeID).setMaxNumberOfAssignments(tempMaxNumberOfAssigns);	
 			}		
-		}
-		
+		}	
 		// ********* For Debugg *********
 //		logger.warn("Output solution streams: ");
 //		for (ActivityNode qNode : vertexSetQuery) {
 //			logger.warn(qNode.toString() + " " + solutionStreamMap.get(qNode.getActivityID()).toString());
 //		}
-//		logger.warn("numberOfDiscreteMatchQEdge: " + numberOfDiscreteMatchQEdge);
+//		logger.warn("numberOfDiscreteMatchQEdges: " + numberOfDiscreteMatchQEdges);
 	}
 	
 	/**
@@ -210,64 +338,22 @@ public class InexactMatchAlgorithms {
 	 * 
 	 */
 	public void clearStaticVariables() {
-		if (!solutionStreamMap.isEmpty()) {
-			solutionStreamMap.clear();
+		SolutionStream streamQ;
+		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
+		for (ActivityNode queryNode : vertexSetQuery) {
+			streamQ = solutionStreamMap.get(queryNode.getActivityID());
+			if (!streamQ.getStreamList().isEmpty()) {
+				streamQ.getStreamList().clear();
+			}
 		}
 		if (!maxAssignListMap.isEmpty()) {
 			maxAssignListMap.clear();
 		}
-		if (!tempMaxAssignSetMap.isEmpty()) {
-			tempMaxAssignSetMap.clear();
-		}
-		
-		
-		
+		if (!tempMaxAssignListMap.isEmpty()) {
+			tempMaxAssignListMap.clear();
+		}		
 	} 
 	
-	
-	/**
-	 * Performs inexact graph matching between the query graph to each process graph under 
-	 * inexact matching semantic.
-	 * 
-	 */
-	public void doInexactMatch(){
-		float discreteMatchRatio;
-		int numberOfQueryEdges;	
-		List<Matching> maxMatchingList;
-		ActivityNode q0;
-		List<StreamItem> streamListQ0;
-		Assignment tempAssQ0;
-		if ((processgraph.getGraphType() == GraphType.TREE)
-				|| (processgraph.getGraphType() == GraphType.ROOTED_DAG)) {				
-			initSolutionStreams();
-			if ((numberOfQueryEdges = querygraph.getNumberOfEdges()) == 0) {
-				q0 = querygraph.getStartActivity();
-				if (!(streamListQ0 = solutionStreamMap.get(q0.getActivityID()).getStreamList()).isEmpty()) {
-					maxMatchingList = new ArrayList<Matching>();
-					for (StreamItem seq0 : streamListQ0) {
-						tempAssQ0 = new Assignment();
-						tempAssQ0.addAssign(q0, seq0.getProcessnode());
-						maxMatchingList.add(new Matching(1.0f, tempAssQ0));
-					}
-					inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
-							processgraph.getProcessNamespace(), processgraph.getProcessName(), 
-							maxMatchingList, 1.0f);
-//					printSolutions();
-				}	
-			} else {
-				discreteMatchRatio = (((float)numberOfDiscreteMatchQEdge)/((float)numberOfQueryEdges));
-				if (discreteMatchRatio >= minMatchingSimilarity) {
-					if (querygraph.getGraphType() == GraphType.TREE) {
-						computeMaxAssignForTreeNodes();
-						maxMatchsOfQueryTree();
-					} else if (querygraph.getGraphType() == GraphType.ROOTED_DAG) {
-						computeMaxAssignForDAGNodes();
-						maxMatchsOfQueryDAG();
-					}
-				}
-			}	
-		}
-	}
 	
 	/**
 	 * Compute maximal level-i matchings and the number of edges of each of 
@@ -276,18 +362,15 @@ public class InexactMatchAlgorithms {
 	 * 
 	 */
 	public void computeMaxAssignForTreeNodes() {
-		int i, j, maxSizePx, oldListLength, qNodesSize;
+		int i, j, oldListLength, qNodesSize;
+		float maxSizePx;
 		ActivityNode qi, px, pcm;
 		SolutionStream solutionStreamQi;
 		List<StreamItem> streamListQi;
-//		seQcMaxList = new ArrayList<StreamItem>();
 		Assignment upx, upxupcm;
 		String qiID, qipxID, qcpcmID, debuggerString;
 		List<Assignment> tempMaxAssList, tempMaxAssignListQcPcm, maxAssignListQi;
-//		Set<ActivityNode> qchildren;
 		Set<String> qcSubtreeNodesIDs;
-//		Set<String> allProcNodesIds = new HashSet<String>();
-//		Set<String> allProcessedProcNodesIds = new HashSet<String>();
 		qNodesSize = querygraph.getQueryNodesSortedByLevelOrder().size();
 	
 		// query nodes are processed in bottom-up order (from leaf to root)
@@ -304,12 +387,18 @@ public class InexactMatchAlgorithms {
 						px = seqi.getProcessnode();
 						upx = new Assignment();
 						upx.addAssign(qi, px);
+						if (isStructuredOnly) {
+							seqi.setMaxMatchSize(0.0f);
+						} else {
+							upx.setAssignSize(discreteFactor);
+							upx.setNumberOfAssignedQueryNodes(1);
+							seqi.setMaxMatchSize(discreteFactor);
+						}
 						qipxID = "q" + qi.getActivityID() + "p" + px.getActivityID();
 						tempMaxAssList = new ArrayList<Assignment>();
 						tempMaxAssList.add(upx);
-						tempMaxAssignSetMap.put(qipxID, tempMaxAssList);
+						tempMaxAssignListMap.put(qipxID, tempMaxAssList);
 						maxAssignListQi.add(upx);
-						seqi.setMaxMatchSize(0);
 					}
 				} else {
 					querygraph.getChildren(qi, qchildren);
@@ -318,42 +407,50 @@ public class InexactMatchAlgorithms {
 						upx = new Assignment();
 						// the start assign
 						upx.addAssign(qi, px);
-						// Count the number of edges of the maximal assignment, whose start assign is [qi / px]
-						maxSizePx = 0;
+						// Count the number of edges of the maximal assignment, whose start assign is [qi / px]					
+						if (isStructuredOnly) {
+							maxSizePx = 0.0f;
+						} else {
+							maxSizePx = discreteFactor;
+//							upx.setAssignSize(maxSizePx);
+						}
 						qipxID = "q" + qi.getActivityID() + "p" + px.getActivityID();
 						tempMaxAssList = new ArrayList<Assignment>();
 						tempMaxAssList.add(upx);
-						tempMaxAssignSetMap.put(qipxID, tempMaxAssList);
+						tempMaxAssignListMap.put(qipxID, tempMaxAssList);
 						// iterate through children nodes to calculate assignments for qi through combine
 						// children assignments
-						for (ActivityNode qc : qchildren) {
-							// No references to any stream elements stored in solution stream of qc
-//							seQcMaxList.clear();
+						for (ActivityNode qc : qchildren) {	
 							seqi.getMaxReferencedStreamItems(qc, seQcMaxList);
-							if (seQcMaxList.isEmpty()) {
+							// seQcMaxList is a list of stream elements referenced by seqi.childrenRefMap.get(qc), 
+							// each of these stream elements has a maximal value m for attribute “maxMatchSize” 
+							// among all referenced stream elements in seqi.childrenRefMap.get(qc)
+							if (seQcMaxList.isEmpty()) { // No references to any stream elements stored in solution stream of qc
 								// Expand each assignment with undefined for each query node in qc’s substree, replace
 								// the old assignment with the expanded one.
 								qcSubtreeNodesIDs = querygraph.getSubgraphNodesIDsFromMap(qc);														
-								// for (Assignment ass : tempMaxAssignSetMap.get(qipxID)) {
+								// for (Assignment ass : tempMaxAssignListMap.get(qipxID)) {
 								for (Assignment ass : tempMaxAssList) {
 									ass.addAssignsByQueryNodesIDs(qcSubtreeNodesIDs);
 								}	
 							} else {
-								// seQcMaxList is a list of stream elements referenced by seqi.childrenRefMap.get(qc), 
-								// each of these stream elements has a maximal value m for attribute “maxMatchSize” 
-								// among all referenced stream elements in seqi.childrenRefMap.get(qc)
 								oldListLength = tempMaxAssList.size();
-								maxSizePx = maxSizePx + seQcMaxList.get(0).getMaxMatchSize() + 1;
+								if (isStructuredOnly) {
+									maxSizePx += seQcMaxList.get(0).getMaxMatchSize() + 1.0f;
+								} else {
+									maxSizePx += seQcMaxList.get(0).getMaxMatchSize() + structuredFactor;
+								}				
 								for (j = 0; j < oldListLength; j++) {
 									upx = tempMaxAssList.get(j);
 									for (StreamItem seQcMax : seQcMaxList) {
 										pcm = seQcMax.getProcessnode();
 										qcpcmID = "q" + qc.getActivityID() + "p" + pcm.getActivityID();
-										tempMaxAssignListQcPcm = tempMaxAssignSetMap.get(qcpcmID);
+										tempMaxAssignListQcPcm = tempMaxAssignListMap.get(qcpcmID);
 										for (Assignment upcm : tempMaxAssignListQcPcm) {
 											upxupcm = new Assignment();
 											upxupcm.addAssignment(upx);
 											upxupcm.addAssignment(upcm);
+											upxupcm.setAssignSize(maxSizePx);
 											tempMaxAssList.add(upxupcm);
 										}
 									}	
@@ -361,8 +458,7 @@ public class InexactMatchAlgorithms {
 								
 								for (j = 0; j < oldListLength; j++) {
 									tempMaxAssList.remove(0);
-								}
-								
+								}		
 								if (tempMaxAssList.size() > solutionStreamQi.getMaxNumberOfAssignments()) {
 //									logger.warn("call reduce assignments");
 									reduceAssignments(tempMaxAssList, allProcNodesIds, allProcessedProcNodesIds);
@@ -398,8 +494,12 @@ public class InexactMatchAlgorithms {
 					for (Assignment uqi : maxAssignListQi) {
 						uqi.setAssignSize(solutionStreamQi.getMaxMatchSize());
 					}
-				}
-							
+					if (!isStructuredOnly) {
+						for (Assignment uqi : maxAssignListQi) {
+							uqi.computeNumberOfAssignedQueryNodes();
+						}
+					}
+				}			
 				// ******** For Debug ********
 //				debuggerString = "maxAssignListQi[" + qi.toString() + "] with size " + maxAssignListQi.size() + " = ";
 //				for (Assignment uqi : maxAssignListQi) {
@@ -422,37 +522,25 @@ public class InexactMatchAlgorithms {
 		String qiID, qiParentID, qjID, umqiPID;
 		List<Assignment> assMmaxList, maxAssListQi, newmaxAssList;
 		Set<String> subTreeNodesIDsQi;
-		Assignment um2, tempUm;
-		int qNodesSize, sizeUm1, sizeUm2, maxMatchSizeQi, maxAssignSize, numberOfQueryEdges;
-		float maxSimilarity, newMatchSimilarity, tempNewMatchSize;
-		boolean isMaxUm1, isEmptyMaxMatchingList, isSubComplement, maxMatchingListChanged;
+		Assignment um2, umqi;
+		int qNodesSize, numberOfQueryEdges, maxNumOfAssQNodes, totalNumOfAssQNodes, qiNumOfAssQNodes, um2NumOfAssQNodes, umNumOfAssQNodes;
+		float maxSimilarity, denominatorOfSim, maxAssignSize, maxMatchSizeQi, sizeUm1, sizeUm2, newMatchSimilarity, tempNewMatchSize;
+		boolean isMaxUm1, isEmptyMaxMatchingList, maxMatchingListChanged;
 		SolutionStream solutionStreamQi;
-		List<Matching> maxMatchingList = new ArrayList<Matching>();
-		List<Matching> tempMaxMatchingList;
-		Matching newMatch;
-
-		// Store all maximal level-1 assignments in Smax, which is a set used to store maximal matchings
-//		List<Assignment> maxAssignListQ0;
+		// Store all maximal level-1 assignments in maxMatchList, which is a set used to store maximal matchings
+		List<Match> maxMatchList = new ArrayList<Match>();
+		List<Match> tempMaxMatchList;
+		Match newMatch;
+		
+		// logger.warn("call max matchs of query tree");	
 		maxSimilarity = 0.0f;
 		numberOfQueryEdges = querygraph.getNumberOfEdges();
-//		logger.warn("call max matchs of query tree");
-		
-//		if ((numberOfQueryEdges = querygraph.getNumberOfEdges()) == 0) {
-//			maxAssignListQ0 = maxAssignListMap.get(querygraph.getQueryNodesSortedByLevelOrder().
-//					get(0).getActivityID());
-//			if ((maxAssignListQ0 != null) && (!(maxAssignListQ0.isEmpty()))) {
-//				for (Assignment ass : maxAssignListQ0) {
-//					maxMatchingList.add(new Matching(1.0f, ass));
-//				}
-//				maxSimilarity = 1.0f;
-//			}
-//		} else {
-		tempMaxMatchingList = new ArrayList<Matching>();
-//		allProcNodesIds = new HashSet<String>();
-//		allProcessedProcNodesIds = new HashSet<String>();
-//		pIDsInMatch = new HashSet<String>();
 		qNodesSize = querygraph.getQueryNodesSortedByLevelOrder().size();
+		tempMaxMatchList = new ArrayList<Match>();
+		denominatorOfSim = structuredFactor*((float)numberOfQueryEdges) + discreteFactor*((float)qNodesSize);
 		isEmptyMaxMatchingList = true;
+		qiNumOfAssQNodes = 0;
+		um2NumOfAssQNodes = 0;
 		// iterate through query tree nodes
 		for (int i = 0; i < qNodesSize; i++) {
 			qi = querygraph.getQueryNodesSortedByLevelOrder().get(i);
@@ -461,51 +549,48 @@ public class InexactMatchAlgorithms {
 			maxAssListQi = maxAssignListMap.get(qiID);
 			// Store the first not empty MaxAssignList[qi] in maxMatchingList
 			if (isEmptyMaxMatchingList && (maxAssListQi != null) && (!maxAssListQi.isEmpty())) {
-				maxSimilarity = ((float)(solutionStreamMap.get(qiID).getMaxMatchSize()))
-					/((float)numberOfQueryEdges);
+				if (isStructuredOnly) {
+					maxSimilarity = (solutionStreamQi.getMaxMatchSize())/((float)numberOfQueryEdges);
+				} else {
+					maxSimilarity = (solutionStreamQi.getMaxMatchSize())/denominatorOfSim;
+				}		
 				isEmptyMaxMatchingList = false;
 				if (querygraph.isRoot(qi)) {
 					for (Assignment ass : maxAssListQi) {
-						maxMatchingList.add(new Matching(maxSimilarity, ass));
+						maxMatchList.add(new Match(maxSimilarity, ass));
 					}
 				} else {
-//					subTreeNodesIDsQiComplement = new HashSet<String>();
 					if (!subTreeNodesIDsQiComplement.isEmpty()) {
 						subTreeNodesIDsQiComplement.clear();
 					}
 					subTreeNodesIDsQi = querygraph.getSubgraphNodesIDsFromMap(qi);
 					for (int j = 0; j < qNodesSize; j++) {
 						qjID = querygraph.getQueryNodesSortedByLevelOrder().get(j).getActivityID();
-						isSubComplement = true;
-						for (String subQiID : subTreeNodesIDsQi) {
-							if (qjID.compareTo(subQiID) == 0) {
-								isSubComplement = false;
-								break;
-							}
-						}
-						if (isSubComplement) {
+						if (!subTreeNodesIDsQi.contains(qjID)) {
 							subTreeNodesIDsQiComplement.add(qjID);
 						}
 					}
 					for (Assignment ass : maxAssListQi) {
 						ass.addAssignsByQueryNodesIDs(subTreeNodesIDsQiComplement);
-						maxMatchingList.add(new Matching(maxSimilarity, ass));
+						maxMatchList.add(new Match(maxSimilarity, ass));
 					}
-				}	
+				}
 			} else if ((maxAssListQi != null) && (!maxAssListQi.isEmpty())) {
 				qiParentID = querygraph.getParent(qi).getActivityID();
 				subTreeNodesIDsQi = querygraph.getSubgraphNodesIDsFromMap(qi);
-				tempMaxMatchingList.clear();
-				tempMaxMatchingList.addAll(maxMatchingList);
+				tempMaxMatchList.clear();
+				tempMaxMatchList.addAll(maxMatchList);
 				maxMatchSizeQi = solutionStreamQi.getMaxMatchSize();	
 				maxMatchingListChanged = false;
-				for (Matching mmax : maxMatchingList) {
+				for (Match mmax : maxMatchList) {
 					assMmaxList = mmax.getAssignments();
 					tempNewMatchSize = 0.0f;
-					maxAssignSize = 0;
+					maxAssignSize = 0.0f;
 					isMaxUm1 = false;
-					tempUm = null;
-					sizeUm2 = 0;
+					umqi = null;
+					sizeUm2 = 0.0f;
+					maxNumOfAssQNodes = 0;
+					totalNumOfAssQNodes = 0;
 					for (Assignment um : assMmaxList) {
 						// If parent node of qi is one of the query nodes assigned by um, 
 						// then we try to combine um with maximal assignments for qi stored 
@@ -513,7 +598,7 @@ public class InexactMatchAlgorithms {
 						if (um.containQueryNode(qiParentID)) {
 							umqiPID = um.getProcessNodeID(qiID);
 							if (umqiPID == null) {
-								sizeUm1 = 0;
+								sizeUm1 = 0.0f;
 							} else {
 								sizeUm1 = solutionStreamQi.getMaxMatchSizeOfStreamItem(umqiPID);	
 							}
@@ -522,9 +607,13 @@ public class InexactMatchAlgorithms {
 								if (umqiPID == null) {
 									sizeUm2 = um.getAssignSize() - sizeUm1;
 								} else {
-									sizeUm2 = um.getAssignSize() - sizeUm1 - 1;
+									if (isStructuredOnly) {
+										sizeUm2 = um.getAssignSize() - sizeUm1 - 1.0f;
+									} else {
+										sizeUm2 = um.getAssignSize() - sizeUm1 - structuredFactor;
+									}
 								}
-									
+								
 								if (maxMatchSizeQi >= sizeUm2) {
 									if (maxMatchSizeQi > maxAssignSize) {
 										maxAssignSize = maxMatchSizeQi;
@@ -534,82 +623,96 @@ public class InexactMatchAlgorithms {
 										maxAssignSize = sizeUm2;
 									}
 								}
-								tempNewMatchSize += ((float)maxMatchSizeQi + (float)sizeUm2);
-								tempUm = um;
+								umqi = um;							
+								tempNewMatchSize += (maxMatchSizeQi + sizeUm2);
+								
+								if (!isStructuredOnly) {
+									qiNumOfAssQNodes = maxAssListQi.get(0).getNumberOfAssignedQueryNodes();
+									um2NumOfAssQNodes = um.getNumberOfComplementAssignedQueryNodes(subTreeNodesIDsQi);
+									if (qiNumOfAssQNodes >= um2NumOfAssQNodes) {
+										if (qiNumOfAssQNodes > maxNumOfAssQNodes) {
+											maxNumOfAssQNodes = qiNumOfAssQNodes;
+										}
+									} else {
+										if (um2NumOfAssQNodes > maxNumOfAssQNodes) {
+											maxNumOfAssQNodes = um2NumOfAssQNodes;
+										}
+									}
+									totalNumOfAssQNodes += (qiNumOfAssQNodes + um2NumOfAssQNodes);
+								}							
 							} else {
 								isMaxUm1 = true;
 								break;
 							}
-						} else {
+						} else {	
 							if (um.getAssignSize() > maxAssignSize) {
 								maxAssignSize = um.getAssignSize();
 							}
-							tempNewMatchSize += ((float)(um.getAssignSize()));
+							tempNewMatchSize += um.getAssignSize();
+							if (!isStructuredOnly) {
+								umNumOfAssQNodes = um.getNumberOfAssignedQueryNodes();
+								if (umNumOfAssQNodes > maxNumOfAssQNodes) {
+									maxNumOfAssQNodes = umNumOfAssQNodes;
+								}
+								totalNumOfAssQNodes += umNumOfAssQNodes;
+							}
 						}
 					}
 						
-					if (!isMaxUm1) {
-						newMatchSimilarity = (((float)maxAssignSize + connectivityFactor * 
-							(tempNewMatchSize - (float)maxAssignSize))/numberOfQueryEdges);
-						if (tempUm != null) {
-							if (newMatchSimilarity > maxSimilarity) {
-								um2 = tempUm.getRestPartOfAssignmentByQueryNodesIDs(subTreeNodesIDsQi, sizeUm2);
-								maxSimilarity = newMatchSimilarity;
-								tempMaxMatchingList.clear();
-								for (Assignment maxAssQi : maxAssListQi) {
-									newmaxAssList = new ArrayList<Assignment>();
-									newmaxAssList.add(um2);
-									for (Assignment assMmax : assMmaxList) {
-										if (!assMmax.equals(tempUm)) {
-											newmaxAssList.add(assMmax);
-										}
-									}
-									newmaxAssList.add(maxAssQi);
-									newMatch = new Matching(newMatchSimilarity, newmaxAssList);
-									tempMaxMatchingList.add(newMatch);
-								}
-								maxMatchingListChanged = true;
-							} else if (newMatchSimilarity == maxSimilarity) {
-								um2 = tempUm.getRestPartOfAssignmentByQueryNodesIDs(subTreeNodesIDsQi, sizeUm2);
-								for (Assignment maxAssQi : maxAssListQi) {
-									newmaxAssList = new ArrayList<Assignment>();
-									newmaxAssList.add(um2);
-									for (Assignment assMmax : assMmaxList) {
-										if (!assMmax.equals(tempUm)) {
-											newmaxAssList.add(assMmax);
-										}
-									}
-									newmaxAssList.add(maxAssQi);
-									newMatch = new Matching(newMatchSimilarity, newmaxAssList);
-									tempMaxMatchingList.add(newMatch);
-								}
-								maxMatchingListChanged = true;
+					if ((!isMaxUm1) && (umqi != null)) {
+						if (isStructuredOnly) {
+							newMatchSimilarity = (maxAssignSize + connectivityFactor * (tempNewMatchSize - maxAssignSize))/numberOfQueryEdges;
+						} else {						
+							newMatchSimilarity = (maxAssignSize + connectivityFactor * ((tempNewMatchSize - discreteFactor * 
+									((float)totalNumOfAssQNodes))- (maxAssignSize - discreteFactor * ((float)maxNumOfAssQNodes))) 
+									+ discreteFactor*((float)(totalNumOfAssQNodes - maxNumOfAssQNodes)))/denominatorOfSim;
+						}
+						if (newMatchSimilarity > maxSimilarity) {
+							maxSimilarity = newMatchSimilarity;
+							tempMaxMatchList.clear();
+						}
+						if (newMatchSimilarity >= maxSimilarity) {
+							um2 = umqi.getRestPartOfAssignmentByQueryNodesIDs(subTreeNodesIDsQi, sizeUm2);
+							if (!isStructuredOnly) {
+								um2.setNumberOfAssignedQueryNodes(um2NumOfAssQNodes);
 							}
+							for (Assignment maxAssQi : maxAssListQi) {
+								newmaxAssList = new ArrayList<Assignment>();
+								newmaxAssList.add(um2);
+								for (Assignment assMmax : assMmaxList) {
+									if (!assMmax.equals(umqi)) {
+										newmaxAssList.add(assMmax);
+									}
+								}
+								newmaxAssList.add(maxAssQi);
+								newMatch = new Match(newMatchSimilarity, newmaxAssList);
+								tempMaxMatchList.add(newMatch);
+							}
+							maxMatchingListChanged = true;
 						}
 					}
 				}
 				
 				if (maxMatchingListChanged) {
-					if (tempMaxMatchingList.size() > thresholdOfNumberOfMaxMatch) {
+					if (tempMaxMatchList.size() > thresholdOfNumberOfMaxMatch) {
 //						logger.warn("call reduce matchings");
-						reduceMatchings(tempMaxMatchingList, allProcNodesIds, allProcessedProcNodesIds, pIDsInMatch);		
+						reduceMatchings(tempMaxMatchList, allProcNodesIds, allProcessedProcNodesIds, pIDsInMatch);		
 					}
-					maxMatchingList.clear();
-					maxMatchingList.addAll(tempMaxMatchingList);
+					maxMatchList.clear();
+					maxMatchList.addAll(tempMaxMatchList);
 				}
 			}
 		}
-//		}
 		
 		if (maxSimilarity >= minMatchingSimilarity) {
 			// optional step
-			if (maxMatchingList.size() > 1) {
+			if (maxMatchList.size() > 1) {
 //				logger.warn("call reduce matchings at final step");
-				reduceMatchings(maxMatchingList, allProcNodesIds, allProcessedProcNodesIds, pIDsInMatch);
+				reduceMatchings(maxMatchList, allProcNodesIds, allProcessedProcNodesIds, pIDsInMatch);
 			}
 			inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
 					processgraph.getProcessNamespace(), processgraph.getProcessName(), 
-					maxMatchingList, maxSimilarity);
+					maxMatchList, maxSimilarity);
 //			printSolutions();
 		}
 	}
@@ -622,28 +725,16 @@ public class InexactMatchAlgorithms {
 	 * 
 	 */
 	public void computeMaxAssignForDAGNodes() {
-		int qNodesSize, i, j, k, l, tempPos, maxSizePx, oldListLength, tempListLength, 
-			seqiQcMaxRefSize, maxPartialAssignSize, qIDpairsHalfLength,upcm1Size;
+		int qNodesSize, i, j, k, l, tempPos, oldListLength, tempListLength, numberOfCrossEdges;
+		float seqiQcMaxRefSize, maxSizePx, maxPartialAssignSize, upcm1Size, newAssigSize;
 		ActivityNode qi, px, pcm;
 		SolutionStream solutionStreamQi;
 		List<StreamItem> streamListQi;
-//		seQcMaxList = new ArrayList<StreamItem>();
 		Assignment upx, upxupcm, upcm1;
-		String qiID, qipxID, qcpcmID, sourceQID, targetQID, sourcePID, targetPID, debuggerString;
+		String qiID, qipxID, qcpcmID, debuggerString;
 		List<Assignment> tempMaxAssignsQiPx, tempMaxAssignListQcPcm, maxAssignListQi;
-//		Set<ActivityNode> qchildren;
 		Set<String> qcSubgraphNodesIDs;
-//		Set<String> allProcNodesIds = new HashSet<String>();
-//		Set<String> allProcessedProcNodesIds = new HashSet<String>();
 		qNodesSize = querygraph.getQueryNodesSortedByLevelOrder().size();
-//		processedChildrenSubgraphNodesIDs = new HashSet<String>();
-//		commonNodesIDs = new HashSet<String>();
-//		List<String> queryIDPairsForNonCommonNodes = new ArrayList<String>();
-//		qcSubgraphNodesMinusCommonNodesIDs = new HashSet<String>();
-//		List<ActivityNode> qChildrenSorted = new LinkedList<ActivityNode>();
-//		maxChildrenSize = querygraph.getMaxChildrenSize();
-//		int[] qChildrenMaxRefSize = new int[maxChildrenSize];
-		StreamItem sourceSE, targetSE;
 	
 		for (i = (qNodesSize - 1); i >= 0; i--) {
 			qi = querygraph.getQueryNodesSortedByLevelOrder().get(i);
@@ -658,12 +749,18 @@ public class InexactMatchAlgorithms {
 						px = seqi.getProcessnode();
 						upx = new Assignment();
 						upx.addAssign(qi, px);
+						if (isStructuredOnly) {
+							seqi.setMaxMatchSize(0.0f);
+						} else {
+							seqi.setMaxMatchSize(discreteFactor);
+							upx.setAssignSize(discreteFactor);
+							upx.setNumberOfAssignedQueryNodes(1);
+						}
 						qipxID = "q" + qiID + "p" + px.getActivityID();
 						tempMaxAssignsQiPx = new ArrayList<Assignment>();
 						tempMaxAssignsQiPx.add(upx);
-						tempMaxAssignSetMap.put(qipxID, tempMaxAssignsQiPx);
-						maxAssignListQi.add(upx);
-						seqi.setMaxMatchSize(0);
+						tempMaxAssignListMap.put(qipxID, tempMaxAssignsQiPx);
+						maxAssignListQi.add(upx);			
 					}
 				} else {				
 					querygraph.getChildren(qi, qchildren);					
@@ -673,20 +770,25 @@ public class InexactMatchAlgorithms {
 						// the start assign
 						upx.addAssign(qi, px);
 						// Count the number of edges of the maximal assignment, whose start assign is [qi / px]
-						maxSizePx = 0;
+						if (isStructuredOnly) {
+							maxSizePx = 0.0f;
+						} else {
+							maxSizePx = discreteFactor;
+							upx.setAssignSize(discreteFactor);
+						}		
 						qipxID = "q" + qiID + "p" + px.getActivityID();
 						tempMaxAssignsQiPx = new ArrayList<Assignment>();
 						tempMaxAssignsQiPx.add(upx);
-						tempMaxAssignSetMap.put(qipxID, tempMaxAssignsQiPx);
+						tempMaxAssignListMap.put(qipxID, tempMaxAssignsQiPx);
 						if (!processedChildrenSubgraphNodesIDs.isEmpty()) {
 							processedChildrenSubgraphNodesIDs.clear();	
-						}				
+						}
 						// *********** Sort query children ********** 
 						if (!qChildrenSorted.isEmpty()) {
 							qChildrenSorted.clear();
 						}	
 						for (k = 0; k < qChildrenMaxRefSize.length; k++) {
-							qChildrenMaxRefSize[k] = -2;
+							qChildrenMaxRefSize[k] = -2.0f;
 						}				
 						tempPos = -1;
 						for (ActivityNode qc : qchildren) {
@@ -712,10 +814,9 @@ public class InexactMatchAlgorithms {
 							qcSubgraphNodesIDs = querygraph.getSubgraphNodesIDsFromMap(qc);
 							// commonNodes are intersection of processed subtree nodes and nodes of subtree rooted at qc
 							intersectionOfSets(processedChildrenSubgraphNodesIDs, qcSubgraphNodesIDs, commonNodesIDs);
-							processedChildrenSubgraphNodesIDs.addAll(qcSubgraphNodesIDs);
-							// No references to any stream elements stored in solution stream of qc
+							processedChildrenSubgraphNodesIDs.addAll(qcSubgraphNodesIDs);		
 							seqi.getMaxReferencedStreamItems(qc, seQcMaxList);
-							if (seQcMaxList.isEmpty()) {
+							if (seQcMaxList.isEmpty()) { // No references to any stream elements stored in solution stream of qc
 								// Expand each assignment with undefined for each query node in qc’s substree, replace
 								// the old assignment with the expanded one.
 								if (commonNodesIDs.isEmpty()) {								
@@ -734,20 +835,25 @@ public class InexactMatchAlgorithms {
 								// seQcMaxList is a list of stream elements referenced by seqi.childrenRefMap.get(qc), 
 								// each of these stream elements has a maximal value m for attribute maxMatchSize 
 								// among all referenced stream elements in seqi.childrenRefMap.get(qc)
-								// assListQiPx = tempMaxAssignSetMap.get(qipxID);
+								// assListQiPx = tempMaxAssignListMap.get(qipxID);
 								oldListLength = tempMaxAssignsQiPx.size();
-								if (commonNodesIDs.isEmpty()) {								
-									maxSizePx = maxSizePx + seQcMaxList.get(0).getMaxMatchSize() + 1;
+								if (commonNodesIDs.isEmpty()) {
+									if (isStructuredOnly) {
+										maxSizePx = maxSizePx + seQcMaxList.get(0).getMaxMatchSize() + 1.0f;
+									} else {
+										maxSizePx = maxSizePx + seQcMaxList.get(0).getMaxMatchSize() + structuredFactor;
+									}
 									for (j = 0; j < oldListLength; j++) {
 										upx = tempMaxAssignsQiPx.get(j);
 										for (StreamItem seQcMax : seQcMaxList) {
 											pcm = seQcMax.getProcessnode();
 											qcpcmID = "q" + qc.getActivityID() + "p" + pcm.getActivityID();
-											tempMaxAssignListQcPcm = tempMaxAssignSetMap.get(qcpcmID);
+											tempMaxAssignListQcPcm = tempMaxAssignListMap.get(qcpcmID);
 											for (Assignment upcm : tempMaxAssignListQcPcm) {
 												upxupcm = new Assignment();
 												upxupcm.addAssignment(upx);
 												upxupcm.addAssignment(upcm);
+												upxupcm.setAssignSize(maxSizePx);
 												tempMaxAssignsQiPx.add(upxupcm);
 											}
 										}	
@@ -756,52 +862,45 @@ public class InexactMatchAlgorithms {
 									// in order to compute the size of upcm1
 									differenceOfSets(qcSubgraphNodesIDs, commonNodesIDs, qcSubgraphNodesMinusCommonNodesIDs);
 									querygraph.computeNodeIDPairs(qcSubgraphNodesMinusCommonNodesIDs, queryIDPairsForNonCommonNodes);
-									qIDpairsHalfLength = queryIDPairsForNonCommonNodes.size()/2;
-									maxPartialAssignSize = 0;							
+									querygraph.computeNodeIDPairs(qcSubgraphNodesMinusCommonNodesIDs, commonNodesIDs, queryIDPairsForCrossEdges);
+									maxPartialAssignSize = 0.0f;							
 									for (j = 0; j < oldListLength; j++) {
 										upx = tempMaxAssignsQiPx.get(j);
 										for (StreamItem seQcMax : seQcMaxList) {
 											pcm = seQcMax.getProcessnode();
 											qcpcmID = "q" + qc.getActivityID() + "p" + pcm.getActivityID();
-											tempMaxAssignListQcPcm = tempMaxAssignSetMap.get(qcpcmID);
+											tempMaxAssignListQcPcm = tempMaxAssignListMap.get(qcpcmID);
 											for (Assignment upcm : tempMaxAssignListQcPcm) {				
-												upcm1 = upcm.getRestPartOfAssignmentByQueryNodesIDs(commonNodesIDs, 0);
 												// ****** ??? assignsize for upcm1 ???*****
-												upcm1Size = 0;
-												for (k = 0; k < qIDpairsHalfLength; k++) {
-													sourceQID = queryIDPairsForNonCommonNodes.get(k*2);
-													targetQID = queryIDPairsForNonCommonNodes.get(k*2 + 1);
-													if ((sourceQID != null) && (targetQID != null)) {
-														sourcePID = upcm1.getProcessNodeID(sourceQID);
-														targetPID = upcm1.getProcessNodeID(targetQID);
-														if ((sourcePID != null) && (targetPID != null)) {
-															sourceSE = solutionStreamMap.get(sourceQID).getStreamItem(sourcePID);
-															targetSE = solutionStreamMap.get(targetQID).getStreamItem(targetPID);
-															if ((sourceSE != null) && (targetSE != null)) {
-																if (sourceSE.isChild(targetSE)) {
-																	upcm1Size++;	
-																}	
-															}
-														}
-													}
-												}
+												upcm1 = upcm.getRestPartOfAssignmentByQueryNodesIDs(commonNodesIDs, 0.0f);
+												upcm1Size = getAssignmentSize(queryIDPairsForNonCommonNodes, qcSubgraphNodesMinusCommonNodesIDs, upcm1);
 												upcm1.setAssignSize(upcm1Size);
-												if (upcm1.getAssignSize() > maxPartialAssignSize) {
-													maxPartialAssignSize = upcm1.getAssignSize();
+												numberOfCrossEdges = getNumberOfCrossMatchEdges(queryIDPairsForCrossEdges, upcm1, upx);
+												if (isStructuredOnly) {
+													newAssigSize = upcm1Size + ((float)numberOfCrossEdges);
+												} else {
+													newAssigSize = upcm1Size + structuredFactor*((float)numberOfCrossEdges);
+												}
+												if (newAssigSize > maxPartialAssignSize) {
+													maxPartialAssignSize = newAssigSize;
 													upcm1.addAssignment(upx);
 													tempListLength = tempMaxAssignsQiPx.size();
 													for (k = oldListLength; k < tempListLength; k++) {
 														tempMaxAssignsQiPx.remove(oldListLength);
 													}
 													tempMaxAssignsQiPx.add(upcm1);
-												} else if (upcm1.getAssignSize() == maxPartialAssignSize) {
+												} else if (newAssigSize == maxPartialAssignSize) {
 													upcm1.addAssignment(upx);
 													tempMaxAssignsQiPx.add(upcm1);
 												}
 											}
 										}
-									}	
-									maxSizePx = maxSizePx + maxPartialAssignSize + 1;
+									}
+									if (isStructuredOnly) {
+										maxSizePx = maxSizePx + maxPartialAssignSize + 1.0f;
+									} else {
+										maxSizePx = maxSizePx + maxPartialAssignSize + structuredFactor;
+									}		
 								}
 								
 								for (j = 0; j < oldListLength; j++) {
@@ -830,20 +929,26 @@ public class InexactMatchAlgorithms {
 					}
 					
 					if (maxAssignListQi.size() > solutionStreamQi.getMaxNumberOfAssignments()) {
-						logger.warn("call reduce assignments");
+//						logger.warn("before call reduce assignments maxAssignListQi.size(): " + maxAssignListQi.size() + "  qi: " + qi.toString());
 						reduceAssignments(maxAssignListQi, allProcNodesIds, allProcessedProcNodesIds);
+//						logger.warn("after call reduce assignments maxAssignListQi.size(): " + maxAssignListQi.size());
 					}
 					for (Assignment uqi : maxAssignListQi) {
 						uqi.setAssignSize(solutionStreamQi.getMaxMatchSize());
+					}	
+					if (!isStructuredOnly) {
+						for (Assignment uqi : maxAssignListQi) {
+							uqi.computeNumberOfAssignedQueryNodes();
+						}
 					}
 				}
 				
 				// ******** For Debug ********
-				debuggerString = "maxAssignListQi[" + qi.toString() + "] with size " + maxAssignListQi.size() + " = ";
-				for (Assignment uqi : maxAssignListQi) {
-					debuggerString += uqi.toString();
-				}
-				logger.warn(debuggerString);
+//				debuggerString = "maxAssignListQi[" + qi.toString() + "] with size " + maxAssignListQi.size() + " = ";
+//				for (Assignment uqi : maxAssignListQi) {
+//					debuggerString += uqi.toString();
+//				}
+//				logger.warn(debuggerString);
 			}
 		}
 		
@@ -851,36 +956,39 @@ public class InexactMatchAlgorithms {
 //		for (ActivityNode qNode : querygraph.getQueryGraph().vertexSet()) {
 //			logger.warn(qNode.toString() + " " + solutionStreamMap.get(qNode.getActivityID()).toString());
 //		}
-//		logger.warn("numberOfDiscreteMatchQEdge: " + numberOfDiscreteMatchQEdge);
+//		logger.warn("numberOfDiscreteMatchQEdges: " + numberOfDiscreteMatchQEdges);
 	}
 	
 	/**
-	 * Finds maximal matchings between the query graph and the process graph as combinations of 
+	 * Finds maximal matches between the query graph and the process graph as combinations of 
 	 * maximal level-i assignments. The results are stored in attribute <code> maxMatchingList 
 	 * </code>.
 	 * 
 	 */
 	public void maxMatchsOfQueryDAG() {
-		String rootID, qID, q0ID, urq0PID, qiID, umqiPID, sourceQID, targetQID, sourcePID, targetPID;
-		int matchSizeQ, i, j, k, tempSize, maxMatchSizeQr, maxMatchSizeQi, numberOfQueryEdges, sizeQiPID,
-			urMinusQ0Size, um1Size, qNodesSortedSize, qIDpairsHalfLength, maxAssignSize;
-		float maxSimilarity, newMatchSimilarity, tempNewMatchSize;
-		List<Matching> maxMatchingList = new ArrayList<Matching>();
-		List<Matching> tempMaxMatchingList;
+		String rootID, qID, q0ID, urq0PID, qiID, umqiPID;
+		int i, j, tempSize, numberOfQueryEdges, qNodesSortedSize,numberOfCrossMatchEdges, assMmaxListLength;
+		float matchSizeQ,maxMatchSizeQr, maxMatchSizeQ0, maxMatchSizeQi, maxSimilarity, newMatchSimilarity, 
+			tempNewMatchSize, tempNewMatchSize2, urMinusQ0Size, uqr0Size, sizeQiPID, umqi1Size, maxAssignSize, 
+			uqi1Size, maxAssignSize2, denominatorOfSim, discretePartU0, discretePartUrU0, 
+			structuredPartU0, structuredPartUrU0, discretePartUm, structuredPartUm, discretePartUmqi1, 
+			structuredPartUmqi1, maxStructuredPart, totalStructuredPart, totalDiscretePart, maxStructuredPart2, 
+			totalStructuredPart2, totalDiscretePart2, uqi1DiscretePart, uqi1StructuredPart;
+		List<Match> tempMaxMatchingList, maxMatchingList = new ArrayList<Match>();
 		List<Assignment> maxAssListQr, maxAssListQ0, maxAssListQi, assMmaxList, newmaxAssList;
 		SolutionStream solutionStreamQ0, solutionStreamQi;
-		Set<String> qiSubgraphNIDs;
-		Matching newMatch;
-		Assignment newAssm, tempUm, um1;
-//		List<String> queryIDPairsForNonCommonNodes;
-		StreamItem sourceSE, targetSE;
-		boolean isMaxUmQi, added, maxMatchingListChanged;
+		Set<String> q0SubgraphNIDs, qiSubgraphNIDs;
+		Match newMatch;
+		Assignment uqr0, urMinusu0, newAssm, umqi, umqi1, uqi1, umj;
+		boolean isMaxUmQi, added, maxMatchingListChanged, isUmqi;
 		
 		List<ActivityNode> qNodesSortedByLevel = querygraph.getQueryNodesSortedByLevelOrder();	
 		// qNodesSortedByMatchSize is an array on query nodes except the query root node that meet the 
 		// following conditions: the MaxAssignSet[] for each of these query nodes is not empty. Query 
 		// nodes are sorted in descending order of the “maxMatchSize”. 
-		List<ActivityNode> qNodesSortedByMatchSize = new ArrayList<ActivityNode>();
+		if (!qNodesSortedByMatchSize.isEmpty()) {
+			qNodesSortedByMatchSize.clear();
+		}
 		qNodesSortedByMatchSize.add(qNodesSortedByLevel.get(1));
 		for (i = 2; i < qNodesSortedByLevel.size(); i++) {
 			qID = qNodesSortedByLevel.get(i).getActivityID();		
@@ -906,11 +1014,16 @@ public class InexactMatchAlgorithms {
 		maxMatchSizeQr = solutionStreamMap.get(rootID).getMaxMatchSize();
 		numberOfQueryEdges = querygraph.getGraph().edgeSet().size();
 		maxAssListQr = maxAssignListMap.get(rootID);
+		denominatorOfSim = structuredFactor*((float)numberOfQueryEdges) + discreteFactor*((float)qNodesSortedByLevel.size());
 		
-		if (maxMatchSizeQr <= 0) {
+		if (maxMatchSizeQr <= 0.0f) {
 			maxSimilarity = 0.0f;
 		} else {
-			maxSimilarity = ((float)maxMatchSizeQr) / ((float)numberOfQueryEdges);
+			if (isStructuredOnly) {
+				maxSimilarity = (maxMatchSizeQr / ((float)numberOfQueryEdges));
+			} else {
+				maxSimilarity = (maxMatchSizeQr / denominatorOfSim);
+			}	
 		}
 		
 		// Combine maximal level-i assignments for query subgraph rooted at q0 with maximal level-1 
@@ -918,92 +1031,116 @@ public class InexactMatchAlgorithms {
 		if ((qNodesSortedSize = qNodesSortedByMatchSize.size()) == 0) {
 			if ((maxAssListQr != null) && (maxSimilarity >= minMatchingSimilarity)) {
 				for (Assignment ass : maxAssListQr) {
-					maxMatchingList.add(new Matching(maxSimilarity, ass));
+					maxMatchingList.add(new Match(maxSimilarity, ass));
 				}
 			}
 		} else { 	// there is at least one node whose MaxAssignList is not empty
 			q0ID = qNodesSortedByMatchSize.get(0).getActivityID();
 			solutionStreamQ0 = solutionStreamMap.get(q0ID);
-			maxMatchSizeQi = solutionStreamQ0.getMaxMatchSize();
-			maxAssListQ0 = maxAssignListMap.get(q0ID);
-//			qiSubgraphNIDsComplement = new HashSet<String>();
+			maxMatchSizeQ0 = solutionStreamQ0.getMaxMatchSize();
+			maxAssListQ0 = maxAssignListMap.get(q0ID);			
 			if (!qiSubgraphNIDsComplement.isEmpty()) {
 				qiSubgraphNIDsComplement.clear();
 			}
-			qiSubgraphNIDs = querygraph.getSubgraphNodesIDsFromMap(qNodesSortedByMatchSize.get(0));
-			
+			q0SubgraphNIDs = querygraph.getSubgraphNodesIDsFromMap(qNodesSortedByMatchSize.get(0));			
 			for (ActivityNode qNode : qNodesSortedByLevel) {
-				if (!qiSubgraphNIDs.contains(qNode.getActivityID())) {
+				if (!q0SubgraphNIDs.contains(qNode.getActivityID())) {
 					qiSubgraphNIDsComplement.add(qNode.getActivityID());
 				}
-			}
-			
-//			allProcNodesIds = new HashSet<String>();
-//			allProcessedProcNodesIds = new HashSet<String>();
-//			pIDsInMatch = new HashSet<String>();
-//			queryIDPairsForNonCommonNodes = new ArrayList<String>();
-			
+			}		
 			if ((maxAssListQr == null) || maxAssListQr.isEmpty()) {
-				maxSimilarity = ((float)maxMatchSizeQi) / ((float)numberOfQueryEdges);
+				if (isStructuredOnly) {
+					maxSimilarity = maxMatchSizeQ0 / ((float)numberOfQueryEdges);
+				} else {
+					maxSimilarity = maxMatchSizeQ0 / denominatorOfSim;
+				}
 				for (Assignment ass : maxAssListQ0) {
-					newMatch = new Matching(maxSimilarity, ass);
+					newMatch = new Match(maxSimilarity, ass);
 					newAssm = new Assignment();
 					newAssm.addAssignsByQueryNodesIDs(qiSubgraphNIDsComplement);
 					newMatch.addAssignment(newAssm);
 					maxMatchingList.add(newMatch);
-				}		
+				}	
 			} else {
+				for (Assignment ass : maxAssListQr) {
+					maxMatchingList.add(new Match(maxSimilarity, ass));
+				}
 				querygraph.computeNodeIDPairs(qiSubgraphNIDsComplement, queryIDPairsForNonCommonNodes);
-				qIDpairsHalfLength = queryIDPairsForNonCommonNodes.size()/2;
+				querygraph.computeNodeIDPairs(qiSubgraphNIDsComplement, q0SubgraphNIDs, queryIDPairsForCrossEdges);
+				structuredPartU0 = 0.0f;
+				structuredPartUrU0 = 0.0f;
+				discretePartUrU0 = 0.0f;
+				discretePartU0 = 0.0f;
 				for (Assignment ur : maxAssListQr) {
 					if (((urq0PID = ur.getProcessNodeID(q0ID)) == null) || ((solutionStreamQ0.
-							getStreamItem(urq0PID).getMaxMatchSize()) < maxMatchSizeQi)) {			
-						// ********* Compute |ur minus subgraphNodes(q0)| *************
-						urMinusQ0Size = 0;
-						for (k = 0; k < qIDpairsHalfLength; k++) {
-							sourceQID = queryIDPairsForNonCommonNodes.get(k*2);
-							targetQID = queryIDPairsForNonCommonNodes.get(k*2 + 1);
-							if ((sourceQID != null) && (targetQID != null)) {
-								sourcePID = ur.getProcessNodeID(sourceQID);
-								targetPID = ur.getProcessNodeID(targetQID);
-								if ((sourcePID != null) && (targetPID != null)) {
-									sourceSE = solutionStreamMap.get(sourceQID).getStreamItem(sourcePID);
-									targetSE = solutionStreamMap.get(targetQID).getStreamItem(targetPID);
-									if ((sourceSE != null) && (targetSE != null)) {
-										if (sourceSE.isChild(targetSE)) {
-											urMinusQ0Size++;	
-										}	
+							getStreamItem(urq0PID).getMaxMatchSize()) < maxMatchSizeQ0)) {			
+						//********* Compute |ur minus subgraphNodes(q0)| *************	
+						urMinusu0 = ur.getRestPartOfAssignmentByQueryNodesIDs(q0SubgraphNIDs, 0.0f);
+						if (!isStructuredOnly) {
+							discretePartUrU0 = discreteFactor*(urMinusu0.computeNumberOfAssignedQueryNodes());
+						}
+						urMinusQ0Size = getAssignmentSize(queryIDPairsForNonCommonNodes, discretePartUrU0, urMinusu0);
+						urMinusu0.setAssignSize(urMinusQ0Size);
+						if (!isStructuredOnly) {
+							structuredPartUrU0 = urMinusQ0Size - discretePartUrU0;
+						}
+						for (Assignment u0 : maxAssListQ0) {
+							if (!isStructuredOnly) {
+								discretePartU0 = discreteFactor*(u0.getNumberOfAssignedQueryNodes());
+								structuredPartU0 = maxMatchSizeQ0 - discretePartU0;
+							}
+							numberOfCrossMatchEdges = getNumberOfCrossMatchEdges(queryIDPairsForCrossEdges, ur, u0);
+							if (numberOfCrossMatchEdges == 0) {
+								if (isStructuredOnly) {
+									if (maxMatchSizeQ0 > urMinusQ0Size) {
+										newMatchSimilarity = ((maxMatchSizeQ0 + connectivityFactor * 
+												urMinusQ0Size)/numberOfQueryEdges);
+									} else {
+										newMatchSimilarity = ((urMinusQ0Size + connectivityFactor * 
+												maxMatchSizeQ0)/numberOfQueryEdges);
+									}
+								} else {
+									if (structuredPartU0 > structuredPartUrU0) {
+										newMatchSimilarity = (structuredPartU0 + connectivityFactor * structuredPartUrU0 
+												+ discretePartUrU0 + discretePartU0)/denominatorOfSim;
+									} else {
+										newMatchSimilarity = (structuredPartUrU0 + connectivityFactor * structuredPartU0 
+												+ discretePartUrU0 + discretePartU0)/denominatorOfSim;
 									}
 								}
+		
+								if (newMatchSimilarity > maxSimilarity) {
+									maxSimilarity = newMatchSimilarity;
+									maxMatchingList.clear();				
+								}	
+								if (newMatchSimilarity >= maxSimilarity) {
+									newMatch = new Match(maxSimilarity, u0);
+									newMatch.addAssignment(urMinusu0);
+									maxMatchingList.add(newMatch);
+								}
+							} else {
+								if (isStructuredOnly) {
+									uqr0Size = (float)numberOfCrossMatchEdges + maxMatchSizeQ0 + urMinusQ0Size;
+									newMatchSimilarity = uqr0Size/numberOfQueryEdges;
+								} else {
+									uqr0Size = ((float)numberOfCrossMatchEdges)*structuredFactor + maxMatchSizeQ0 + urMinusQ0Size;
+									newMatchSimilarity = uqr0Size/denominatorOfSim;
+								}
+								if (newMatchSimilarity > maxSimilarity) {
+									maxSimilarity = newMatchSimilarity;
+									maxMatchingList.clear();
+								} 
+								if (newMatchSimilarity >= maxSimilarity) {
+									uqr0 = new Assignment();
+									uqr0.addAssignment(urMinusu0);
+									uqr0.addAssignment(u0);
+									uqr0.setAssignSize(uqr0Size);
+									uqr0.computeNumberOfAssignedQueryNodes();
+									newMatch = new Match(maxSimilarity, uqr0);
+									maxMatchingList.add(newMatch);
+								}
 							}
-						}
-						
-						if (maxMatchSizeQi > urMinusQ0Size) {
-							newMatchSimilarity = (((float)maxMatchSizeQi + connectivityFactor * 
-									((float)urMinusQ0Size))/numberOfQueryEdges);
-						} else {
-							newMatchSimilarity = (((float)urMinusQ0Size + connectivityFactor * 
-									((float)maxMatchSizeQi))/numberOfQueryEdges);
-						}
-
-						
-						if (newMatchSimilarity > maxSimilarity) {
-							maxSimilarity = newMatchSimilarity;
-							maxMatchingList.clear();				
-							for (Assignment ass : maxAssListQ0) {
-								newMatch = new Matching(maxSimilarity, ass);
-								newMatch.addAssignment(ur.getRestPartOfAssignmentByQueryNodesIDs
-										(qiSubgraphNIDs, urMinusQ0Size));
-								maxMatchingList.add(newMatch);
-							}
-						} else if (newMatchSimilarity == maxSimilarity) {
-							for (Assignment ass : maxAssListQ0) {
-								newMatch = new Matching(maxSimilarity, ass);
-								newMatch.addAssignment(ur.getRestPartOfAssignmentByQueryNodesIDs
-										(qiSubgraphNIDs, urMinusQ0Size));
-								maxMatchingList.add(newMatch);
-							}
-						}
+						}		
 					}
 				}
 				
@@ -1013,9 +1150,14 @@ public class InexactMatchAlgorithms {
 			}
 			
 			if (qNodesSortedSize > 1) {
-				tempMaxMatchingList = new ArrayList<Matching>();
-//				umQIDs = new HashSet<String>();
-				isMaxUmQi = false;
+				tempMaxMatchingList = new ArrayList<Match>();			
+				discretePartUmqi1 = 0.0f;
+				uqi1StructuredPart = 0.0f;
+				uqi1DiscretePart = 0.0f;
+				totalStructuredPart2 = 0.0f;
+				maxStructuredPart2 = 0.0f;
+				totalDiscretePart2 = 0.0f;
+				umqi1Size = 0.0f;
 				for (i = 1; i < qNodesSortedSize; i++) {
 					qiID = qNodesSortedByMatchSize.get(i).getActivityID();
 					qiSubgraphNIDs = querygraph.getSubgraphNodesIDsFromMap(qNodesSortedByLevel.get(i));
@@ -1025,104 +1167,168 @@ public class InexactMatchAlgorithms {
 					maxMatchSizeQi = solutionStreamQi.getMaxMatchSize();
 					maxAssListQi = maxAssignListMap.get(qiID);
 					maxMatchingListChanged = false;
-					for (Matching mmax : maxMatchingList) {
-						assMmaxList = mmax.getAssignments();						
+					for (Match mmax : maxMatchingList) {
+						assMmaxList = mmax.getAssignments();
+						assMmaxListLength = assMmaxList.size();
 						tempNewMatchSize = 0.0f;
-						maxAssignSize = 0;
-						tempUm = null;
-						um1Size = 0;					
+						maxAssignSize = 0.0f;			
+						umqi = null;
+						totalDiscretePart = 0.0f;
+						totalStructuredPart = 0.0f;
+						maxStructuredPart = 0.0f;
+						isMaxUmQi = false;
 						for (Assignment um : assMmaxList) {
 							if (um.containQueryNode(qiID)) {
 								umqiPID = um.getProcessNodeID(qiID);
 								if (umqiPID == null) {
-									sizeQiPID = -1;
+									sizeQiPID = -1.0f;
 								} else {
 									sizeQiPID = solutionStreamQi.getMaxMatchSizeOfStreamItem(umqiPID);	
 								}
-								isMaxUmQi = false;
 								if (sizeQiPID < maxMatchSizeQi) {								
 									um.getQueryNodesIDs(umQIDs);
+									intersectionOfSets(umQIDs, qiSubgraphNIDs, commonNodesIDs);
 									differenceOfSets(umQIDs, qiSubgraphNIDs, qiSubgraphNIDsComplement);
 									querygraph.computeNodeIDPairs(qiSubgraphNIDsComplement, queryIDPairsForNonCommonNodes);
-									qIDpairsHalfLength = queryIDPairsForNonCommonNodes.size()/2;	
-									um1Size = 0;
-									for (k = 0; k < qIDpairsHalfLength; k++) {
-										sourceQID = queryIDPairsForNonCommonNodes.get(k*2);
-										targetQID = queryIDPairsForNonCommonNodes.get(k*2 + 1);
-										if ((sourceQID != null) && (targetQID != null)) {
-											sourcePID = um.getProcessNodeID(sourceQID);
-											targetPID = um.getProcessNodeID(targetQID);
-											if ((sourcePID != null) && (targetPID != null)) {
-												sourceSE = solutionStreamMap.get(sourceQID).getStreamItem(sourcePID);
-												targetSE = solutionStreamMap.get(targetQID).getStreamItem(targetPID);
-												if ((sourceSE != null) && (targetSE != null)) {
-													if (sourceSE.isChild(targetSE)) {
-														um1Size++;	
-													}	
-												}
-											}
+									umqi1Size = getAssignmentSize(queryIDPairsForNonCommonNodes, qiSubgraphNIDsComplement, um);					
+									umqi = um;
+									if (!isStructuredOnly) {
+										discretePartUmqi1 = discreteFactor * um.getNumberOfAssignedQueryNodes(qiSubgraphNIDsComplement);
+										structuredPartUmqi1 = umqi1Size - discretePartUmqi1;
+										if (structuredPartUmqi1 > maxStructuredPart) {
+											maxStructuredPart = structuredPartUmqi1;
 										}
-									}					
-									if (maxMatchSizeQi >= um1Size) {
-										if (maxMatchSizeQi > maxAssignSize) {
-											maxAssignSize = maxMatchSizeQi;
-										}
-									} else {
-										if (um1Size > maxAssignSize) {
-											maxAssignSize = um1Size;
-										}
+										totalDiscretePart += discretePartUmqi1;
+										totalStructuredPart += structuredPartUmqi1;
 									}
-									tempNewMatchSize += ((float)maxMatchSizeQi + (float)um1Size);
-									tempUm = um;
+									if (umqi1Size > maxAssignSize) {
+										maxAssignSize = umqi1Size;
+									}
+									tempNewMatchSize += umqi1Size;
 								} else {
 									isMaxUmQi = true;
 									break;
 								}
 							} else {
+								if (!isStructuredOnly) {
+									discretePartUm = discreteFactor * um.getNumberOfAssignedQueryNodes();
+									structuredPartUm = um.getAssignSize() - discretePartUm;
+									if (structuredPartUm > maxStructuredPart) {
+										maxStructuredPart = structuredPartUm;
+									}
+									totalDiscretePart += discretePartUm;
+									totalStructuredPart += structuredPartUm;
+								}
 								if (um.getAssignSize() > maxAssignSize) {
 									maxAssignSize = um.getAssignSize();
 								}
-								tempNewMatchSize += ((float)(um.getAssignSize()));
+								tempNewMatchSize += um.getAssignSize();
 							}
 						}
 						
-						newMatchSimilarity = (((float)maxAssignSize + connectivityFactor * 
-								(tempNewMatchSize - (float)maxAssignSize))/numberOfQueryEdges);
-						if ((tempUm != null) && (!isMaxUmQi)) {
-							if (newMatchSimilarity > maxSimilarity) {
-								um1 = tempUm.getRestPartOfAssignmentByQueryNodesIDs(qiSubgraphNIDs, um1Size);
-								maxSimilarity = newMatchSimilarity;
-								tempMaxMatchingList.clear();
-								for (Assignment maxAssQi : maxAssListQi) {
+						if ((umqi != null) && (!isMaxUmQi)) {
+							querygraph.computeNodeIDPairs(commonNodesIDs, queryIDPairsForNonCommonNodes);
+							for (Assignment uqi : maxAssListQi) {					
+								uqi1Size = getAssignmentSize(queryIDPairsForNonCommonNodes, commonNodesIDs, uqi);
+								tempNewMatchSize2 = tempNewMatchSize + uqi1Size;
+								maxAssignSize2 = maxAssignSize;
+								if (!isStructuredOnly) {
+									uqi1DiscretePart = discreteFactor * ((float)uqi.getNumberOfAssignedQueryNodes(commonNodesIDs));
+									uqi1StructuredPart = uqi1Size - uqi1DiscretePart;
+									totalDiscretePart2 = totalDiscretePart + uqi1DiscretePart;
+									maxStructuredPart2 = maxStructuredPart;
+									totalStructuredPart2 = totalStructuredPart + uqi1StructuredPart;
+								}
+								for (j = 0; j < assMmaxListLength; j++) {
+									umj = assMmaxList.get(j);
+									if (umj.equals(umqi)) {
+										isUmqi = true;
+									} else {
+										isUmqi = false;
+									}
+									if (isUmqi) {
+										querygraph.computeNodeIDPairs(qiSubgraphNIDsComplement, commonNodesIDs, queryIDPairsForCrossEdges);
+										numberOfCrossMatchEdges = getNumberOfCrossMatchEdges(queryIDPairsForCrossEdges, umj, uqi);
+										querygraph.computeNodeIDPairs(commonNodesIDs, qiSubgraphNIDsComplement, queryIDPairsForCrossEdges);
+										numberOfCrossMatchEdges += getNumberOfCrossMatchEdges(queryIDPairsForCrossEdges, uqi, umj);
+									} else {
+										umj.getQueryNodesIDs(umjQIDs);
+										querygraph.computeNodeIDPairs(umjQIDs, commonNodesIDs, queryIDPairsForCrossEdges);
+										numberOfCrossMatchEdges = getNumberOfCrossMatchEdges(queryIDPairsForCrossEdges, umj, uqi);
+										querygraph.computeNodeIDPairs(commonNodesIDs, umjQIDs, queryIDPairsForCrossEdges);
+										numberOfCrossMatchEdges += getNumberOfCrossMatchEdges(queryIDPairsForCrossEdges, uqi, umj);
+									}
+									
+									if (numberOfCrossMatchEdges > 0) {
+										isCombined[j] = true;
+										if (isStructuredOnly) {
+											tempNewMatchSize2 += ((float)numberOfCrossMatchEdges);
+											if (isUmqi) {
+												uqi1Size += (umqi1Size + (float)numberOfCrossMatchEdges);
+											} else {
+												uqi1Size += (umj.getAssignSize() + (float)numberOfCrossMatchEdges);
+											}
+										} else {
+											tempNewMatchSize2 += structuredFactor * ((float)numberOfCrossMatchEdges);
+											totalStructuredPart2 += structuredFactor * ((float)numberOfCrossMatchEdges);
+											if (isUmqi) {
+												uqi1Size += (umqi1Size + structuredFactor * ((float)numberOfCrossMatchEdges));
+												uqi1DiscretePart +=  discretePartUmqi1;
+											} else {
+												uqi1Size += (umj.getAssignSize() + structuredFactor * ((float)numberOfCrossMatchEdges));
+												uqi1DiscretePart += discreteFactor * ((float)umj.getNumberOfAssignedQueryNodes());
+											}
+										}
+									} else {
+										isCombined[j] = false;
+									}	
+								}
+								if (uqi1Size > maxAssignSize2) {
+									maxAssignSize2 = uqi1Size;
+								}
+								if (isStructuredOnly) {
+									newMatchSimilarity = ((maxAssignSize2 + connectivityFactor * (tempNewMatchSize2 - maxAssignSize2))/numberOfQueryEdges);
+								} else {
+									uqi1StructuredPart = uqi1Size - uqi1DiscretePart;
+									if (uqi1StructuredPart > maxStructuredPart2) {
+										maxStructuredPart2 = uqi1StructuredPart;
+									}
+									newMatchSimilarity = (maxStructuredPart2 + connectivityFactor * (totalStructuredPart2 - maxStructuredPart2)
+											+ totalDiscretePart2)/denominatorOfSim;
+								}
+								if (newMatchSimilarity > maxSimilarity) {
+									maxSimilarity = newMatchSimilarity;
+									tempMaxMatchingList.clear();
+								} 								
+								if (newMatchSimilarity >= maxSimilarity) {
+									umqi1 = umqi.getRestPartOfAssignmentByQueryNodesIDs(commonNodesIDs, umqi1Size);
+									umqi1.computeNumberOfAssignedQueryNodes();
+									uqi1 = uqi.getPartOfAssignmentByQueryNodesIDs(commonNodesIDs, uqi1Size);
 									newmaxAssList = new ArrayList<Assignment>();
-									newmaxAssList.add(um1);
-									for (Assignment assMmax : assMmaxList) {
-										if (!assMmax.equals(tempUm)) {
-											newmaxAssList.add(assMmax);
+									for (j = 0; j < assMmaxListLength; j++) {
+										umj = assMmaxList.get(j);
+										if (umj.equals(umqi)) {
+											if (isCombined[j]) {
+												uqi1.addAssignment(umqi1);
+											} else {
+												newmaxAssList.add(umqi1);
+											}
+										} else {
+											if (isCombined[j]) {
+												uqi1.addAssignment(umj);
+											} else {
+												newmaxAssList.add(umj);
+											}
 										}
 									}
-									newmaxAssList.add(maxAssQi);
-									newMatch = new Matching(newMatchSimilarity, newmaxAssList);
+									uqi1.computeNumberOfAssignedQueryNodes();
+									newmaxAssList.add(uqi1);
+									newMatch = new Match(newMatchSimilarity, newmaxAssList);
 									tempMaxMatchingList.add(newMatch);
-								}
-								maxMatchingListChanged = true;
-							} else if (newMatchSimilarity == maxSimilarity) {
-								um1 = tempUm.getRestPartOfAssignmentByQueryNodesIDs(qiSubgraphNIDs, um1Size);
-								for (Assignment maxAssQi : maxAssListQi) {
-									newmaxAssList = new ArrayList<Assignment>();
-									newmaxAssList.add(um1);
-									for (Assignment assMmax : assMmaxList) {
-										if (!assMmax.equals(tempUm)) {
-											newmaxAssList.add(assMmax);
-										}
-									}
-									newmaxAssList.add(maxAssQi);
-									newMatch = new Matching(newMatchSimilarity, newmaxAssList);
-									tempMaxMatchingList.add(newMatch);
-								}
-								maxMatchingListChanged = true;
-							}
-						}				
+									maxMatchingListChanged = true;
+								}				
+							}					
+						}		
 					}				
 					if (maxMatchingListChanged) {
 						if (tempMaxMatchingList.size() > thresholdOfNumberOfMaxMatch) {
@@ -1159,71 +1365,64 @@ public class InexactMatchAlgorithms {
 	 * @param processedProcIDs all processed node ids (initialized as an empty set)
 	 * 
 	 */
-	public void reduceAssignments(List<Assignment> inoutputAssList, Set<String> pall, Set<String> processedProcIDs) {
-		int oldListLength = inoutputAssList.size();
-		int i, j, indexCompared, indexU1,indexU2, indexUi, tempDiff, maxDiff;
+	public void reduceAssignments(List<Assignment> inoutputAssList, Set<String> pall, Set<String> processedProcIDs) {	
+		int i, indexCompared, oldListLength, indexU1, indexUi, tempDiff, maxDiff, assLength;
+		Assignment assi;
+		assLength = inoutputAssList.get(0).getAssigns().size();
 		if (!pall.isEmpty()) {
 			pall.clear();
 		}
 		if (!processedProcIDs.isEmpty()) {
 			processedProcIDs.clear();
 		}
-		
-		for (Assignment ass : inoutputAssList) {
-			ass.addAllProcessNodeIDs(pall);
+		oldListLength = inoutputAssList.size();
+		for (i = 0; i < oldListLength; i++) {
+			assi = inoutputAssList.get(i);
+			assi.addAllProcessNodeIDs(pall);
 		}
 		
-		// find two assignments u1, u2 (their indexes in inoutputAssList are indexU1, indexU2) 
-		// in AInputList that the number of different assigned process nodes is maximal in inoutputList
+		// find an assignment u1 whose number of different assigned process nodes is maximal in inoutputList
 		maxDiff = -1;
 		indexU1 = -1;
-		indexU2 = -1;
 		for (i = 0; i < oldListLength; i++) {
-			for (j = (i+1); j < oldListLength; j++) {
-				tempDiff = inoutputAssList.get(i).getNumberOfDiffProcessNode
-					(inoutputAssList.get(j));
-				if (tempDiff > maxDiff) {
-					maxDiff = tempDiff;
-					indexU1 = i;
-					indexU2 = j;
+			assi = inoutputAssList.get(i);
+			if ((tempDiff = assi.getNumberOfDiffProcessNodes()) > maxDiff) {
+				maxDiff = tempDiff;
+				indexU1 = i;
+				if (maxDiff == assLength) {
+					break;
 				}
 			}
 		}
 		
-		if ((indexU1 != -1)&& (indexU2 != -1)) {
-			if ((indexU1 > 1)&& (indexU2 > 1)) {
+		if (indexU1 != -1) {
+			if (indexU1 > 0) {
 				Collections.swap(inoutputAssList, 0, indexU1);
-				Collections.swap(inoutputAssList, 1, indexU2);
-			} else if (indexU2 > 1) {
-				if (indexU1 == 0) {
-					Collections.swap(inoutputAssList, 1, indexU2);
-				} else if (indexU1 == 1) {
-					Collections.swap(inoutputAssList, 0, indexU2);
-				}
 			}
-			
 			inoutputAssList.get(0).addAllProcessNodeIDs(processedProcIDs);
-			inoutputAssList.get(1).addAllProcessNodeIDs(processedProcIDs);
-			pall.removeAll(processedProcIDs);
-			
-			indexCompared = 1;
-			while (!pall.isEmpty()) {
+			pall.removeAll(processedProcIDs);	
+			indexCompared = 0;
+			while (!pall.isEmpty()) {	
 				indexCompared++;
 				if (indexCompared >= oldListLength) {
 					break;
 				}
 				maxDiff = -1;
 				indexUi = -1;
-				for (i = indexCompared; i < oldListLength; i++ ) {
-					tempDiff = inoutputAssList.get(i).getNumberOfDiffProcessNode(processedProcIDs);
+				for (i = (indexCompared); i < oldListLength; i++ ) {
+					tempDiff = inoutputAssList.get(i).getNumberOfDiffProcessNodes(processedProcIDs);
 					if (tempDiff > maxDiff) {
 						maxDiff = tempDiff;
 						indexUi = i;
+						if (maxDiff == assLength) {
+							break;
+						}
 					}
-				}
-				
+				}		
 				if (indexUi != -1) {
-					Collections.swap(inoutputAssList, indexCompared, indexUi);
+					if (indexCompared != indexUi) {
+						Collections.swap(inoutputAssList, indexCompared, indexUi);
+					}		
 					inoutputAssList.get(indexCompared).addAllProcessNodeIDs(processedProcIDs);
 					inoutputAssList.get(indexCompared).removeAllProcessNodeIDs(pall);
 				}
@@ -1248,10 +1447,10 @@ public class InexactMatchAlgorithms {
 	 * @param pidsOfMatch a variable used to hold all process ids appeared in Match
 	 * 
 	 */
-	public void reduceMatchings(List<Matching> inoutputMatchList, Set<String> pall, Set<String> processedProcIDs, 
+	public void reduceMatchings(List<Match> inoutputMatchList, Set<String> pall, Set<String> processedProcIDs, 
 			Set<String> pidsOfMatch) {
 		int oldListLength = inoutputMatchList.size();
-		int i, j, indexCompared, indexU1,indexU2, indexUi, tempDiff, maxDiff;
+		int i, indexCompared, indexU1,indexUi, tempDiff, maxDiff;
 		List<Assignment> assList;
 		
 		if (!pall.isEmpty()) {
@@ -1261,7 +1460,7 @@ public class InexactMatchAlgorithms {
 			processedProcIDs.clear();
 		}
 			
-		for (Matching mac : inoutputMatchList) {
+		for (Match mac : inoutputMatchList) {
 			assList = mac.getAssignments();
 			for (Assignment ass : assList) {
 				ass.addAllProcessNodeIDs(pall);
@@ -1272,36 +1471,22 @@ public class InexactMatchAlgorithms {
 		// in AInputList that the number of different assigned process nodes is maximal in inoutputList
 		maxDiff = -1;
 		indexU1 = -1;
-		indexU2 = -1;
 		for (i = 0; i < oldListLength; i++) {
-			for (j = (i+1); j < oldListLength; j++) {
-				tempDiff = inoutputMatchList.get(i).getNumberOfDiffProcessNode
-					(inoutputMatchList.get(j));
-				if (tempDiff > maxDiff) {
-					maxDiff = tempDiff;
-					indexU1 = i;
-					indexU2 = j;
-				}
+			tempDiff = inoutputMatchList.get(i).getNumberOfDiffProcessNode(pidsOfMatch);
+			if (tempDiff > maxDiff) {
+				maxDiff = tempDiff;
+				indexU1 = i;
 			}
 		}
 		
-		if ((indexU1 != -1)&& (indexU2 != -1)) {
-			if ((indexU1 > 1)&& (indexU2 > 1)) {
+		if (indexU1 != -1) {
+			if (indexU1 > 0) {
 				Collections.swap(inoutputMatchList, 0, indexU1);
-				Collections.swap(inoutputMatchList, 1, indexU2);
-			} else if (indexU2 > 1) {
-				if (indexU1 == 0) {
-					Collections.swap(inoutputMatchList, 1, indexU2);
-				} else if (indexU1 == 1) {
-					Collections.swap(inoutputMatchList, 0, indexU2);
-				}
-			}
-			
+			}	
 			inoutputMatchList.get(0).addAllProcessNodeIDs(processedProcIDs);
-			inoutputMatchList.get(1).addAllProcessNodeIDs(processedProcIDs);
 			pall.removeAll(processedProcIDs);
 			
-			indexCompared = 1;
+			indexCompared = 0;
 			while (!pall.isEmpty()) {
 				indexCompared++;
 				if (indexCompared >= oldListLength) {
@@ -1338,13 +1523,13 @@ public class InexactMatchAlgorithms {
      */
 	public void printSolutions(){
 		String result;
-		List<Matching> matchList = inexactMatchings.getMatchings();
+		List<Match> matchList = inexactMatchings.getMatchings();
 		result = "process ID: " + inexactMatchings.getProcessID() + 
 		"  process namespace: " + inexactMatchings.getProcessNamespace() + 
 		"  process name: " + inexactMatchings.getProcessName() + 
 		" matches query with matchingsimilarity " + inexactMatchings.getMatchingSimilarity()
 		+ " has " + matchList.size() + " matchings: ";		
-		for (Matching match : matchList) {
+		for (Match match : matchList) {
 			result += match.toString();
 		}
 		logger.warn(result);
@@ -1403,6 +1588,140 @@ public class InexactMatchAlgorithms {
 		}	
 	}
 	
+    /**
+     * Gets size of the given assignment.
+     * 
+     * @param qIDPairsList a list of query id pairs, each query id pair represents a query edge, 
+     * 						that should be considered by calculation of matching edges
+     * @param qIDSet a set of query ids that should be considered by calculation of matching nodes.
+     * 				If it is null, all query nodes in the assignment should be considered.
+     * @param u assignment whose size to be computed
+     * 
+     * @return size of the given assignment
+     * 
+     */
+	private float getAssignmentSize(List<String> qIDPairsList, Set<String> qIDSet, Assignment u) {
+		String sourceQID, targetQID, sourcePID, targetPID;
+		StreamItem sourceSE, targetSE;
+		int uEdgeCount, qIDPairsListHalfLength, uNumOfAssQNodes;
+		float assSize;
+		uEdgeCount = 0;
+		qIDPairsListHalfLength = qIDPairsList.size() / 2;
+		for (int k = 0; k < qIDPairsListHalfLength; k++) {
+			sourceQID = qIDPairsList.get(k*2);
+			targetQID = qIDPairsList.get(k*2 + 1);
+			if ((sourceQID != null) && (targetQID != null)) {
+				sourcePID = u.getProcessNodeID(sourceQID);
+				targetPID = u.getProcessNodeID(targetQID);
+				if ((sourcePID != null) && (targetPID != null)) {
+					sourceSE = solutionStreamMap.get(sourceQID).getStreamItem(sourcePID);
+					targetSE = solutionStreamMap.get(targetQID).getStreamItem(targetPID);
+					if ((sourceSE != null) && (targetSE != null)) {
+						if (sourceSE.isChild(targetSE)) {
+							uEdgeCount++;	
+						}	
+					}
+				}
+			}
+		}
+		
+		if (isStructuredOnly) {
+			assSize = (float)uEdgeCount;
+		} else {
+			if ((qIDSet == null) || (qIDSet.isEmpty())) {
+				uNumOfAssQNodes = u.getNumberOfAssignedQueryNodes();
+			} else {
+				uNumOfAssQNodes = u.getNumberOfAssignedQueryNodes(qIDSet);
+			}
+			assSize = structuredFactor * ((float)uEdgeCount) + discreteFactor * 
+				((float)uNumOfAssQNodes);
+		}
+		return assSize;		
+	}
+	
+	
+    /**
+     * Gets size of the given assignment.
+     * 
+     * @param qIDPairsList a list of query id pairs, each query id pair represents a query edge
+     * @param discreteMatchSize the discrete part of the match size (only used for mixed metric)
+     * @param u assignment whose size to be computed
+     * 
+     * @return size of the given assignment
+     * 
+     */
+	private float getAssignmentSize(List<String> qIDPairsList, float discreteMatchSize, Assignment u) {
+		String sourceQID, targetQID, sourcePID, targetPID;
+		StreamItem sourceSE, targetSE;
+		int uEdgeCount, qIDPairsListHalfLength;
+		float assSize;
+		uEdgeCount = 0;
+		qIDPairsListHalfLength = qIDPairsList.size() / 2;
+		for (int k = 0; k < qIDPairsListHalfLength; k++) {
+			sourceQID = qIDPairsList.get(k*2);
+			targetQID = qIDPairsList.get(k*2 + 1);
+			if ((sourceQID != null) && (targetQID != null)) {
+				sourcePID = u.getProcessNodeID(sourceQID);
+				targetPID = u.getProcessNodeID(targetQID);
+				if ((sourcePID != null) && (targetPID != null)) {
+					sourceSE = solutionStreamMap.get(sourceQID).getStreamItem(sourcePID);
+					targetSE = solutionStreamMap.get(targetQID).getStreamItem(targetPID);
+					if ((sourceSE != null) && (targetSE != null)) {
+						if (sourceSE.isChild(targetSE)) {
+							uEdgeCount++;	
+						}	
+					}
+				}
+			}
+		}
+		
+		if (isStructuredOnly) {
+			assSize = (float)uEdgeCount;
+		} else {
+			assSize = structuredFactor * ((float)uEdgeCount) + discreteMatchSize;
+		}
+		return assSize;		
+	}
+	
+	
+    /**
+     * Gets number of the cross matching edges between two assignments.
+     * 
+     * @param qIDPairsList a list of query id pairs, each query id pair 
+     * 						represents a query edge
+     * @param u1 assignment whose query nodes are sources of the cross edges
+     * @param u2 assignment whose query nodes are targets of the cross edges
+     * 
+     * @return number of the cross matching edges between two assignments
+     * 
+     */
+	private int getNumberOfCrossMatchEdges(List<String> qIDPairsList, Assignment u1, Assignment u2) {
+		String sourceQID, targetQID, sourcePID, targetPID;
+		StreamItem sourceSE, targetSE;
+		int numberOfCrossMatchEdges, qIDPairsListHalfLength;
+		numberOfCrossMatchEdges = 0;
+		qIDPairsListHalfLength = qIDPairsList.size() / 2;
+		for (int k = 0; k < qIDPairsListHalfLength; k++) {
+			sourceQID = qIDPairsList.get(k*2);
+			targetQID = qIDPairsList.get(k*2 + 1);
+			if ((sourceQID != null) && (targetQID != null)) {
+				sourcePID = u1.getProcessNodeID(sourceQID);
+				targetPID = u2.getProcessNodeID(targetQID);
+				if ((sourcePID != null) && (targetPID != null)) {
+					sourceSE = solutionStreamMap.get(sourceQID).getStreamItem(sourcePID);
+					targetSE = solutionStreamMap.get(targetQID).getStreamItem(targetPID);
+					if ((sourceSE != null) && (targetSE != null)) {
+						if (sourceSE.isChild(targetSE)) {
+							numberOfCrossMatchEdges++;	
+						}	
+					}
+				}
+			}
+		}	
+		return numberOfCrossMatchEdges;		
+	}
+	
+	
 	public static QueryGraph getQuerygraph() {
 		return querygraph;
 	}
@@ -1418,14 +1737,15 @@ public class InexactMatchAlgorithms {
 	public void setProcessgraph(ProcessGraph processgraph) {
 		this.processgraph = processgraph;
 	}
-	
-	public float getMinMatchingSimilarity() {
+
+	public static float getMinMatchingSimilarity() {
 		return minMatchingSimilarity;
 	}
 
-	public void setMinMatchingSimilarity(float minMatchingSimilarity) {
-		this.minMatchingSimilarity = minMatchingSimilarity;
+	public static void setMinMatchingSimilarity(float minMatchingSimilarity) {
+		InexactMatchAlgorithms.minMatchingSimilarity = minMatchingSimilarity;
 	}
+
 
 	public InexactMatchingResult getInexactMatchingResult() {
 		return inexactMatchings;
@@ -1436,13 +1756,13 @@ public class InexactMatchAlgorithms {
 	}
 
 	public static Map<String, List<Assignment>> getTempMaxAssignSetMap() {
-		return tempMaxAssignSetMap;
+		return tempMaxAssignListMap;
 	}
 
 
 	public static void setTempMaxAssignSetMap(
 			Map<String, List<Assignment>> tempMaxAssignSetMap) {
-		InexactMatchAlgorithms.tempMaxAssignSetMap = tempMaxAssignSetMap;
+		InexactMatchAlgorithms.tempMaxAssignListMap = tempMaxAssignSetMap;
 	}
 
 
@@ -1563,12 +1883,12 @@ public class InexactMatchAlgorithms {
 	}
 
 
-	public static int[] getQChildrenMaxRefSize() {
+	public static float[] getQChildrenMaxRefSize() {
 		return qChildrenMaxRefSize;
 	}
 
 
-	public static void setQChildrenMaxRefSize(int[] childrenMaxRefSize) {
+	public static void setQChildrenMaxRefSize(float[] childrenMaxRefSize) {
 		qChildrenMaxRefSize = childrenMaxRefSize;
 	}
 
@@ -1622,4 +1942,98 @@ public class InexactMatchAlgorithms {
 	public static void setNodesCompare(NodesComparator nodesCompare) {
 		InexactMatchAlgorithms.nodesCompare = nodesCompare;
 	}
+
+
+	public static List<String> getQueryIDPairsForCrossEdges() {
+		return queryIDPairsForCrossEdges;
+	}
+
+
+	public static void setQueryIDPairsForCrossEdges(
+			List<String> queryIDPairsForCrossEdges) {
+		InexactMatchAlgorithms.queryIDPairsForCrossEdges = queryIDPairsForCrossEdges;
+	}
+
+
+	public static Set<String> getUmjQIDs() {
+		return umjQIDs;
+	}
+
+
+	public static void setUmjQIDs(Set<String> umjQIDs) {
+		InexactMatchAlgorithms.umjQIDs = umjQIDs;
+	}
+
+
+	public static boolean[] getIsCombined() {
+		return isCombined;
+	}
+
+
+	public static void setIsCombined(boolean[] isCombined) {
+		InexactMatchAlgorithms.isCombined = isCombined;
+	}
+
+
+	public static List<ActivityNode> getQNodesSortedByMatchSize() {
+		return qNodesSortedByMatchSize;
+	}
+
+
+	public static void setQNodesSortedByMatchSize(
+			List<ActivityNode> nodesSortedByMatchSize) {
+		qNodesSortedByMatchSize = nodesSortedByMatchSize;
+	}
+
+
+	public static float getConnectivityFactor() {
+		return connectivityFactor;
+	}
+
+
+	public static void setConnectivityFactor(float connectivityFactor) {
+		InexactMatchAlgorithms.connectivityFactor = connectivityFactor;
+	}
+
+
+	public static float getStructuredFactor() {
+		return structuredFactor;
+	}
+
+
+	public static void setStructuredFactor(float structuredFactor) {
+		InexactMatchAlgorithms.structuredFactor = structuredFactor;
+	}
+
+
+	public static float getDiscreteFactor() {
+		return discreteFactor;
+	}
+
+
+	public static void setDiscreteFactor(float discreteFactor) {
+		InexactMatchAlgorithms.discreteFactor = discreteFactor;
+	}
+
+
+	public static SimilarityMeasureType getTypeOfSimilarityMeasure() {
+		return typeOfSimilarityMeasure;
+	}
+
+
+	public static void setTypeOfSimilarityMeasure(
+			SimilarityMeasureType typeOfSimilarityMeasure) {
+		InexactMatchAlgorithms.typeOfSimilarityMeasure = typeOfSimilarityMeasure;
+	}
+
+
+	public static boolean isStructuredOnly() {
+		return isStructuredOnly;
+	}
+
+
+	public static void setStructuredOnly(boolean isStructuredOnly) {
+		InexactMatchAlgorithms.isStructuredOnly = isStructuredOnly;
+	}
+
 }
