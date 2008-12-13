@@ -461,10 +461,10 @@ public class TwigStackAlgorithmTest {
 	public static void main(String[] args) {			
 		setUp();
 		List<ProcessGraph> pGraphs = new ArrayList<ProcessGraph>();
-		pGraphs.add(processGraph1);
+		pGraphs.add(processGraph2);
 //		EvalQueryExactMatch evalQueryExact = new EvalQueryExactMatch(queryGraph1b, pGraphs);
 //		evalQueryExact.doExactMatch();
-		EvalQueryInexactMatch evalQueryInexact = new EvalQueryInexactMatch(queryGraph1b, pGraphs);
+		EvalQueryInexactMatch evalQueryInexact = new EvalQueryInexactMatch(queryGraph2, pGraphs);
 		evalQueryInexact.doInexactMatch();	
 		System.exit(0);		
 	}	

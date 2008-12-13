@@ -13,22 +13,29 @@ import java.util.Set;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 
 /**
+ * An assignment consists a list of assigns, which assigns a query subgraph to a substructure 
+ * of process graph.
+ * 
  * @author luwei
  *
  */
 public class Assignment {
-	private int assignSize;
+	private float assignSize;
+	private int numberOfAssignedQueryNodes;
 	private List<Assign> assigns;
 	
 	/**
 	 * Creates an assignment with the given list of assignments and size of the assignment.
 	 * 
 	 * @param assignSize size of the assignment
+	 * @param numberOfAssignedQueryNodes number of query nodes that are assigned by non-empty value
 	 * @param assigns the list of assignments to be added in the new created assignment
+	 * 
 	 */
-	public Assignment(int assignSize, List<Assign> assigns) {
+	public Assignment(float assignSize, int numberOfAssignedQueryNodes, List<Assign> assigns) {
 		super();
 		this.assignSize = assignSize;
+		this.numberOfAssignedQueryNodes = numberOfAssignedQueryNodes;
 		if (assigns == null) {
 			this.assigns = new LinkedList<Assign>();
 		} else {
@@ -49,7 +56,8 @@ public class Assignment {
 		} else {
 			this.assigns = assigns;
 		}
-		this.assignSize = 0;
+		this.assignSize = 0.0f;
+		this.numberOfAssignedQueryNodes = 0;
 	}
 
 	/**
@@ -58,13 +66,15 @@ public class Assignment {
 	 */
 	public Assignment() {
 		super();
-		this.assignSize = 0;
+		this.assignSize = 0.0f;
+		this.numberOfAssignedQueryNodes = 0;
 		this.assigns = new LinkedList<Assign>();
 	}
 	
 	public String toString() {
 		String tempStr = "";
-		tempStr += (" Assignment with Size " + assignSize + " : {" );
+		tempStr += (" Assignment with Size " + assignSize + "  numberOfAssignedQueryNodes: " + 
+				numberOfAssignedQueryNodes + " : {" );
 		for (Assign ass : assigns) {
 			tempStr += ass.toString();
 		}
@@ -126,6 +136,31 @@ public class Assignment {
      */
 	public void addAssignment(Assignment assm) {
 		this.assigns.addAll(assm.getAssigns());
+	}
+	
+    /**
+     * Adds assigns of the given assignment that are not contained in the current 
+     * assignment to the current assignment.
+     *
+     * @param assm assignment whose assigns to be added
+     * 
+     */
+	public void addAssignmentComplement(Assignment assm) {
+		boolean isComplement;
+		List<Assign> assList = assm.getAssigns();
+		for (Assign ass1 : assList) {
+			isComplement = true;
+			for (Assign ass2 : assigns) {
+				if (ass1.getQuerynodeID().compareTo
+						(ass2.getQuerynodeID()) == 0) {
+					isComplement = false;
+					break;
+				}	
+			}
+			if (isComplement) {
+				this.assigns.add(ass1);
+			}	
+		}
 	}
 	
     /**
@@ -231,6 +266,39 @@ public class Assignment {
 	}
 	
 	/**
+	 * Returns the number of different assigned process nodes of the 
+	 * current assignment
+	 * 
+	 * @return the number of different assigned process nodes of the 
+	 * current assignment
+	 */
+	public int getNumberOfDiffProcessNodes () {
+		int numberOfDiffAssignedProcNodes = 0;
+		int assignsLength = assigns.size();
+		String assiPID, assjPID;
+		boolean isDiff;
+		for (int i = 0; i < assignsLength; i++) {
+			if ((assiPID = assigns.get(i).getProcessNodeID()) != null) {
+				isDiff = true;
+				for (int j = 0; j < i; j++) {
+					if ((assjPID = assigns.get(j).getProcessNodeID()) != null) {
+						if (assiPID.compareTo(assjPID) == 0) {
+							isDiff = false;
+							break;
+						}
+					}
+				}
+				
+				if (isDiff) {
+					numberOfDiffAssignedProcNodes++;
+				}
+			}
+		}
+		return numberOfDiffAssignedProcNodes;
+	}
+	
+	
+	/**
 	 * Returns the number of different ids between the ids of the process nodes 
 	 * assigned by the assignment and the input ids
 	 * 
@@ -239,18 +307,19 @@ public class Assignment {
 	 * @return the number of different ids between the ids of the process nodes 
 	 * assigned by the assignment and the input ids 
 	 */
-	public int getNumberOfDiffProcessNode(Set<String> existPIDs) {
+	public int getNumberOfDiffProcessNodes(Set<String> existPIDs) {
 		int numberOfDiffProcIDs = 0;
 		for (Assign ass : assigns) {
 			if (ass.getProcessNodeID() != null) { 
-				if (existPIDs.contains(ass.getProcessNodeID())) {
+				if (!existPIDs.contains(ass.getProcessNodeID())) {
 					numberOfDiffProcIDs++;
 				}
 			}
 		}
 		return numberOfDiffProcIDs;
 	}
-	
+
+
 	/**
 	 * Returns a new assignment which contains assigns of the exist assignment and their query nodes 
 	 * are not appeared in the given set of query nodes.
@@ -262,7 +331,7 @@ public class Assignment {
 	 * are not appeared in the given set of query nodes 
 	 */
 	public Assignment getRestPartOfAssignmentByQueryNodes(Set<ActivityNode> queryNodes, 
-			int restPartSize) {
+			float restPartSize) {
 		String qID;
 		Set<ActivityNode> tempQNodes = new HashSet<ActivityNode>();
 		tempQNodes.addAll(queryNodes);
@@ -280,7 +349,7 @@ public class Assignment {
 				}
 			}
 		}
-		Assignment resultAss = new Assignment(restPartSize, resultList);
+		Assignment resultAss = new Assignment(restPartSize, 0, resultList);
 		return resultAss;
 	}
 	
@@ -289,32 +358,49 @@ public class Assignment {
 	 * are not appeared in the given set of ids of query nodes.
 	 * 
 	 * @param queryNodesIDs set of ids of query nodes
-	 * @param restPartSize matching size of the new assignment
+	 * @param restPartSize matching size of the new assignment to be returned
 	 * 
 	 * @return a new assignment which contains assigns of the exist assignment and their ids of query nodes 
 	 * are not appeared in the given set of ids of query nodes 
 	 */
 	public Assignment getRestPartOfAssignmentByQueryNodesIDs(Set<String> queryNodesIDs, 
-			int restPartSize) {
+			float restPartSize) {
 		String qIDAssign;
-		boolean isRestPart;
 		List<Assign> resultList = new LinkedList<Assign>();
 		for (Assign ass : assigns) {
 			qIDAssign = ass.getQuerynodeID();
-			isRestPart = true;
-			for (String qID : queryNodesIDs) {
-				if (qIDAssign.compareTo(qID) == 0) {
-					isRestPart = false;
-					break;
-				}
-			}
-			if (isRestPart) {
+			if (!queryNodesIDs.contains(qIDAssign)) {
 				resultList.add(ass);
 			}
 		}
-		Assignment resultAss = new Assignment(restPartSize, resultList);
+		Assignment resultAss = new Assignment(restPartSize, 0, resultList);
 		return resultAss;
 	}
+	
+	
+	/**
+	 * Returns a new assignment which contains assigns of current assignment and their ids of query nodes 
+	 * are appeared in the given set of ids of query nodes.
+	 * 
+	 * @param queryNodesIDs set of ids of query nodes
+	 * @param size matching size of the new assignment
+	 * 
+	 * @return a new assignment which contains assigns of the exist assignment and their ids of query nodes 
+	 * are appeared in the given set of ids of query nodes 
+	 */
+	public Assignment getPartOfAssignmentByQueryNodesIDs(Set<String> queryNodesIDs, float size) {
+		String qIDAssign;
+		List<Assign> resultList = new LinkedList<Assign>();
+		for (Assign ass : assigns) {
+			qIDAssign = ass.getQuerynodeID();
+			if (queryNodesIDs.contains(qIDAssign)) {
+				resultList.add(ass);
+			}
+		}
+		Assignment resultAss = new Assignment(size, 0, resultList);
+		return resultAss;
+	}
+	
 	
 	/**
 	 * Returns the number of different assigned process nodes between 
@@ -325,7 +411,7 @@ public class Assignment {
 	 * @return the number of different assigned process nodes between 
 	 *  the assignment and the input assignment 
 	 */
-	public int getNumberOfDiffProcessNode (Assignment inputAss) {
+	public int getNumberOfDiffProcessNodes (Assignment inputAss) {
 		int numberOfDiffAssignedProcNode = 0;
 		List<Assign> inputAssigns = inputAss.getAssigns();
 		for (Assign ass : assigns) {
@@ -390,11 +476,95 @@ public class Assignment {
 	}
 	
 	
-	public int getAssignSize() {
+	/**
+	 * Returns number of assigned query nodes of the assignment except the given query nodes.
+	 * 
+	 * @param nodeIDs ids of query nodes that are not counted for the number of assigned query nodes
+	 * 
+	 * @return number of assigned query nodes of the assignment
+	 *  
+	 */
+	public int getNumberOfComplementAssignedQueryNodes (Set<String> nodeIDs) {
+		int numberOfAssignedQueryNodes = 0;
+		for (Assign ass : assigns) {
+			if ((ass.getProcessNodeID() != null) && (!nodeIDs.contains(ass.getQuerynodeID()))) {
+				numberOfAssignedQueryNodes++;
+			}
+		}
+		return numberOfAssignedQueryNodes;
+	}
+	
+	
+	/**
+	 * Returns number of assigned query nodes which also appear in the given 
+	 * list of query ids
+	 * 
+	 * @param qIDList a list of query ids
+	 * 
+	 * @return number of assigned query nodes which also appear in the given 
+	 * list of query ids
+	 *  
+	 */
+//	public int getNumberOfAssignedQueryNodes (List<String> qIDList) {
+//		int numberOfAssignedQueryNodes = 0;
+//		for (Assign ass : assigns) {
+//			if ((ass.getProcessNodeID() != null) && (qIDList.contains(ass.getQuerynodeID()))) {
+//				numberOfAssignedQueryNodes++;
+//			}
+//		}
+//		return numberOfAssignedQueryNodes;
+//	}
+	
+	/**
+	 * Returns number of assigned query nodes which also appear in the given 
+	 * set of query ids
+	 * 
+	 * @param qIDSet a set of query ids
+	 * 
+	 * @return number of assigned query nodes which also appear in the given 
+	 * set of query ids
+	 *  
+	 */
+	public int getNumberOfAssignedQueryNodes (Set<String> qIDSet) {
+		int numberOfAssignedQueryNodes = 0;
+		for (Assign ass : assigns) {
+			if ((ass.getProcessNodeID() != null) && (qIDSet.contains(ass.getQuerynodeID()))) {
+				numberOfAssignedQueryNodes++;
+			}
+		}
+		return numberOfAssignedQueryNodes;
+	}
+	
+	/**
+	 * Returns number of assigned query nodes of the assignment.
+	 * 
+	 * @return number of assigned query nodes of the assignment
+	 *  
+	 */
+	public int computeNumberOfAssignedQueryNodes () {
+		int numberOfAssignedQueryNodes = 0;
+		for (Assign ass : assigns) {
+			if (ass.getProcessNodeID() != null) {
+				numberOfAssignedQueryNodes++;
+			}
+		}
+		setNumberOfAssignedQueryNodes(numberOfAssignedQueryNodes);
+		return numberOfAssignedQueryNodes;
+	}
+	
+	public int getNumberOfAssignedQueryNodes() {
+		return numberOfAssignedQueryNodes;
+	}
+
+	public void setNumberOfAssignedQueryNodes(int numberOfAssignedQueryNodes) {
+		this.numberOfAssignedQueryNodes = numberOfAssignedQueryNodes;
+	}
+	
+	public float getAssignSize() {
 		return assignSize;
 	}
 
-	public void setAssignSize(int assignSize) {
+	public void setAssignSize(float assignSize) {
 		this.assignSize = assignSize;
 	}
 

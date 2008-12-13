@@ -38,14 +38,12 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
      * intermediate partial solutions to full solutions.
      * 
      */		
-	protected HashMap<ActivityNode, Set<PoolItem3Ext>> solutionPoolMap = 
-		new HashMap<ActivityNode, Set<PoolItem3Ext>>();
+	protected static Map<String, Set<PoolItem3Ext>> solutionPoolMap;
 	
     /**
      * Stores current position of the stack from queryNodeStackMap.
      */
-	protected Map<ActivityNode, Integer> queryNodeStreamPositionMap = 
-		new HashMap<ActivityNode, Integer>();
+	protected static Map<String, Integer> queryNodeStreamPositionMap;
 	
 	/**
 	 * Creates a new TwigStackD2Algorithm object for the specified  
@@ -57,8 +55,11 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 		super(pg);
 		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
 		for (ActivityNode queryNode : vertexSetQuery) {	
-			solutionPoolMap.put(queryNode, new HashSet<PoolItem3Ext>());
-			queryNodeStreamPositionMap.put(queryNode, new Integer(0));
+//			solutionPoolMap.put(queryNode.getActivityID(), new HashSet<PoolItem3Ext>());
+			if (!solutionPoolMap.get(queryNode.getActivityID()).isEmpty()) {
+				solutionPoolMap.get(queryNode.getActivityID()).clear();
+			}
+			queryNodeStreamPositionMap.put(queryNode.getActivityID(), new Integer(0));
 		}
 	}
 
@@ -74,7 +75,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 		NodeRegionEncoding tqactFirst, tqactCurrent;
 		int tqactPos;
 
-		logger.warn("***run TwigStackD2Algorithm ***");
+		logger.warn("*** run TwigStackD2Algorithm ***");
 		if (allQuerySubtreeNodesStreamsNotEmpty(q)) {
 			root = querygraph.getStartActivity();		
 			while (!end(q)) {
@@ -84,30 +85,29 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 				qact = getNextExtForExactMatch(q);
 				parentQact = querygraph.getParent(qact);
 				
-				streamqact = queryNodeStreamMap.get(qact);
-				sqact = queryNodeStackMap.get(qact);
+				streamqact = queryNodeStreamMap.get(qact.getActivityID());
+				sqact = queryNodeStackMap.get(qact.getActivityID());
 		
-				streamParentQact = queryNodeStreamMap.get(parentQact);
-				sParentQact = queryNodeStackMap.get(parentQact);
-		
-				streamRoot = queryNodeStreamMap.get(root);
-				sRoot = queryNodeStackMap.get(root);
+//				streamParentQact = queryNodeStreamMap.get(parentQact.getActivityID());
+//				sParentQact = queryNodeStackMap.get(parentQact.getActivityID());
+//				streamRoot = queryNodeStreamMap.get(root.getActivityID());
+//				sRoot = queryNodeStackMap.get(root.getActivityID());
 				
 				if (streamqact.isEmpty()) {
 					logger.warn("Stop processing the given process graph!");
 					break;
 				} else {
-					tqactPos = queryNodeStreamPositionMap.get(qact).intValue();
-					tqactCurrent = queryNodeStreamMap.get(qact).get(tqactPos);
+					tqactPos = queryNodeStreamPositionMap.get(qact.getActivityID()).intValue();
+					tqactCurrent = queryNodeStreamMap.get(qact.getActivityID()).get(tqactPos);
 					if (checkSubtreeStreams(qact)) {
-						queryNodeStreamMap.get(qact).remove(tqactPos);
+						queryNodeStreamMap.get(qact.getActivityID()).remove(tqactPos);
 					} else {
 						if (!querygraph.isRoot(qact)) {
 							cleanStack(parentQact, tqactCurrent.getStart());
 						}
 							
 						if (querygraph.isRoot(qact) || !queryNodeStackMap.get
-								(parentQact).isEmpty()) {
+								(parentQact.getActivityID()).isEmpty()) {
 							cleanStack(qact, tqactCurrent.getStart());
 							moveStreamToStack(qact);
 							sweepPartialSolutionsTSD2(qact, tqactCurrent);
@@ -117,10 +117,10 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 								//showSolutions2Ext(qact, 0, null, null, "");
 								//processSolutions(qact, 0, null, 0);
 								queryLeafNodesSolution.add(qact);
-								queryNodeStackMap.get(qact).pop();										
+								queryNodeStackMap.get(qact.getActivityID()).pop();										
 							} 						
 						} else {										 			
-							queryNodeStreamMap.get(qact).remove(tqactPos);
+							queryNodeStreamMap.get(qact.getActivityID()).remove(tqactPos);
 						}
 					}	
 				}
@@ -156,23 +156,21 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 			qact = getNextExtForInexactMatch(q);
 			parentQact = querygraph.getParent(qact);
 		
-			streamqact = queryNodeStreamMap.get(qact);
-			sqact = queryNodeStackMap.get(qact);
-		
-			streamParentQact = queryNodeStreamMap.get(parentQact);
-			sParentQact = queryNodeStackMap.get(parentQact);
-		
-			streamRoot = queryNodeStreamMap.get(root);
-			sRoot = queryNodeStackMap.get(root);
+			streamqact = queryNodeStreamMap.get(qact.getActivityID());
+			sqact = queryNodeStackMap.get(qact.getActivityID());	
+//			streamParentQact = queryNodeStreamMap.get(parentQact.getActivityID());
+//			sParentQact = queryNodeStackMap.get(parentQact.getActivityID());
+//			streamRoot = queryNodeStreamMap.get(root.getActivityID());
+//			sRoot = queryNodeStackMap.get(root.getActivityID());
 			
 			isQactStreamEmpty = streamqact.isEmpty();
 			if (isQactStreamEmpty) {
-				tqactFirst = queryNodeStreamMap.get(qact).getFirst();
+				tqactFirst = queryNodeStreamMap.get(qact.getActivityID()).getFirst();
 				if (!querygraph.isRoot(qact)) {
 					cleanStack(parentQact, tqactFirst.getStart());
 				}
 					
-				if (querygraph.isRoot(qact) || !queryNodeStackMap.get(parentQact).isEmpty()) {
+				if (querygraph.isRoot(qact) || !queryNodeStackMap.get(parentQact.getActivityID()).isEmpty()) {
 					cleanStack(qact, tqactFirst.getStart());
 					moveStreamToStack(qact);
 					sweepPartialSolutionsTSD2(qact, tqactFirst);
@@ -182,7 +180,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 						showSolutions2Ext(qact, 0, null, null, "");
 						//processSolutions(qact, 0, null, 0);
 						queryLeafNodesSolution.add(qact);
-						queryNodeStackMap.get(qact).pop();										
+						queryNodeStackMap.get(qact.getActivityID()).pop();										
 					} 						
 				} else {
 						// *** Change ***
@@ -194,7 +192,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 //								  break;
 //							}
 //						}
-					queryNodeStreamMap.get(qact).removeFirst();
+					queryNodeStreamMap.get(qact.getActivityID()).removeFirst();
 				}
 			}
 		}
@@ -297,18 +295,18 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 			return q;
 		}
 		
-		Set<ActivityNode> childrenQ = querygraph.getChildren(q);
+		Set<ActivityNode> childrenQ = querygraph.getChildrenFromMap(q);
 		List<NodeRegionEncoding> tchildrenNext = new ArrayList<NodeRegionEncoding>();
 		List<String> childrenNextIDs = new ArrayList<String>();
 		
 		for (ActivityNode childQi : childrenQ) {
 			ni = getNextExtForExactMatch(childQi);		
-			if (!queryNodeStreamMap.get(ni).isEmpty()) {
+			if (!queryNodeStreamMap.get(ni.getActivityID()).isEmpty()) {
 				if (ni.getActivityID().compareTo(childQi.getActivityID()) != 0) {
 					return ni;
 				}
-				tempPosC = queryNodeStreamPositionMap.get(ni).intValue();
-				tchildQNext = queryNodeStreamMap.get(ni).get(tempPosC);
+				tempPosC = queryNodeStreamPositionMap.get(ni.getActivityID()).intValue();
+				tchildQNext = queryNodeStreamMap.get(ni.getActivityID()).get(tempPosC);
 				tchildrenNext.add(tchildQNext);
 				childrenNextIDs.add(ni.getActivityID());
 				niL = tchildQNext.getStart();
@@ -326,30 +324,30 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 			}
 		}
 		
-		while (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).
+		while (!queryNodeStreamMap.get(q.getActivityID()).isEmpty() && (queryNodeStreamMap.get(q.getActivityID()).
 				getFirst().getEnd() < maxL)) {			
-			queryNodeStreamMap.get(q).removeFirst();
+			queryNodeStreamMap.get(q.getActivityID()).removeFirst();
 		}
 			
 		returnChildNode = nmin;
 		
-		if (tchildrenNext.isEmpty() || (!queryNodeStreamMap.get(q).isEmpty()&& 
-				(queryNodeStreamMap.get(q).getFirst().getStart() < minL))) {
+		if (tchildrenNext.isEmpty() || (!queryNodeStreamMap.get(q.getActivityID()).isEmpty()&& 
+				(queryNodeStreamMap.get(q.getActivityID()).getFirst().getStart() < minL))) {
 			return q;			
 		} else {
-			//while (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).
+			//while (!queryNodeStreamMap.get(q.getActivityID()).isEmpty() && (queryNodeStreamMap.get(q.getActivityID()).
 				//	getFirst().getStart() < minR)) {			
-				//queryNodeStreamMap.get(q).removeFirst();
+				//queryNodeStreamMap.get(q.getActivityID()).removeFirst();
 			//}				
-			if (queryNodeStreamMap.get(q).isEmpty()) {
+			if (queryNodeStreamMap.get(q.getActivityID()).isEmpty()) {
 				return returnChildNode;
 			} else {
 				tempPos = 0;
-				streamSize = queryNodeStreamMap.get(q).size();
+				streamSize = queryNodeStreamMap.get(q.getActivityID()).size();
 				containsAll = false;
 				foundReturnChild = false;
 				while ((tempPos < streamSize) && !containsAll) {
-					nextQ = queryNodeStreamMap.get(q).get(tempPos);
+					nextQ = queryNodeStreamMap.get(q.getActivityID()).get(tempPos);
 					containsAll = true;
 					tempPos++;
 					for (int j = 0; j < tchildrenNext.size(); j++) {
@@ -365,7 +363,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 					}				
 				}			
 				if(containsAll) {
-					queryNodeStreamPositionMap.put(q, new Integer(tempPos-1));
+					queryNodeStreamPositionMap.put(q.getActivityID(), new Integer(tempPos-1));
 					return q;
 				} else {
 					return returnChildNode;
@@ -402,7 +400,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 			return q;
 		}
 		
-		Set<ActivityNode> childrenQ = querygraph.getChildren(q);
+		Set<ActivityNode> childrenQ = querygraph.getChildrenFromMap(q);
 		Set<ActivityNode> childrenNextQueryNodes = new HashSet<ActivityNode>();
 		
 		for (ActivityNode childQi : childrenQ) {
@@ -412,9 +410,9 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 				return ni;
 			}
 			
-			if (!queryNodeStreamMap.get(ni).isEmpty()) {
+			if (!queryNodeStreamMap.get(ni.getActivityID()).isEmpty()) {
 				childrenNextQueryNodes.add(ni);
-				niL = queryNodeStreamMap.get(ni).getFirst().getStart();			
+				niL = queryNodeStreamMap.get(ni.getActivityID()).getFirst().getStart();			
 				if (niL < minL) {
 					minL = niL;
 					nmin = ni;
@@ -429,30 +427,30 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 //			}
 		}
 		
-		while (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).
+		while (!queryNodeStreamMap.get(q.getActivityID()).isEmpty() && (queryNodeStreamMap.get(q.getActivityID()).
 				getFirst().getEnd() < maxL)) {			
-			queryNodeStreamMap.get(q).removeFirst();
+			queryNodeStreamMap.get(q.getActivityID()).removeFirst();
 		}
 			
 		returnChildNode = nmin;
 		
 		// For inexact matching
-		if (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).
+		if (!queryNodeStreamMap.get(q.getActivityID()).isEmpty() && (queryNodeStreamMap.get(q.getActivityID()).
 				getFirst().getStart() < minL)) {
 		// For exact matching, but still has problem if sibling nodes the same are
-//		if (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).getFirst().
+//		if (!queryNodeStreamMap.get(q.getActivityID()).isEmpty() && (queryNodeStreamMap.get(q.getActivityID()).getFirst().
 //				getStart() < minL) && !existGetNextChildStreamEmpty) {
 			return q;			
 		} else {
 			// *** Change ***
 			// Check whether q's first stream node is ancestor of other returned stream nodes
-			if (!queryNodeStreamMap.get(q).isEmpty()) {
+			if (!queryNodeStreamMap.get(q.getActivityID()).isEmpty()) {
 				containsAll = true;
-				nextQ = queryNodeStreamMap.get(q).getFirst();
+				nextQ = queryNodeStreamMap.get(q.getActivityID()).getFirst();
 
 				for (ActivityNode childQNext : childrenNextQueryNodes) {
-					if (!queryNodeStreamMap.get(childQNext).isEmpty()) {
-						tchildQNext = queryNodeStreamMap.get(childQNext).getFirst();
+					if (!queryNodeStreamMap.get(childQNext.getActivityID()).isEmpty()) {
+						tchildQNext = queryNodeStreamMap.get(childQNext.getActivityID()).getFirst();
 						if (!checkContainment2(nextQ, tchildQNext)) {
 							containsAll = false;
 							returnChildNode = childQNext;
@@ -496,7 +494,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 			return q;
 		}
 		
-		Set<ActivityNode> childrenQ = querygraph.getChildren(q);
+		Set<ActivityNode> childrenQ = querygraph.getChildrenFromMap(q);
 		// *** Change ***
 		// Hold the first elements of returned stream nodes
 		Set<ActivityNode> childrenNextQueryNodes = new HashSet<ActivityNode>();
@@ -508,10 +506,10 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 				return ni;
 			}
 			
-			if (!queryNodeStreamMap.get(ni).isEmpty()) {
+			if (!queryNodeStreamMap.get(ni.getActivityID()).isEmpty()) {
 				// *** Change ***
 				childrenNextQueryNodes.add(ni);
-				niL = queryNodeStreamMap.get(ni).getFirst().getStart();			
+				niL = queryNodeStreamMap.get(ni.getActivityID()).getFirst().getStart();			
 				if (niL < minL) {
 					minL = niL;
 					nmin = ni;
@@ -522,26 +520,26 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 			} 
 		}
 		
-		while (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).
+		while (!queryNodeStreamMap.get(q.getActivityID()).isEmpty() && (queryNodeStreamMap.get(q.getActivityID()).
 				getFirst().getEnd() < maxL)) {			
-			queryNodeStreamMap.get(q).removeFirst();
+			queryNodeStreamMap.get(q.getActivityID()).removeFirst();
 		}
 			
 		returnChildNode = nmin;
 		
 		// For inexact matching
-		if (!queryNodeStreamMap.get(q).isEmpty() && (queryNodeStreamMap.get(q).
+		if (!queryNodeStreamMap.get(q.getActivityID()).isEmpty() && (queryNodeStreamMap.get(q.getActivityID()).
 				getFirst().getStart() < minL)) {
 			return q;			
 		} else {
 			// *** Change ***
 			// Check whether q's first stream node is ancestor of other returned stream nodes
-			if (!queryNodeStreamMap.get(q).isEmpty()) {
+			if (!queryNodeStreamMap.get(q.getActivityID()).isEmpty()) {
 				containsAll = true;
-				nextQ = queryNodeStreamMap.get(q).getFirst();				
+				nextQ = queryNodeStreamMap.get(q.getActivityID()).getFirst();				
 				for (ActivityNode childQNext : childrenNextQueryNodes) {
-					if (!queryNodeStreamMap.get(childQNext).isEmpty()) {
-						tchildQNext = queryNodeStreamMap.get(childQNext).getFirst();
+					if (!queryNodeStreamMap.get(childQNext.getActivityID()).isEmpty()) {
+						tchildQNext = queryNodeStreamMap.get(childQNext.getActivityID()).getFirst();
 //						if (nextQ.getPreorderRank() > tchildQNext.getPreorderRank()) {
 							if (!checkContainment2(nextQ, tchildQNext)) {
 								containsAll = false;
@@ -572,7 +570,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 		Set<ActivityNode> vertexSetQuery = querygraph.getGraph().vertexSet();
 		queryNodeStreamPositionMap.clear();
 		for (ActivityNode queryNode : vertexSetQuery) {	
-			queryNodeStreamPositionMap.put(queryNode, new Integer(0));
+			queryNodeStreamPositionMap.put(queryNode.getActivityID(), new Integer(0));
 		}
    }
    
@@ -587,16 +585,16 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 	{
 		// The new pushed element consists: the next element of q's stream, 
 		// Pointer to the top element of parent(q)'s stack
-		int tqPos = queryNodeStreamPositionMap.get(q).intValue();
-		NodeRegionEncoding tqCurrent = queryNodeStreamMap.get(q).get(tqPos);
+		int tqPos = queryNodeStreamPositionMap.get(q.getActivityID()).intValue();
+		NodeRegionEncoding tqCurrent = queryNodeStreamMap.get(q.getActivityID()).get(tqPos);
 		if (querygraph.isRoot(q)) {
-			queryNodeStackMap.get(q).push(new NodeInStack
+			queryNodeStackMap.get(q.getActivityID()).push(new NodeInStack
 					(tqCurrent, null));
 		} else {
-			queryNodeStackMap.get(q).push(new NodeInStack(tqCurrent, 
-					queryNodeStackMap.get(querygraph.getParent(q)).lastElement()));
+			queryNodeStackMap.get(q.getActivityID()).push(new NodeInStack(tqCurrent, 
+					queryNodeStackMap.get(querygraph.getParent(q).getActivityID()).lastElement()));
 		}
-		queryNodeStreamMap.get(q).remove(tqPos);		
+		queryNodeStreamMap.get(q.getActivityID()).remove(tqPos);		
 	}
 	
   /**
@@ -611,13 +609,13 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
   protected void sweepPartialSolutionsTSD2(ActivityNode q, NodeRegionEncoding tq) {
 	  ActivityNode parentQ = querygraph.getParent(q);
 	  Set<PoolItem3Ext> poolParentQ;
-	  Set<ActivityNode> childrenQ = querygraph.getChildren(q);
+	  Set<ActivityNode> childrenQ = querygraph.getChildrenFromMap(q);
 
 	  PoolItem3Ext tqPI = new PoolItem3Ext(q, tq, null);
-	  solutionPoolMap.get(q).add(tqPI);
+	  solutionPoolMap.get(q.getActivityID()).add(tqPI);
 	  
 	  if (parentQ != null) {
-		poolParentQ = solutionPoolMap.get(parentQ);
+		poolParentQ = solutionPoolMap.get(parentQ.getActivityID());
 			for (PoolItem3Ext poolItemParentQ : poolParentQ) {
 				if (checkContainment2(poolItemParentQ.getProcessnode(), tq)) {
 					poolItemParentQ.addChild(tqPI);
@@ -626,7 +624,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 	  }
 	  
 	  for (ActivityNode childQi : childrenQ) {
-		 for (PoolItem3Ext h : solutionPoolMap.get(childQi)) {
+		 for (PoolItem3Ext h : solutionPoolMap.get(childQi.getActivityID())) {
 			if (checkContainment2(tq, h.getProcessnode())) {
 				//h.addParent(tqPI);
 				tqPI.addChild(h);
@@ -662,9 +660,9 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 		if (querygraph.isRoot(q)) {
 			outputPoolSolutionsRootedAtTqPI(tqPI, partialPath);
 		} else {			
-			NodeInStack parentNodeInStack = queryNodeStackMap.get(q).get(stackpos).getNext();
+			NodeInStack parentNodeInStack = queryNodeStackMap.get(q.getActivityID()).get(stackpos).getNext();
 			temp = querygraph.getParent(q);
-			tempStack = queryNodeStackMap.get(temp);
+			tempStack = queryNodeStackMap.get(temp.getActivityID());
 			parentStackIndex = tempStack.indexOf(parentNodeInStack);
 			
 			for (int i = 0; i <= parentStackIndex; i++) {
@@ -725,7 +723,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  		int parentStackIndex;
  		PoolItem3Ext cPI;
  	
- 		NodeRegionEncoding tq = queryNodeStackMap.get(q).get(stackpos).getNode();
+ 		NodeRegionEncoding tq = queryNodeStackMap.get(q.getActivityID()).get(stackpos).getNode();
  		cPI = expandStackPathSolution(q, tq, tchildq, childPI, partialPath);
  		partialPath = processgraph.getActivityName(tq.getActivityID()) + ": " 
  			+ tq.getActivityID() + "  ||  "+ partialPath;
@@ -734,9 +732,9 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  			logger.warn("Output path solution in partial solution stack");
  			logger.warn(partialPath);			
  		} else { 						
- 			NodeInStack parentNodeInStack = queryNodeStackMap.get(q).get(stackpos).getNext();
+ 			NodeInStack parentNodeInStack = queryNodeStackMap.get(q.getActivityID()).get(stackpos).getNext();
  			temp = querygraph.getParent(q);
- 			tempStack = queryNodeStackMap.get(temp);
+ 			tempStack = queryNodeStackMap.get(temp.getActivityID());
  			parentStackIndex = tempStack.indexOf(parentNodeInStack);
  			
  			for (int i = 0; i <= parentStackIndex; i++) {
@@ -772,7 +770,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  		 PoolItem3Ext tqPI = new PoolItem3Ext(q, tq, null);
  		
  		 // Retrieve tqPI from the Pool[q]
- 		 Set<PoolItem3Ext> qPoolItems = solutionPoolMap.get(q);
+ 		 Set<PoolItem3Ext> qPoolItems = solutionPoolMap.get(q.getActivityID());
  		 for (PoolItem3Ext qPoolItem : qPoolItems) {
  			if (qPoolItem.getProcessnode().getActivityID().
  					compareTo(tq.getActivityID()) == 0) {
@@ -804,8 +802,8 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  	 */
  	 protected void sweepPartialSolutionsReverse(ActivityNode q, NodeRegionEncoding tchildq,
  			 PoolItem3Ext childPI, String partialPathQ) {		   
- 		Set<PoolItem3Ext> poolQ = solutionPoolMap.get(q);
- 		Stack<NodeInStack> stackQ = queryNodeStackMap.get(q);
+ 		Set<PoolItem3Ext> poolQ = solutionPoolMap.get(q.getActivityID());
+ 		Stack<NodeInStack> stackQ = queryNodeStackMap.get(q.getActivityID());
  		boolean belongsToCurrentPaths;
  		String poolQItemDataNodeID, tempPartialPath;
  		for (PoolItem3Ext poolQItem : poolQ) {
@@ -851,7 +849,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  			logger.warn(partialPath);
  		} else {
  			tqID = tqPI.getProcessnode().getActivityID();
- 			poolParentQ = solutionPoolMap.get(querygraph.getParent(q));
+ 			poolParentQ = solutionPoolMap.get(querygraph.getParent(q).getActivityID());
  			for (PoolItem3Ext poolItemParentQ : poolParentQ) {
  				if ((childrenpoolParentQ = poolItemParentQ.getChildren()) != null) {
  					for (PoolItem3Ext childpoolParentQ : childrenpoolParentQ) {
@@ -881,7 +879,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  	protected boolean checkSubtreeStreams(ActivityNode q) {
  		Set<ActivityNode> subtreeNodesQ = querygraph.getSubtreeNodes(q);		
  		for (ActivityNode subtreeNodeQ : subtreeNodesQ) {
- 			if (queryNodeStreamMap.get(subtreeNodeQ).isEmpty()) {
+ 			if (queryNodeStreamMap.get(subtreeNodeQ.getActivityID()).isEmpty()) {
  				return true;
  			}
  		}	
@@ -906,7 +904,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  		boolean hasExactMatch, firstVisit, existProcNode;
  		
  		queryroot = querygraph.getStartActivity();
- 		rootPIs = solutionPoolMap.get(queryroot);	
+ 		rootPIs = solutionPoolMap.get(queryroot.getActivityID());	
  		if (!rootPIs.isEmpty()) {
  			visitedQueryNodeIDs = new ArrayList<String>();
  			visitedQueryNodeIDs.add(queryroot.getActivityID());
@@ -922,13 +920,12 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  			hasExactMatch = true;
  	 		while (!queryNodesQueue.isEmpty()) {
  	 			currentQueryNode = queryNodesQueue.remove();	 			
- 	 			currentPIs = solutionPoolMap.get(currentQueryNode);
+ 	 			currentPIs = solutionPoolMap.get(currentQueryNode.getActivityID());
  	 			if (currentPIs.isEmpty()) {
  	 				hasExactMatch = false;
  	 				break;
  	 			}
- 	 			queryChildrenNodes = querygraph.getChildren(currentQueryNode);
- 	 			
+ 	 			queryChildrenNodes = querygraph.getChildrenFromMap(currentQueryNode); 			
  	 			if (!queryChildrenNodes.isEmpty()) {
  	 	 			tempID = currentQueryNode.getActivityID();
  	 	 			for (int i = 0; i < visitedQueryNodeIDs.size(); i++) {
@@ -1008,7 +1005,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  		 		}
  				this.exactMatchingResults = new ExactMatchingResult(
  						processgraph.getProcessID(), processgraph.getProcessNamespace(), 
- 						processgraph.getProcessName(), exactMatchs);
+ 						processgraph.getProcessName(), exactMatchs, visitedQueryNodeIDs);
  				this.hasExactMatch = true;
  	 		}
  		}
@@ -1025,7 +1022,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 		"  process name: " + processgraph.getProcessName();	
 		logger.warn(resultProcessInfo);	
 		logger.warn("It has following exact matching results: ");	
- 		Set<PoolItem3Ext> queryRootPool = solutionPoolMap.get(querygraph.getStartActivity());	
+ 		Set<PoolItem3Ext> queryRootPool = solutionPoolMap.get(querygraph.getStartActivity().getActivityID());	
  		for (PoolItem3Ext queryRootPoolItem : queryRootPool) {
  			outputSolutionsForSpecificElementInRootPool(queryRootPoolItem);
  		}		
@@ -1047,7 +1044,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
 		
 		logger.warn("Has matching Similarity: " + similarity + " with following matching results: ");
 		
- 		Set<PoolItem3Ext> queryRootPool = solutionPoolMap.get(querygraph.getStartActivity());		
+ 		Set<PoolItem3Ext> queryRootPool = solutionPoolMap.get(querygraph.getStartActivity().getActivityID());		
  		for (PoolItem3Ext queryRootPoolItem : queryRootPool) {
  			outputSolutionsForSpecificElementInRootPool(queryRootPoolItem);
  		}		
@@ -1073,7 +1070,7 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  		
  		while (!theQueue.isEmpty()) {
  			currentPoolItem = theQueue.remove();
- 			if ((queryChildrenNodes = querygraph.getChildren
+ 			if ((queryChildrenNodes = querygraph.getChildrenFromMap
  					(currentPoolItem.getQuerynode())) != null) {
  				for (ActivityNode queryChildNode : queryChildrenNodes) {
  					// ****** Problem **********
@@ -1098,5 +1095,23 @@ public class TwigStackD2Algorithm extends TwigStackAlgorithm {
  			outputSolutionsForSpecificElementInRootPool(rootPoolItem);
  		}
  	}
+
+	public static Map<String, Set<PoolItem3Ext>> getSolutionPoolMap() {
+		return solutionPoolMap;
+	}
+
+	public static void setSolutionPoolMap(
+			Map<String, Set<PoolItem3Ext>> solutionPoolMap) {
+		TwigStackD2Algorithm.solutionPoolMap = solutionPoolMap;
+	}
+
+	public static Map<String, Integer> getQueryNodeStreamPositionMap() {
+		return queryNodeStreamPositionMap;
+	}
+
+	public static void setQueryNodeStreamPositionMap(
+			Map<String, Integer> queryNodeStreamPositionMap) {
+		TwigStackD2Algorithm.queryNodeStreamPositionMap = queryNodeStreamPositionMap;
+	}
 }
 

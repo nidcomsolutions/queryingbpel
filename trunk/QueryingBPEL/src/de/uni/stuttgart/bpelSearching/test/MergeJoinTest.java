@@ -1,5 +1,8 @@
 package de.uni.stuttgart.bpelSearching.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -9,10 +12,12 @@ import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
 import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.QueryGraph;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityType;
+import de.uni.stuttgart.bpelSearching.matching.exactMatching.EvalQueryExactMatch;
+import de.uni.stuttgart.bpelSearching.matching.inexactmatching.EvalQueryInexactMatch;
 
 public class MergeJoinTest {
 	
-	static Logger logger = Logger.getLogger(QueryGraphTest.class);
+	static Logger logger = Logger.getLogger(MergeJoinTest.class);
 	
 	private static DirectedGraph<ActivityNode, DefaultEdge> query1;
 	
@@ -73,7 +78,7 @@ public class MergeJoinTest {
 		queryGraph1 = new QueryGraph(query1);
 		
 		// ********** process1 ************
-		// This graph is taken from article "A Fast Tree Pattern Matching Algorithm 
+		// This graph is taken from article "A Fast Tree Pattern Match Algorithm 
 		// for XML Documents"
 		process1 = new DefaultDirectedGraph<ActivityNode, DefaultEdge>(
 		DefaultEdge.class);
@@ -133,8 +138,12 @@ public class MergeJoinTest {
 		
 	public static void main(String[] args) {		
 		setUp();
-		MatchBPELForTestOfTwigStackAlgorithm matchBPEL = new MatchBPELForTestOfTwigStackAlgorithm(queryGraph1, processGraph1, true);
-		matchBPEL.match();
+		List<ProcessGraph> pGraphs = new ArrayList<ProcessGraph>();
+		pGraphs.add(processGraph1);
+//		EvalQueryExactMatch evalQueryExact = new EvalQueryExactMatch(queryGraph1, pGraphs);
+//		evalQueryExact.doExactMatch();
+		EvalQueryInexactMatch evalQueryInexact = new EvalQueryInexactMatch(queryGraph1, pGraphs);
+		evalQueryInexact.doInexactMatch();	
 		System.exit(0);
 	}
 

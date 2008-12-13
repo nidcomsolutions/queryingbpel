@@ -8,28 +8,35 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * A match contains at least one assignment. A match assigns each query node of query graph to 
+ * a match process node or to null.
+ * 
  * @author luwei
  *
  */
-public class Matching {
+public class Match {
 	private float matchingSimilarity;
 	private List<Assignment> assignments;
 
 	/**
+	 * Creates a new Match.
+	 * 
 	 * @param matchingSimilarity
 	 * @param assignments
 	 */
-	public Matching(float matchingSimilarity, List<Assignment> assignments) {
+	public Match(float matchingSimilarity, List<Assignment> assignments) {
 		super();
 		this.matchingSimilarity = matchingSimilarity;
 		this.assignments = assignments;
 	}
 	
 	/**
+	 * Creates a new Match.
+	 * 
 	 * @param matchingSimilarity
 	 * @param assignments
 	 */
-	public Matching(float matchingSimilarity, Assignment assignment) {
+	public Match(float matchingSimilarity, Assignment assignment) {
 		super();
 		this.matchingSimilarity = matchingSimilarity;
 		this.assignments = new ArrayList<Assignment>();
@@ -37,17 +44,19 @@ public class Matching {
 	}
 
 	/**
+	 * Creates a new Match.
+	 * 
 	 * @param matchingSimilarity
 	 */
-	public Matching() {
+	public Match() {
 		super();
-		this.matchingSimilarity = 0;
+		this.matchingSimilarity = 0.0f;
 		this.assignments = new ArrayList<Assignment>();
 	}
 	
 	public String toString() {
 		String tempStr = "";
-		tempStr += (" Matching with Size " + matchingSimilarity + " : " );
+		tempStr += (" Match with Size " + matchingSimilarity + " : " );
 		if (assignments != null) {
 			for (Assignment ass : assignments) {
 				tempStr += ass.toString();
@@ -65,12 +74,30 @@ public class Matching {
 	 * @return the number of different assigned process nodes between 
 	 *  the matching and the input matching 
 	 */
-	public int getNumberOfDiffProcessNode (Matching inputMac) {
+	public int getNumberOfDiffProcessNode (Match inputMac) {
 		int numberOfDiffAssignedProcNode = 0;
 		List<Assignment> inputAssignms = inputMac.getAssignments();
 		for (Assignment iassm : inputAssignms) {
 			numberOfDiffAssignedProcNode += iassm.getNumberOfDiffProcessNode(assignments);
 		}
+		return numberOfDiffAssignedProcNode;
+	}
+	
+	/**
+	 * Returns the number of different process ids assigned by the matching
+	 * 
+	 * @param pidsOfMatch the ids of the process nodes assigned by the match
+	 * 
+	 * @return the number of different process ids assigned by the matching
+	 * 
+	 */
+	public int getNumberOfDiffProcessNode (Set<String> pidsOfMatch) {
+		int numberOfDiffAssignedProcNode;
+		if (!pidsOfMatch.isEmpty()) {
+			pidsOfMatch.clear();
+		}
+		addAllProcessNodeIDs(pidsOfMatch);
+		numberOfDiffAssignedProcNode = pidsOfMatch.size();
 		return numberOfDiffAssignedProcNode;
 	}
 	
@@ -95,9 +122,6 @@ public class Matching {
 				numberOfDiffAssignedProcNode++;
 			}
 		}
-//		for (Assignment assm : assignments) {
-//			numberOfDiffAssignedProcNode += assm.getNumberOfDiffProcessNode(existPIDs);
-//		}
 		return numberOfDiffAssignedProcNode;
 	}
 	

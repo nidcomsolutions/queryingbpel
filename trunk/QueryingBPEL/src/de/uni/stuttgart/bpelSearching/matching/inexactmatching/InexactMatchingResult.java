@@ -13,7 +13,7 @@ import de.uni.stuttgart.bpelSearching.matching.MatchingResult;
  *
  */
 public class InexactMatchingResult extends MatchingResult {
-	private List<Matching> matchings;
+	private List<Match> matchings;
 	private float matchingSimilarity;
 	
 	/**
@@ -24,7 +24,7 @@ public class InexactMatchingResult extends MatchingResult {
 	 * @param matchingSimilarity
 	 */
 	public InexactMatchingResult(String processID, String processNamespace,
-			String processName, List<Matching> matchings,
+			String processName, List<Match> matchings,
 			float matchingSimilarity) {
 		super(processID, processNamespace, processName);
 		this.matchings = matchings;
@@ -41,15 +41,15 @@ public class InexactMatchingResult extends MatchingResult {
 	public InexactMatchingResult(String processID, String processNamespace,
 			String processName, float matchingSimilarity) {
 		super(processID, processNamespace, processName);
-		this.matchings = new ArrayList<Matching>();
+		this.matchings = new ArrayList<Match>();
 		this.matchingSimilarity = matchingSimilarity;
 	}
 	
-	public List<Matching> getMatchings() {
+	public List<Match> getMatchings() {
 		return matchings;
 	}
 
-	public void setMatchings(List<Matching> matchings) {
+	public void setMatchings(List<Match> matchings) {
 		this.matchings = matchings;
 	}
 
