@@ -20,6 +20,9 @@ import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.StructuredActivityNode;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.StructuredActivityOnMessageNode;
 
 /**
+ * The StructuredQueryGraphFactory1 class is a creator for QueryGraph
+ * object from a loaded BPEL process from a .bpel file.
+ * 
  * @author luwei
  *
  */

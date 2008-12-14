@@ -19,7 +19,7 @@ import de.uni.stuttgart.bpelSearching.datastructure.PoolItem3Ext;
 /**
  * Implements the DagStackD algorithm for matching a rooted DAG pattern query against 
  * a rooted DAG pattern process graph. The implementation is based on the modified 
- * TwigStackD algorithm.
+ * DAGStackD algorithm.
  * 
  * @author luwei
  *

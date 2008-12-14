@@ -105,19 +105,8 @@ public class EvalQueryInexactMatch {
 	 * 
 	 */
 	private void initStaticVariablesForInexactMatchAlgorithms() {
-		int numberOfQueryEdges;
-		String qNodeID;
-		String minSimProp = PropertyLoader.getInstance().getUserProperties().getProperty("minMatchingSimilarity");
-		if (minSimProp.equals("querygraphDependent")) {
-			if ((numberOfQueryEdges = this.querygraph.getNumberOfEdges()) == 0) {
-				InexactMatchAlgorithms.setMinMatchingSimilarity(1.0f);
-			} else {
-				InexactMatchAlgorithms.setMinMatchingSimilarity((1.00f / ((float)numberOfQueryEdges)));
-			}		
-		} else {
-			InexactMatchAlgorithms.setMinMatchingSimilarity(Float.valueOf(minSimProp.trim()).floatValue());
-		}
-		
+		int numberOfQueryEdges, numberOfQueryNodes;
+		String qNodeID, configInfo = "Configuration Information: ";	
 		String conFactorProp = PropertyLoader.getInstance().getUserProperties().getProperty("connectivityFactor");
 		InexactMatchAlgorithms.setConnectivityFactor(Float.valueOf(conFactorProp.trim()).floatValue());
 
@@ -125,16 +114,39 @@ public class EvalQueryInexactMatch {
 		if (typeOfSimMeasureProp.compareTo("structuredOnly") == 0) {
 			InexactMatchAlgorithms.setTypeOfSimilarityMeasure(SimilarityMeasureType.STRUCTRUREDONLY);
 			InexactMatchAlgorithms.setStructuredOnly(true);
+			configInfo += " similarity measure type: structuredOnly";
 		} else if (typeOfSimMeasureProp.compareTo("matchingNodesOnly") == 0) {
 			InexactMatchAlgorithms.setTypeOfSimilarityMeasure(SimilarityMeasureType.MATCHINGNODESONLY);
 			InexactMatchAlgorithms.setStructuredOnly(false);
+			configInfo += " similarity measure type: matchingNodesOnly";
 		} else if (typeOfSimMeasureProp.compareTo("mixed") == 0) {
 			InexactMatchAlgorithms.setTypeOfSimilarityMeasure(SimilarityMeasureType.MIXED);
 			InexactMatchAlgorithms.setStructuredOnly(false);
+			configInfo += " similarity measure type: mixed";
 		} else {
 			// Default value
 			InexactMatchAlgorithms.setTypeOfSimilarityMeasure(SimilarityMeasureType.STRUCTRUREDONLY);
 			InexactMatchAlgorithms.setStructuredOnly(true);
+			configInfo += " similarity measure type: structuredOnly";
+		}
+		
+		String minSimProp = PropertyLoader.getInstance().getUserProperties().getProperty("minMatchingSimilarity");
+		if (minSimProp.equals("querygraphDependent")) {
+			if (InexactMatchAlgorithms.getTypeOfSimilarityMeasure() == SimilarityMeasureType.MATCHINGNODESONLY) {
+				if ((numberOfQueryNodes = this.querygraph.getGraph().vertexSet().size()) > 0) {
+					InexactMatchAlgorithms.setMinMatchingSimilarity((1.00f / ((float)numberOfQueryNodes)));
+				} else {
+					InexactMatchAlgorithms.setMinMatchingSimilarity(0.0f);
+				}
+			} else {
+				if ((numberOfQueryEdges = this.querygraph.getNumberOfEdges()) == 0) {
+					InexactMatchAlgorithms.setMinMatchingSimilarity(1.0f);
+				} else {
+					InexactMatchAlgorithms.setMinMatchingSimilarity((1.00f / ((float)numberOfQueryEdges)));
+				}
+			}
+		} else {
+			InexactMatchAlgorithms.setMinMatchingSimilarity(Float.valueOf(minSimProp.trim()).floatValue());
 		}
 		
 		String structuredFactorProp = PropertyLoader.getInstance().getUserProperties().getProperty("structuredFactor");
@@ -143,9 +155,11 @@ public class EvalQueryInexactMatch {
 		String discreteFactorProp = PropertyLoader.getInstance().getUserProperties().getProperty("discreteFactor");
 		InexactMatchAlgorithms.setDiscreteFactor(Float.valueOf(discreteFactorProp.trim()).floatValue());
 
-		logger.warn(" minMatchingSimilarity: " + InexactMatchAlgorithms.getMinMatchingSimilarity() + 
-				"  minMatchingSimilarity: " + InexactMatchAlgorithms.getConnectivityFactor()+ "  structuredFactor: " + 
-				structuredFactorProp + "  discreteFactor: " + discreteFactorProp);
+		if (InexactMatchAlgorithms.getTypeOfSimilarityMeasure() == SimilarityMeasureType.MIXED) {
+			configInfo += "  structuredFactor: " + structuredFactorProp + "  discreteFactor: " + discreteFactorProp;
+		}
+		configInfo += "  connectivity factor: " + InexactMatchAlgorithms.getConnectivityFactor() + "  minMatchingSimilarity: " + InexactMatchAlgorithms.getMinMatchingSimilarity();
+		logger.warn(configInfo);
 		
 		InexactMatchAlgorithms.setQuerygraph(querygraph);
 		InexactMatchAlgorithms.getQuerygraph().setQueryNodesSortedByLevelOrder();

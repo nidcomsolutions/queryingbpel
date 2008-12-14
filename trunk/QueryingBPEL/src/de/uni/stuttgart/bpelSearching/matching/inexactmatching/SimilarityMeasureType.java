@@ -3,6 +3,8 @@
  */
 package de.uni.stuttgart.bpelSearching.matching.inexactmatching;
 /**
+ * This class defines some constants of similarity measure type.
+ * 
  * @author luwei
  *
  */

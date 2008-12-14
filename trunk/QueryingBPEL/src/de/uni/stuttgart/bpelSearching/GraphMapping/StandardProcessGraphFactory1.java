@@ -2,7 +2,6 @@ package de.uni.stuttgart.bpelSearching.GraphMapping;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.teneo.hibernate.mapping.identifier.IdentifierCacheHandler;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.Activity;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.ActivityContainer;
 import org.open.oasis.docs.wsbpel._2._0.process.executable.Elseif;
@@ -19,7 +18,6 @@ import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.StructuredActivityNode;
 /**
  * The StandardProcessGraphFactory1 class is a creator class for
  * ProcessGraph objects from a loaded BPEL process from the database.
- * <p>
  * This class is responsible for the correct mapping of a BPEL process to a
  * ProcessGraph object. Thereby, it supports all BPEL activities (Invoke,
  * Reply, Sequence, Flow ...).

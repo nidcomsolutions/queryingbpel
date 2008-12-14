@@ -18,6 +18,9 @@ import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.StructuredActivityNode;
 import de.uni.stuttgart.gerlacdt.bpel.controller.DbGraphPropertiesFactory;
 
 /**
+ * The abstract QueryGraphFactory1 class is a creator class for Query Graph object from a 
+ * loaded BPEL process from a .bpel file.
+ * 
  * @author luwei
  *
  */

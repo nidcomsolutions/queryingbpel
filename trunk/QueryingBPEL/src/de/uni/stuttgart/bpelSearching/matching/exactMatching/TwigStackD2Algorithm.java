@@ -4,7 +4,6 @@
 package de.uni.stuttgart.bpelSearching.matching.exactMatching;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +20,7 @@ import de.uni.stuttgart.bpelSearching.datastructure.PoolItem3Ext;
 import de.uni.stuttgart.bpelSearching.datastructure.Predecessors2;
 
 /**
- * Implements the TwigStackD algorithm (Modified Version) for matching a query 
+ * Implements the TwigStackD2 algorithm (Modified TwigStackD) for matching a query 
  * tree against a rooted DAG pattern process graph. Compare with the original 
  * TwigStackD algorithm, a different data structure named solution pools is 
  * used. Each pool element stored in solution pools consists of three components: 

@@ -15,6 +15,9 @@ import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.StructuredActivityNode;
 import de.uni.stuttgart.gerlacdt.bpel.controller.DbGraphPropertiesFactory;
 
 /**
+ * The abstract ProcessGraphFactory1 class is a creator class for Process Graph object from a 
+ * loaded BPEL process from the database.
+ * 
  * @author luwei
  *
  */

@@ -5,6 +5,9 @@ package de.uni.stuttgart.bpelSearching.matching;
 
 
 /**
+ * Class MatchingResult represents a matching result. It contains informations of 
+ * matching BPEL-process, and has two subclasses ExactMatchingResult and InexactMatchingResult.
+ * 
  * @author luwei
  *
  */
@@ -15,6 +18,8 @@ public class MatchingResult {
 	protected String processName;
 
 	/**
+	 * Creates a MatchingResult object.
+	 * 
 	 * @param processID
 	 * @param processNamespace
 	 * @param processName

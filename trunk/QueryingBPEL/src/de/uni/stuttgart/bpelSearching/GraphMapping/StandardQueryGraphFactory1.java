@@ -17,6 +17,9 @@ import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.StructuredActivityNode;
 
 /**
+ * The StandardQueryGraphFactory1 class is a creator class for
+ * QueryGraph object from a loaded BPEL process from a .bpel file.
+ * 
  * @author luwei
  *
  */
