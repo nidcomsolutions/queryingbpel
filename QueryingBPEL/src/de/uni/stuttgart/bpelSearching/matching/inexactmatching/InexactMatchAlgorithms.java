@@ -21,6 +21,9 @@ import de.uni.stuttgart.bpelSearching.matching.NodesComparator;
 import de.uni.stuttgart.bpelSearching.util.GraphAnalyse;
 
 /**
+ * Class InexactMatchAlgorithms implements the inexact matching algorithms for 
+ * tree or DAG pattern query/process graphs.
+ * 
  * @author luwei
  *
  */
@@ -154,12 +157,11 @@ public class InexactMatchAlgorithms {
 		Set<ActivityNode> vertexSetProcess = processgraph.getGraph().vertexSet();
 		String qNodeID;
 		StreamItem streamElement, seqi;
-		int numberOfQueryEdges, maxStreamListLength, tempStreamListLength;
-		float similarity;
+		int numberOfQueryNodes, numberOfMatchQNodesTemp, maxStreamListLength, tempStreamListLength;
+		float similarity, similarityTemp;
 		List<Match> maxMatchingList;
-		ActivityNode q0;
-		List<StreamItem> streamListQ0, streamListQi;
-		Assignment tempAssmQ0, tempAssmI;
+		List<StreamItem> streamListQi;
+		Assignment tempAssmI;
 		
 		clearStaticVariables();
 		maxStreamListLength = 0;
@@ -181,27 +183,13 @@ public class InexactMatchAlgorithms {
 			}
 		}
 		
-		if ((numberOfQueryEdges = querygraph.getNumberOfEdges()) == 0) {
-			if (((float)numberOfMatchQNodes) >= minMatchingSimilarity) {
-				q0 = querygraph.getStartActivity();
-				if (!(streamListQ0 = solutionStreamMap.get(q0.getActivityID()).getStreamList()).isEmpty()) {
-					maxMatchingList = new ArrayList<Match>();
-					for (StreamItem seq0 : streamListQ0) {
-						tempAssmQ0 = new Assignment();
-						tempAssmQ0.addAssign(q0, seq0.getProcessnode());
-						maxMatchingList.add(new Match(1.0f, tempAssmQ0));
-					}
-					inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
-							processgraph.getProcessNamespace(), processgraph.getProcessName(), 
-							maxMatchingList, 1.0f);
-				}
-			}
-		} else {
-			similarity = ((float)numberOfMatchQNodes) / ((float)numberOfQueryEdges);
+		if ((numberOfQueryNodes = vertexSetQuery.size()) > 0) {
+			similarity = ((float)numberOfMatchQNodes) / ((float)numberOfQueryNodes);
 			if (similarity >= minMatchingSimilarity) {
 				maxMatchingList = new ArrayList<Match>();
 				for (int i = 0; i < maxStreamListLength; i++) {
 					tempAssmI = new Assignment();
+					numberOfMatchQNodesTemp = 0;
 					for (ActivityNode qi : vertexSetQuery) {
 						streamListQi = solutionStreamMap.get(qi.getActivityID()).getStreamList();
 						if (streamListQi.size() <= i){
@@ -209,9 +197,11 @@ public class InexactMatchAlgorithms {
 						} else {
 							seqi = streamListQi.get(i);
 							tempAssmI.addAssign(qi, seqi.getProcessnode());
+							numberOfMatchQNodesTemp++;
 						}					
 					}
-					maxMatchingList.add(new Match(similarity, tempAssmI));
+					similarityTemp = ((float)numberOfMatchQNodesTemp) / ((float)numberOfQueryNodes);
+					maxMatchingList.add(new Match(similarityTemp, tempAssmI));
 				}
 				inexactMatchings = new InexactMatchingResult(processgraph.getProcessID(), 
 						processgraph.getProcessNamespace(), processgraph.getProcessName(), 

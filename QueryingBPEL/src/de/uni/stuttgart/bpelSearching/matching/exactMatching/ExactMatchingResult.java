@@ -9,6 +9,8 @@ import java.util.List;
 import de.uni.stuttgart.bpelSearching.matching.MatchingResult;
 
 /**
+ * Class ExactMatchingResult represents a exact matching result.
+ * 
  * @author luwei
  *
  */

@@ -56,7 +56,7 @@ public class Match {
 	
 	public String toString() {
 		String tempStr = "";
-		tempStr += (" Match with Size " + matchingSimilarity + " : " );
+		tempStr += (" Match with matching similarity " + matchingSimilarity + " : " );
 		if (assignments != null) {
 			for (Assignment ass : assignments) {
 				tempStr += ass.toString();

@@ -267,10 +267,10 @@ public class TwigStackDAlgorithmTest2 {
 //		MatchBPELForTestOfTwigStackAlgorithm matchBPEL = new MatchBPELForTestOfTwigStackAlgorithm(queryGraph1, processFlowGraph1, true);
 //		matchBPEL.match();
 		List<ProcessGraph> pGraphs = new ArrayList<ProcessGraph>();
-		pGraphs.add(processFlowGraph1);
+		pGraphs.add(processFlowGraph2);
 //		EvalQueryExactMatch evalQueryExact = new EvalQueryExactMatch(queryGraph1, pGraphs);
 //		evalQueryExact.doExactMatch();
-		EvalQueryInexactMatch evalQueryInexact = new EvalQueryInexactMatch(queryGraph1, pGraphs);
+		EvalQueryInexactMatch evalQueryInexact = new EvalQueryInexactMatch(queryGraph2, pGraphs);
 		evalQueryInexact.doInexactMatch();	
 		System.exit(0);		
 	}

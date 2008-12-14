@@ -73,8 +73,9 @@ public class Assignment {
 	
 	public String toString() {
 		String tempStr = "";
-		tempStr += (" Assignment with Size " + assignSize + "  numberOfAssignedQueryNodes: " + 
-				numberOfAssignedQueryNodes + " : {" );
+//		tempStr += (" Assignment with Size " + assignSize + "  numberOfAssignedQueryNodes: " + 
+//				numberOfAssignedQueryNodes + " : {" );
+		tempStr += (" Assignment: {" );
 		for (Assign ass : assigns) {
 			tempStr += ass.toString();
 		}

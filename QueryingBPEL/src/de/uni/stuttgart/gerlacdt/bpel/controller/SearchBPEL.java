@@ -15,7 +15,9 @@ import de.uni.stuttgart.gerlacdt.bpel.database.ProcessUtils;
 import de.uni.stuttgart.gerlacdt.bpel.database.ProcessUtilsNormal;
 
 /**
- * Start class for Apache ANT. 
+ * Class SearchBPEL is the entry point (or interface) of the query evaluation component. 
+ * Its method search implements the algorithm ProcessQueryEvaluation. It is the Start 
+ * class for Apache ANT. 
  * 
  * @author Wei Lu
  * 

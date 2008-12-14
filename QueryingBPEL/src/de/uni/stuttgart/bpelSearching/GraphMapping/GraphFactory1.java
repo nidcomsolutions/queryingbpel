@@ -36,7 +36,6 @@ import org.open.oasis.docs.wsbpel._2._0.process.executable.While;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityType;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.StructuredActivityNode;
-import de.uni.stuttgart.gerlacdt.bpel.controller.DbGraphPropertiesFactory;
 
 
 /**

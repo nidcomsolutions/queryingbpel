@@ -9,6 +9,8 @@ import java.util.List;
 import de.uni.stuttgart.bpelSearching.matching.MatchingResult;
 
 /**
+ * Class InexactMatchingResult represents a inexact matching result.
+ * 
  * @author luwei
  *
  */
@@ -17,6 +19,8 @@ public class InexactMatchingResult extends MatchingResult {
 	private float matchingSimilarity;
 	
 	/**
+	 * Creates a new InexactMatchingResult instance.
+	 * 
 	 * @param processID
 	 * @param processNamespace
 	 * @param processName
@@ -33,6 +37,8 @@ public class InexactMatchingResult extends MatchingResult {
 	
 	
 	/**
+	 * Creates a new InexactMatchingResult instance.
+	 * 
 	 * @param processID
 	 * @param processNamespace
 	 * @param processName
