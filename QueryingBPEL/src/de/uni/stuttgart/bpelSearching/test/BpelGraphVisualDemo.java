@@ -3,38 +3,21 @@ package de.uni.stuttgart.bpelSearching.test;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.util.List;
-import java.util.Set;
 
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.ListenableDirectedGraph;
-import org.open.oasis.docs.wsbpel._2._0.process.executable.Process;
 
-import de.uni.stuttgart.bpelSearching.GraphMapping.QueryGraphFactory1;
-import de.uni.stuttgart.bpelSearching.GraphMapping.StructuredProcessGraphFactory1;
-import de.uni.stuttgart.bpelSearching.GraphMapping.ProcessGraphFactory1;
-import de.uni.stuttgart.bpelSearching.GraphMapping.graphs.ProcessGraph;
 import de.uni.stuttgart.bpelSearching.GraphMapping.nodes.ActivityNode;
-import de.uni.stuttgart.bpelSearching.traverse.BreadthFirstIteratorNew1;
-import de.uni.stuttgart.bpelSearching.util.DepthFirstTraverseExtension;
-import de.uni.stuttgart.gerlacdt.bpel.controller.DbGraphPropertiesFactory;
-import de.uni.stuttgart.gerlacdt.bpel.database.DatabaseConfiguration;
-import de.uni.stuttgart.gerlacdt.bpel.database.ProcessUtilsNormal;
 
 
 public class BpelGraphVisualDemo extends JApplet{
@@ -294,16 +277,16 @@ public class BpelGraphVisualDemo extends JApplet{
     } 
     */
 	
-    BreadthFirstIteratorNew1<String, DefaultEdge> createIterator(
-    		ListenableGraph<String, DefaultEdge> g,
-            String vertex)
-        {
-            BreadthFirstIteratorNew1<String, DefaultEdge> i =
-                new BreadthFirstIteratorNew1<String, DefaultEdge>(g, vertex);
-            i.setCrossComponentTraversal(true);
-
-            return i;
-        }
+//    BreadthFirstIteratorNew1<String, DefaultEdge> createIterator(
+//    		ListenableGraph<String, DefaultEdge> g,
+//            String vertex)
+//        {
+//            BreadthFirstIteratorNew1<String, DefaultEdge> i =
+//                new BreadthFirstIteratorNew1<String, DefaultEdge>(g, vertex);
+//            i.setCrossComponentTraversal(true);
+//
+//            return i;
+//        }
     
     public ListenableGraph<ActivityNode, DefaultEdge> getProcessGraphDemo() {
 		return processGraphDemo;
